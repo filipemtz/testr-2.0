@@ -1,0 +1,37 @@
+
+db:
+  # which database should be used and their credentials
+  type: <sqlite | postgres>
+  name: "<NAME OF DB OR PATH IF SQLITE>"
+  user: "<DB USER>"
+  password: "<DB PASSWORD>"
+  host: "<DB HOST>"
+  port: "<DB PORT (EMPTY IF DEFAULT)>"
+
+backend:
+  # Django uses a secret key internaly. Change this to a very complex value.
+  secret_key: "<SECRET KEY>"
+  language_code: "pt-br" # default is "en-us"
+  time_zone: "America/Sao_Paulo" # default is "UTC"
+  port: "8000"
+  allowed_hosts: ["0.0.0.0", "127.0.0.1", "localhost"]
+  # Whether or not the backend should run in debug mode
+  debug: false
+
+judge:
+  # directory in which submissions will be stored.
+  autojudge_directory: "./judge/"
+
+  # Whether or not submissions should run inside a docker container.
+  # If true, docker must be installed.
+  use_docker: false
+
+  cpp:
+    # Flags for compiling c/c++ submissions (used only if the makefile is not submitted)
+    cflags: "-Wall"
+    lflags: "-L ./ -lm"
+    iflags: "-I ./"
+
+    # C/C++ Compiler
+    cc: "gcc"
+
