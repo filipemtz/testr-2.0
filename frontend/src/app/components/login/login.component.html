@@ -1,31 +1,42 @@
-
 <mat-card>
   <mat-card-content>
+    <!-- Formulário de login -->
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <!-- Título do formulário -->
       <h2>Login</h2>
+
+      <!-- Exibir mensagem de erro se o login não for válido -->
       <mat-error *ngIf="!loginValid">
-        The username and password were not recognized
+        Houve um problema ao logar. Por favor, tente novamente.
       </mat-error>
+
+      <!-- Campo de e-mail -->
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required>
-        <mat-icon matSuffix>email</mat-icon>
-        <mat-error>
-          Please provide a valid email address
+        <mat-icon matSuffix>email</mat-icon> <!-- Ícone de e-mail -->
+        <!-- Exibir mensagem de erro se o campo de e-mail for inválido -->
+        <mat-error *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+          Por favor, insira um e-mail válido.
         </mat-error>
       </mat-form-field>
       
+      <!-- Campo de senha -->
       <mat-form-field appearance="outline">
         <mat-label>Senha</mat-label>
         <input matInput type="password" formControlName="password" required>
-        <mat-icon matSuffix>lock</mat-icon>
-        <mat-error>
-          Please provide a valid password
+        <mat-icon matSuffix>lock</mat-icon> <!-- Ícone de cadeado -->
+        <!-- Exibir mensagem de erro se o campo de senha for inválido -->
+        <mat-error *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+          A senha é obrigatória.
         </mat-error>
       </mat-form-field>
       
-      <button id="login-button" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Logar</button>
+      <!-- Botão de login -->
+      <button id="login-button" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+        <mat-icon>login</mat-icon> <!-- Ícone de login -->
+        Logar
+      </button>
     </form>
   </mat-card-content>
-</mat-card>  
-
+</mat-card>

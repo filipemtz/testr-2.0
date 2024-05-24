@@ -4,9 +4,6 @@ import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'; 
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -17,15 +14,9 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css' 
 })
-export class MainLayoutComponent implements OnInit {
-  isHandset$: Observable<boolean> = new Observable<boolean>(); 
+export class MainLayoutComponent  {
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
 
-  ngOnInit() {
-    this.isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset)
-      .pipe(
-        map(result => result.matches)
-      );
-  }
+  constructor() {}
+
 }

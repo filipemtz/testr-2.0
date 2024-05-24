@@ -1,6 +1,22 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h2 class="title" >Testr 2.0</h2>
+    <nav>
+      <a mat-button routerLink="/">Home</a>
+      <a mat-button routerLink="/first">Link #1</a>
+      <a mat-button routerLink="/second">Link #2</a>
+      <a mat-button routerLink="/third"><mat-icon>settings</mat-icon> Link #3</a>
+    </nav>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport role="navigation" mode="side" opened="true">
-    <mat-toolbar color="primary">Menu</mat-toolbar>
+  <mat-sidenav #drawer class="sidenav" 
+   role="navigation" mode="side" opened="true">
+    <h2 class="side-title">Testr 2.0</h2>
     <mat-nav-list>
       <a mat-list-item >Home</a>
       <a mat-list-item >About</a>
@@ -8,14 +24,7 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button mat-icon-button color="accent" (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>Your App Name</span>
-    </mat-toolbar>
     <div class="container p-4">
-      
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

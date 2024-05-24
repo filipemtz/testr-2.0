@@ -5,12 +5,14 @@
 // Plus imports for other components in your app.
 
 @include mat.core();
-
-$frontend-primary: mat.define-palette(mat.$indigo-palette, 900);
-$frontend-accent: mat.define-palette(mat.$pink-palette, A200);
+$frontend-primary: mat.define-palette(mat.$indigo-palette, 500, 700, 800);
+$frontend-accent: mat.define-palette(mat.$indigo-palette, A100);
+$frontend-warn:    mat.define-palette(mat.$red-palette);
+// $frontend-primary: mat.define-palette(mat.$indigo-palette, 900);
+// $frontend-accent: mat.define-palette(mat.$pink-palette, A200);
 
 // The warn palette is optional (defaults to red).
-$frontend-warn: mat.define-palette(mat.$red-palette);
+// $frontend-warn: mat.define-palette(mat.$red-palette);
 $frontend-dark: mat.define-palette(mat.$grey-palette, 700);
 $frontend-light: mat.define-palette(mat.$grey-palette, 100);
 $frontend-dark-page: mat.define-palette(mat.$grey-palette, 900);
@@ -38,6 +40,7 @@ $frontend-theme: mat.define-light-theme((
   typography: mat.define-typography-config(),
   density: 0
 ));
+
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

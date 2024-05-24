@@ -5,16 +5,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* Definindo as cores do tema */
 :root {
   /* Cores primárias */
-
-  --primary:#1a237e;
-  --accent: #ff4081;
+  --primary: #3f51b5;
+  --accent: #8c9eff;
   --warn: #f44336;
   --positive: #4caf50;
   --negative: #f44336;
   --info: #2196f3;
   --warning: #ff9800;
+  --secondary: #64b5f6; 
   /* Cor de fundo escura da página */
   --dark-page: #424242;
+  
   /* Cor de fundo clara da página */
   --light-page: #f5f5f5;
 
@@ -27,3 +28,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --text-dark: #fff;
   --text-light: #000;
 }
+

@@ -1,7 +1,24 @@
 .sidenav {
-  width: 300px; /* Largura do menu lateral */
+  width: 300px; 
 }
 
 .mat-sidenav-content{
-  background-color: #fff; /* Cor de fundo do conteúdo */
+  background-color: #fff; 
+  height: calc(205vh - 115vh);
+  padding: 0;
+}
+
+nav a {
+  border-radius: 2rem; 
+  padding: 1rem 1.5rem; 
+  margin-left: 0.5rem;
+} 
+
+span {
+  padding: 1rem;
+}
+
+.side-title{
+  color: var(--text-primary);
+  padding: 1rem 1rem 0 1rem;
 }
