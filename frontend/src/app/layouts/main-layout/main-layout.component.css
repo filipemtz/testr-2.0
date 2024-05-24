@@ -1,0 +1,7 @@
+.sidenav {
+  width: 300px; /* Largura do menu lateral */
+}
+
+.mat-sidenav-content{
+  background-color: #fff; /* Cor de fundo do conteúdo */
+}

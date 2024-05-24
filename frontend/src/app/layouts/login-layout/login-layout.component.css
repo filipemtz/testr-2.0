@@ -1,0 +1,7 @@
+
+.login-layout {
+  background-color: var(--light-page);
+  height: 100vh; /* Define a altura como 100% da altura da tela */
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+}
