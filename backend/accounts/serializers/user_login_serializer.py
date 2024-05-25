@@ -22,7 +22,7 @@ class UserLoginSerializer(serializers.Serializer):
 		Raises:
 			serializers.ValidationError: If the username or password is incorrect.
 		"""
-		user = user = authenticate(username=validated_data['username'], password=validated_data['password'])
+		user = authenticate(username=validated_data['username'], password=validated_data['password'])
 		if not user:
-			raise serializers.ValidationError({'user': 'Usuário ou senha incorretos.'})
+			raise serializers.ValidationError({'message': 'Usuário ou senha incorretos.'})
 		return user

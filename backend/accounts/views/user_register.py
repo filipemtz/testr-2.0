@@ -31,7 +31,7 @@ class UserRegisterView(APIView):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.create(serializer.validated_data)
-            token = Token.objects.create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             response = Response({'token': token.key}, status=status.HTTP_201_CREATED)
             response.set_cookie(key='token', value=token.key, httponly=True)
             return response

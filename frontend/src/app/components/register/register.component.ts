@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -19,22 +20,29 @@ export class RegisterComponent {
   registerForm: FormGroup;
   registerValid: boolean = true;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
-      userType: ['aluno'] // Valor padrão selecionado
+      password2: ['', [Validators.required]],
+      group: ['Student'] // Valor padrão selecionado
     });
   }
 
   onRegister() {
     if (this.registerForm.valid) {
-      // Lógica de registro aqui
+      this.authService.register(this.registerForm.value).subscribe({
+        next: response => {
+          console.log('Product register:', response);
+          this.router.navigate(['/']);
+        },
+        error: err => {
+          console.log('Failed to register:', err);
+        }
+      });
+      
       console.log('Formulário enviado:', this.registerForm.value);
-
-      // Redirecionar após registro bem-sucedido
     }
   }
 }

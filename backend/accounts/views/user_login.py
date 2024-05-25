@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-
 from ..serializers import UserLoginSerializer
 
 from rest_framework import permissions, status
@@ -26,8 +24,6 @@ class UserLoginView(APIView):
     authentication_classes = (TokenAuthentication,)
     
     def post(self, request):
-        print(request.data)
-        print("sadsçkldjaslkdjakl\n\n\n\n\n\n\nnASHaoshAUIHUSauoi\n\n\n\n\n\nASaphsPAHSJ\n\n\n\n\n\n\n\nwsdasjdh\n")
         """
         Handles the POST request for user login.
 
@@ -46,7 +42,7 @@ class UserLoginView(APIView):
                 raise AuthenticationFailed('User not Found!')
             
             if user:
-                token = Token.objects.get(user=user)
+                token, _ = Token.objects.get_or_create(user=user)
                 response = Response({'token': token.key}, status=status.HTTP_200_OK)
                 response.set_cookie(key='token', value=token.key, httponly=True)
                 return response

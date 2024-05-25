@@ -1,31 +1,103 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <button mat-icon-button (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
+<!--Navbar-->
+<nav class="navbar navbar-expand-lg sticky-top custom-nav-color" data-bs-theme="dark">
+  <div class="container">
+    <!--Logo-->
+    <a class="navbar-brand fs-4" href="#">Testr 2.0</a>
+    <!--Toggler-->
+    <button class="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <h2 class="title" >Testr 2.0</h2>
-    <nav>
-      <a mat-button routerLink="/">Home</a>
-      <a mat-button routerLink="/first">Link #1</a>
-      <a mat-button routerLink="/second">Link #2</a>
-      <a mat-button routerLink="/third"><mat-icon>settings</mat-icon> Link #3</a>
-    </nav>
-  </mat-toolbar-row>
-</mat-toolbar>
-
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" 
-   role="navigation" mode="side" opened="true">
-    <h2 class="side-title">Testr 2.0</h2>
-    <mat-nav-list>
-      <a mat-list-item >Home</a>
-      <a mat-list-item >About</a>
-      <a mat-list-item >Contact</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div class="container p-4">
-      <router-outlet></router-outlet>
+    <!--Sidebar-->
+    <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <!--Header-->
+      <div class="offcanvas-header text-white border-bottom">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Testr 2.0</h5>
+        <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <!--Sidebar body-->
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-center flex-grow-1">
+          <li *ngFor="let item of sidebarItems" class="nav-item mx-1">  
+            <a *ngIf="!item.dropdown"  class="nav-link" [routerLink]="[item.link]">{{ item.label }}</a>
+            <div *ngIf="item.dropdown" ngbDropdown>
+              <a class="nav-link" ngbDropdownToggle role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.label }}</a>
+              <ul ngbDropdownMenu class="dropdown-menu">
+                <li *ngFor="let sublink of item.sublinks" >
+                  <a class="dropdown-item" ngbDropdownItem [routerLink]="[sublink.link]">{{ sublink.label }}</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <!--Login/Sign Up-->
+        
+        <ul class="navbar-nav d-flex flex-row justify-content-center fs-5">
+          <li class="nav-item mx-1 my-1">
+            <a class="btn btn-outline-light" href="#">Login</a>
+          </li>
+          <li class="nav-item mx-1 my-1">
+            <a class="btn btn-primary"   href="#">Sign Up</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</nav>
+
+<main class="container mt-3">
+  <router-outlet></router-outlet>
+</main>
+
+
+<!-- sidebar.component.html
+
+<div class="wrapper">
+  <aside id="sidebar" class="expand">
+    <div class="d-flex">
+      <button class="toggle-btn" type="button" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="sidebar-logo">
+        <a href="#">CodzSword</a>
+      </div>
+    </div>
+    <ul class="sidebar-nav">
+      <ng-container *ngFor="let item of sidebarItems">
+        <li class="sidebar-item" *ngIf="!item.dropdown">
+          <a [href]="item.link" class="sidebar-link">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+        <li class="sidebar-item" *ngIf="item.dropdown">
+          <a href="#" class="sidebar-link collapsed has-dropdown"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#' + item.id"
+            [attr.aria-expanded]="false"
+            [attr.aria-controls]="item.id"
+            (click)="toggleDropdown($event)">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+          <ul [id]="item.id" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+            <li class="sidebar-item" *ngFor="let sublink of item.sublinks">
+              <a [href]="sublink.link" class="sidebar-link">
+                {{ sublink.label }}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="#" class="sidebar-link">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+  <div class="main p-3">
+    <router-outlet></router-outlet>
+  </div>
+</div> -->
