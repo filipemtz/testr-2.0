@@ -71,6 +71,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         
         if not Group.objects.filter(name=group).exists():
             
-            raise serializers.ValidationError({'group': f'Grupo inválido. {group, Group.objects.all()}'})
+            raise serializers.ValidationError({'group': 'Grupo inválido.'})
         
         return data
