@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -6,16 +7,17 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     Serializer class for user registration.
 
     This serializer is used to validate and serialize user registration data.
-    It includes fields for username, email, password, and password2.
+    It includes fields for username, email, password, password2, and group.
     """
 
     email = serializers.EmailField()
     password = serializers.CharField(min_length=6, write_only=True)
     password2 = serializers.CharField(min_length=6, write_only=True)
+    group = serializers.ChoiceField(choices=[('Professor', 'Professor'), ('Aluno', 'Aluno')])
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ['username', 'email', 'password', 'password2', 'group']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -32,6 +34,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
+        
+        group_name = validated_data['group']
+        group = Group.objects.get(name=group_name)
+        user.groups.add(group)
         return user
     
     def validate(self, data):
@@ -46,6 +52,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         email = data['email'].strip()
         password = data['password'].strip()
         password2 = data['password2'].strip()
+        group = data['group'].strip()
         
         if not password or len(password) < 8:
             raise serializers.ValidationError({'password': 'A senha deve conter no mínimo 8 caracteres.'})
@@ -61,5 +68,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({'email': 'Este email já está em uso.'})
+        
+        if not Group.objects.filter(name=group).exists():
+            
+            raise serializers.ValidationError({'group': f'Grupo inválido. {group, Group.objects.all()}'})
         
         return data
