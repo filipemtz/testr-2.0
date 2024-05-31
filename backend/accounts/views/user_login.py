@@ -1,12 +1,11 @@
-from ..serializers import UserLoginSerializer
-
+from ..serializers import UserLoginSerializer, UserSerializer
+from django.contrib.auth.models import User
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
-from  rest_framework.response import Response
+from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
-
 
 class UserLoginView(APIView):
     """
@@ -43,7 +42,8 @@ class UserLoginView(APIView):
             
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
-                response = Response({'token': token.key}, status=status.HTTP_200_OK)
+                user_data = UserSerializer(user, context={'request': request})
+                response = Response({'token': token.key, 'user': user_data.data})
                 response.set_cookie(key='token', value=token.key, secure=True, samesite='None')
                 return response
             

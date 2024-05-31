@@ -38,9 +38,11 @@
         Logar
       </button>
 
-      <!-- Exibir mensagem de erro -->
-      <mat-error *ngIf="error">
-        {{ error }}
+      <!-- Exibir mensagens de erro -->
+      <mat-error *ngIf="errors.length > 0">
+        <ul>
+          <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
       </mat-error>
     </form>
   </mat-card-content>

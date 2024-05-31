@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +15,12 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
     const body = { username, password };
-    return this.apiService.post<any>('accounts/login/', body, headers);
+    return this.apiService.post<any>('accounts/login/', body, headers).pipe(
+      tap(response => {
+        // salvar em local storage o usuario da response
+        localStorage.setItem('user', JSON.stringify(response.user));
+      })
+    )
   }
 
   logout(): Observable<any> {

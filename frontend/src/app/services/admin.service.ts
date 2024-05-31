@@ -43,6 +43,24 @@ export class AdminService {
     return this.http.delete<any>(link, {headers});
   }
 
+  getGroups(){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.get<any>('http://localhost:8000/accounts/groups/', {headers});
+  }
+
+  getGroup(link: string){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.get<any>(link, {headers});
+  }
+
   private getCookie(name: string): string | null {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

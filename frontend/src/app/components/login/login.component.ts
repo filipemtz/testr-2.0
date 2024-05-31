@@ -7,7 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { AdminService } from '../../services/admin.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,14 +20,14 @@ import { HttpClient } from '@angular/common/http';
 export class LoginComponent {
   loginForm: FormGroup;
   loginValid: boolean = true;
-  error: string = '';
+  errors: any[] = [];
   user = {
     username: '',
     email: '',
     groups: [] as string[]
-  }
+  };
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private httpClient: HttpClient) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private httpClient: HttpClient, private adminService: AdminService) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]]
@@ -36,27 +38,62 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
         next: response => {
-          this.authService.profile().subscribe({
-            next: response => {
-              this.user = response;
-              console.log(response);
-              this.router.navigate(['/']);
-            },
-            error: err => {
-              console.error(err);
-            }
-          });
+          this.user = response.user;
+          this.getGroupNames();
         },
-        error: err => {
-          console.error(err);
+        error: (err: HttpErrorResponse) => {
+          console.log(err.error);
+          this.errors = [];
+          if (err.error) {
+            for (let key in err.error) {
+              if (err.error.hasOwnProperty(key)) {
+                this.errors.push(err.error[key]);
+              }
+            }
+          } else {
+            this.errors.push('An unknown error occurred.');
+          }
         }
-
-
       });
-      // Lógica de login aqui
       console.log('Form Submitted', this.loginForm.value);
+    }
+  }
 
-      // Redirecionar após login bem-sucedido
+  getGroupNames() {
+    const groups = this.user.groups;
+    for(let group of groups) {
+      this.adminService.getGroup(group).subscribe({
+        next: response => {
+          this.user.groups.push(response.name);
+          this.redirectUser();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err.error);
+          this.errors = [];
+          if (err.error) {
+            for (let key in err.error) {
+              if (err.error.hasOwnProperty(key)) {
+                this.errors.push(err.error[key]);
+              }
+            }
+          } else {
+            this.errors.push('An unknown error occurred.');
+          }
+        }
+      });
+    }
+  }
+
+  redirectUser() {
+    const groups = this.user.groups;
+    if (groups.includes('Admin')) {
+      this.router.navigate(['/admin']);
+    } else if (groups.includes('Professor')) {
+      this.router.navigate(['/professor']);
+    } else if (groups.includes('Student')) {
+      this.router.navigate(['/student']);
+    } else {
+      this.errors.push('No valid group found for the user.');
     }
   }
 }
