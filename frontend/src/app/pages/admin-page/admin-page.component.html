@@ -6,7 +6,6 @@
         <th scope="col">#</th>
         <th scope="col">Username</th>
         <th scope="col">Email</th>
-        <th scope="col">Grupo</th>
         <th scope="col">Ações</th>
       </tr>
     </thead>
@@ -15,11 +14,6 @@
         <th scope="row">{{ user.id }}</th>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
-        <td>
-          <span *ngFor="let group of user.groups">
-            {{ group }}
-          </span>
-        </td>
         <td>
           <button class="fa-solid fa-pen-to-square btn text-warning" (click)="onEdit(user, content)"></button>
           <button class="fa-solid fa-trash btn text-danger" (click)="openDeleteModal(user, deleteModal)"></button>
@@ -50,13 +44,6 @@
           Enter a valid email.
         </div>
       </div>
-      <div class="mb-3">
-        <label for="groups">Groups</label>
-        <input id="groups" type="text" class="form-control" formControlName="groups">
-        <div *ngIf="editForm.get('groups')?.invalid && (editForm.get('groups')?.dirty || editForm.get('groups')?.touched)" class="text-danger">
-          Groups are required.
-        </div>
-      </div>
     </form>
   </div>
   <div class="modal-footer">
@@ -70,7 +57,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    Tem certeza que deseja deletar o usuário {{ userToDelete.username }}?
+    Tem certeza que deseja deletar o usuário {{ userToDelete?.username }}?
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancel</button>

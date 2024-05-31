@@ -1,9 +1,8 @@
-import { Component, OnInit, inject, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-page',
@@ -14,17 +13,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class AdminPageComponent implements OnInit {
   users = [] as any[];
-
   closeResult = '';
   editForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    groups: ['', Validators.required]
+    email: ['', [Validators.required, Validators.email]]
   });
   selectedUser: any;
   userToDelete: any;
 
-  constructor(private adminService: AdminService, private fb: FormBuilder, private modalService: NgbModal, private http: HttpClient) {}
+  constructor(private adminService: AdminService, private fb: FormBuilder, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.adminService.getUsers().subscribe({
@@ -74,17 +71,14 @@ export class AdminPageComponent implements OnInit {
   onSave(modal: any): void {
     if (this.editForm.valid) {
       const updatedUser = { ...this.selectedUser, ...this.editForm.value };
-      const token = this.getCookie('token');
-
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${token}`
-      });
       
-      this.http.put(updatedUser.url, updatedUser, { headers }).subscribe({
+      this.adminService.editUser(this.selectedUser.url, updatedUser).subscribe({
         next: response => {
           console.log(response);
+          this.selectedUser = null;
+          this.editForm.reset();
           this.modalService.dismissAll();
+          this.users = this.users.map(user => user.url === updatedUser.url ? updatedUser : user);
         },
         error: err => {
           console.error(err);
@@ -94,28 +88,15 @@ export class AdminPageComponent implements OnInit {
   }
 
   confirmDelete(modal: any): void {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-
-    this.http.delete(this.userToDelete.url, { headers }).subscribe({
+    this.adminService.deleteUser(this.userToDelete.url).subscribe({
       next: response => {
         console.log(response);
-        this.users = this.users.filter(u => u !== this.userToDelete);
-        modal.close();
+        this.users = this.users.filter(user => user.url !== this.userToDelete.url);
+        this.modalService.dismissAll();
       },
       error: err => {
         console.error(err);
       }
     });
-  }
-
-  private getCookie(name: string): string | null {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-    return null;
   }
 }

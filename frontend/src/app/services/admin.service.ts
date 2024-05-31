@@ -17,15 +17,30 @@ export class AdminService {
   }
 
   getUser(link: string){
-    return this.http.get<any>(link);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.get<any>(link, {headers});
   }
 
   editUser(link: string, data: any){
-    return this.http.put<any>(link, data);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.put<any>(link, data, {headers});
   }
 
   deleteUser(link: string){
-    return this.http.delete<any>(link);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.delete<any>(link, {headers});
   }
 
   private getCookie(name: string): string | null {
