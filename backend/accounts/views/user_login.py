@@ -44,7 +44,7 @@ class UserLoginView(APIView):
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
                 response = Response({'token': token.key}, status=status.HTTP_200_OK)
-                response.set_cookie(key='token', value=token.key, httponly=True)
+                response.set_cookie(key='token', value=token.key, secure=True, samesite='None')
                 return response
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

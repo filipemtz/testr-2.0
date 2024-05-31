@@ -30,14 +30,25 @@
             </div>
           </li>
         </ul>
-        <!--Login/Sign Up-->
         
-        <ul class="navbar-nav d-flex flex-row justify-content-center fs-5">
+        
+        <!--Logout/User-->
+        <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="isLogged">
           <li class="nav-item mx-1 my-1">
-            <a class="btn btn-outline-light" href="#">Login</a>
+            <a class="text-white" routerLink="/accounts/profile">Hi, {{ user.username }}</a>
           </li>
           <li class="nav-item mx-1 my-1">
-            <a class="btn btn-primary"   href="#">Sign Up</a>
+            <a class="btn btn-primary"  (click)="logout()">Logout</a>
+          </li>
+        </ul>
+        
+        <!--Login/Sign Up-->
+        <ul class="navbar-nav d-flex flex-row justify-content-center fs-5" *ngIf="!isLogged">
+          <li class="nav-item mx-1 my-1">
+            <a class="btn btn-outline-light" routerLink="/accounts/login">Login</a>
+          </li>
+          <li class="nav-item mx-1 my-1">
+            <a class="btn btn-primary"  routerLink="/accounts/register">Sign Up</a>
           </li>
         </ul>
       </div>

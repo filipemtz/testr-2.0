@@ -40,13 +40,9 @@ export class ApiService {
     );
   }
 
-  // Manipulação de erros : Todo: Consertar essa função
+  // Manipulação de erros : Todo: Desenvolver um tratamento de erro mais robusto
   private handleError(error: HttpErrorResponse) {
-    console.error('API Error:', error.error);
-    console.log(error);
-    // Retorna um observable com uma mensagem de erro amigável
-    return throwError(
-      'Something bad happened; please try again later.');
-      
+    return throwError(error);
+     
   }
 }

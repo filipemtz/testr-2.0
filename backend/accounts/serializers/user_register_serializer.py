@@ -13,7 +13,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(min_length=6, write_only=True)
     password2 = serializers.CharField(min_length=6, write_only=True)
-    group = serializers.ChoiceField(choices=[('Professor', 'Professor'), ('Aluno', 'Aluno')])
+    group = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
@@ -71,6 +71,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         
         if not Group.objects.filter(name=group).exists():
             
-            raise serializers.ValidationError({'group': 'Grupo inválido.'})
+            raise serializers.ValidationError({'group': f'{group} Grupo inválido.'})
         
         return data

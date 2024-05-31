@@ -24,5 +24,5 @@ class UserLoginSerializer(serializers.Serializer):
 		"""
 		user = authenticate(username=validated_data['username'], password=validated_data['password'])
 		if not user:
-			raise serializers.ValidationError({'message': 'Usuário ou senha incorretos.'})
+			raise serializers.ValidationError({'message': 'Credenciais inválidas.'})
 		return user

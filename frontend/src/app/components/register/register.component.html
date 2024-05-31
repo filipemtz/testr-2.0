@@ -58,6 +58,12 @@
         <mat-icon>person_add</mat-icon> <!-- Ícone de adicionar usuário -->
         Registrar
       </button>
+      <!-- Exibe erros dentro da variavel errors -->
+      <mat-error *ngIf="errors">
+        <ul>
+          <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
+      </mat-error>
     </form>
   </mat-card-content>
 </mat-card>

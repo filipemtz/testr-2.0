@@ -3,7 +3,7 @@
 from rest_framework import permissions, viewsets
 
 from ..models.course import Course
-from ..serializers.course_serializer import CourseSerializer
+from ..serializers import CourseSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):

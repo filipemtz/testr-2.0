@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ import { AuthService } from '../../services/auth.service';
 export class RegisterComponent {
   registerForm: FormGroup;
   registerValid: boolean = true;
+  errors: any[] = [];
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.registerForm = this.fb.group({
@@ -37,8 +39,22 @@ export class RegisterComponent {
           console.log('Product register:', response);
           this.router.navigate(['/']);
         },
-        error: err => {
-          console.log('Failed to register:', err);
+        error: (err: HttpErrorResponse) => {
+          console.log(err.error);
+        
+          if (err.error) {
+            if (this.errors.length > 0) {
+              this.errors = [];
+            }
+            for (let key in err.error) {
+              if (err.error.hasOwnProperty(key)) {
+                this.errors.push(err.error[key]);
+              }
+            }
+          } else {
+            this.errors.push('An unknown error occurred.');
+          }
+          
         }
       });
       

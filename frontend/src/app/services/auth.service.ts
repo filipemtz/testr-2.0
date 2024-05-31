@@ -31,4 +31,23 @@ export class AuthService {
     });
     return this.apiService.post<any>('accounts/register/', userData, headers);
   }
+
+  profile(): Observable<any> {
+    // from cookies get token
+    const token = this.getCookie('token');
+    console.log('Token:', token);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+
+    return this.apiService.get<any>('accounts/profile/', headers);
+  }
+
+  private getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
+  }
 }

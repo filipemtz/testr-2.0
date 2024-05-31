@@ -34,7 +34,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'account',
+    path: 'accounts',
     component: LoginLayoutComponent,
     children: [
       {
