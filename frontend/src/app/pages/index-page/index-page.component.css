@@ -1,0 +1,28 @@
+.course-title {
+    font-size: 2.5rem;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2%;
+  }
+  
+  .courses {
+    max-width: 50%;
+    margin: 0 auto;
+  }
+  
+  .course-item {
+    margin-bottom: 15px;
+  }
+  
+  .course-link {
+    color: blue;
+    text-decoration: none;
+    font-size: 15pt;
+  }
+  
+  .no-course-message {
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+  }

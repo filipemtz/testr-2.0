@@ -1,1 +1,14 @@
-<p>index-page works!</p>
+<div class="course-title">Courses</div>
+<main>
+	<div *ngIf="courses.length > 0; else noCourses" class="courses">
+		<ul>
+			<div *ngFor="let course of courses" class="course-item">
+				{{ course.name }}
+			</div>
+		</ul>
+	</div>
+</main>
+
+<ng-template #noCourses>
+	<p class="no-course-message">No courses are available.</p>
+</ng-template>

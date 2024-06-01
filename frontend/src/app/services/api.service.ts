@@ -19,6 +19,20 @@ export class ApiService {
     );
   }
 
+  // Exemplo teste de get especifico com token
+  getCourses(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `9e8e27e3c9c1ac32a017efc80cf5cd83c5463fc5`
+      })
+    };
+
+    return this.http.get<any>(this.apiUrl + 'courses', httpOptions).pipe(
+      catchError(this.handleError));
+  }
+
   // Método POST genérico para enviar dados
   post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
     return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data, { headers: headers, withCredentials: true }).pipe(

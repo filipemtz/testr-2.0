@@ -37,6 +37,14 @@ export class AuthService {
     return this.apiService.post<any>('accounts/register/', userData, headers);
   }
 
+  // Resta aprimorar
+  isAuthenticated(): Observable<boolean> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.apiService.get<any>('accounts/profile',headers);
+  }
+
   profile(): Observable<any> {
     // from cookies get token
     const token = this.getCookie('token');
