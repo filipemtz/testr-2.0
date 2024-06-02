@@ -3,4 +3,5 @@ export interface Course {
     url: string;
     name: string;
     created_at: string;
+    visible: boolean;
   }

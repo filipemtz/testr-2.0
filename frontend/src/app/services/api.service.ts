@@ -21,15 +21,13 @@ export class ApiService {
 
   // Exemplo teste de get especifico com token
   getCourses(): Observable<any> {
-    const token = localStorage.getItem('token');
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `9e8e27e3c9c1ac32a017efc80cf5cd83c5463fc5`
-      })
-    };
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
 
-    return this.http.get<any>(this.apiUrl + 'courses', httpOptions).pipe(
+    return this.http.get<any>(this.apiUrl + '/courses/', {headers, withCredentials: true}).pipe(
       catchError(this.handleError));
   }
 
@@ -57,6 +55,12 @@ export class ApiService {
   // Manipulação de erros : Todo: Desenvolver um tratamento de erro mais robusto
   private handleError(error: HttpErrorResponse) {
     return throwError(error);
-     
+  }
+
+  private getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
   }
 }

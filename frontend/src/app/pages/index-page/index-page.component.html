@@ -3,7 +3,7 @@
 	<div *ngIf="courses.length > 0; else noCourses" class="courses">
 		<ul>
 			<div *ngFor="let course of courses" class="course-item">
-				{{ course.name }}
+				<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>
 			</div>
 		</ul>
 	</div>

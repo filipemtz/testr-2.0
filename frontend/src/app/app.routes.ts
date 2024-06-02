@@ -7,6 +7,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { StudentPageComponent } from './pages/student-page/student-page.component';
 import { ProfessorPageComponent } from './pages/professor-page/professor-page.component';
 import { IndexPageComponent } from './pages/index-page/index-page.component';
+import { CoursesDetailPageComponent } from './pages/courses-detail-page/courses-detail-page.component';
 
 
 export const routes: Routes = [
@@ -18,6 +19,10 @@ export const routes: Routes = [
       {
         path: '',
         component: IndexPageComponent
+      },
+      { 
+        path: 'course/:id', 
+        component: CoursesDetailPageComponent 
       },
       {
         path: 'admin',
