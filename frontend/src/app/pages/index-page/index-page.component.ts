@@ -20,7 +20,6 @@ export class IndexPageComponent implements OnInit {
     this.authService.isAuthenticated().subscribe({
       next: response => {
         this.apiService.getCourses().subscribe( {next: response => {
-          console.log(response);
           this.courses = response.results;
         },
         error: err => {

@@ -1,13 +1,16 @@
-<div class="course-name">{{ course.name }}</div>
+<div class="course-name">
+    {{ course.name }}
+</div>
 
 <main>
+    
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <div *ngIf="sections.length > 0; else noSections" class="sections">
-        <ul>
-            <div *ngFor="let section of sections; index as i" class="section-item">
-                <a [routerLink]="['/section', section.id]">{{ section.name }}</a>
+    <div *ngIf="sections.length > 0; else noSections">
+        <div *ngFor="let section of sections">
+            <div *ngIf="section.course == course.url" class="section-item">
+                {{ section.name }}
             </div>
-        </ul>   
+        </div>
     </div>
 </main>
 
