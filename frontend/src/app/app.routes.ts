@@ -24,6 +24,10 @@ export const routes: Routes = [
         path: 'course/:id', 
         component: CoursesDetailPageComponent 
       },
+      { 
+        path: 'question/:id', 
+        component: QuestionDetailPageComponent 
+      },
       {
         path: 'admin',
         component: AdminPageComponent

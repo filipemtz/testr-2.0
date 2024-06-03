@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
+import { Question } from '../../interfaces/question';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
-import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-courses-detail-page',
@@ -17,6 +17,8 @@ import { ThisReceiver } from '@angular/compiler';
 export class CoursesDetailPageComponent implements OnInit {
   course: Course = {} as Course;
   sections: Section[] = [];
+  questions: Question[] = [];
+  idx: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +29,7 @@ export class CoursesDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.isAuthenticated().subscribe( {next: resp => {
+        // Pegar um curso baseado no id atual da pagina
         this.route.params.subscribe(params => {
           const id = params['id'];
           this.apiService.getCourse(id).subscribe( {next: response => {
@@ -36,9 +39,23 @@ export class CoursesDetailPageComponent implements OnInit {
             console.log(err);
           }});
         });
+
+        // Pegar as sessões de um curso
         this.apiService.getSections().subscribe( {next: response => {
           console.log(response);  
           this.sections = response.results;
+        }, 
+        error: err => {
+          console.log(err);
+        }});
+
+        // Pegar as questoes de uma sessão
+        this.apiService.getQuestions().subscribe( {next: response => {
+          console.log(response);  
+          this.questions = response.results;
+        },
+        error: err => {
+          console.log(err);
         }});
       },
       error: err => {
@@ -47,4 +64,11 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
+  reset_id(){
+    this.idx = 1;
+  }
+
+  inc_id(){
+    this.idx += 1;
+  }
 }

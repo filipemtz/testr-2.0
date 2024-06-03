@@ -51,6 +51,16 @@ export class ApiService {
       catchError(this.handleError));
   }
 
+  getQuestions(): Observable<any> {
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/questions/`, { headers,  withCredentials: true }).pipe(
+      catchError(this.handleError));
+  }
+
   // Método POST genérico para enviar dados
   post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
     return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data, { headers: headers, withCredentials: true }).pipe(

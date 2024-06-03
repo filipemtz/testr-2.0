@@ -6,9 +6,20 @@
     
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
     <div *ngIf="sections.length > 0; else noSections">
-        <div *ngFor="let section of sections">
-            <div *ngIf="section.course == course.url" class="section-item">
-                {{ section.name }}
+        <div *ngFor="let section of sections" class="sections">
+            <div *ngIf="section.course == course.url" >
+                <div class="section-item">
+                    {{ section.name }}
+                </div>
+                {{ reset_id() }}
+                <div *ngFor="let question of questions">
+                    <div *ngIf="question.section == section.url">
+                        <div class="questions">
+                            {{ idx }}. {{ question.name }}
+                            {{ inc_id() }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
