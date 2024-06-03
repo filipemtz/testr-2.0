@@ -3,13 +3,7 @@
     font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     font-weight: bold;
-    margin-bottom: 2%;
 }
-
-.sections {
-    padding-bottom: 20px;
-  }
-
 .questions {
   max-width: 40%;
   margin: auto auto;
