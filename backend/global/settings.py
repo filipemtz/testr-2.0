@@ -161,21 +161,12 @@ REST_FRAMEWORK = {
 # CORS Settings
 ALLOWED_HOSTS = ['*']
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "http://127.0.0.1:4200",
-    "http://127.0.0.1" 
-]
+CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
+CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']
 
-CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = config_data['backend']['csrf_cookie_secure']
+SESSION_COOKIE_SECURE = config_data['backend']['session_cookie_secure']
+CSRF_COOKIE_SAMESITE = config_data['backend']['csrf_cookie_samesite']
+SESSION_COOKIE_SAMESITE = config_data['backend']['session_cookie_samesite']
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:4200",
-    "http://127.0.0.1:4200",
-    "http://127.0.0.1"
-]
+CSRF_TRUSTED_ORIGINS = config_data['backend']['csrf_trusted_origins']

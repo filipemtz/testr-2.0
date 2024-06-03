@@ -18,47 +18,48 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
-  registerValid: boolean = true;
-  errors: any[] = [];
+  registerForm: FormGroup; 
+  errors: any[] = []; // Array para armazenar mensagens de erro
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+    // Inicializa o formulário de registro com validações
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required]],
-      password2: ['', [Validators.required]],
-      group: ['Student'] // Valor padrão selecionado
+      password2: ['', [Validators.required]], 
+      group: ['Student'] 
     });
   }
 
+  // Método para submeter o formulário de registro
   onRegister() {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid) { 
+      // Chama o serviço de registro passando os valores do formulário
       this.authService.register(this.registerForm.value).subscribe({
         next: response => {
-          console.log('Product register:', response);
-          this.router.navigate(['/']);
+          this.router.navigate(['/']); // Redireciona para a página inicial em caso de sucesso
         },
         error: (err: HttpErrorResponse) => {
-          console.log(err.error);
-        
+          console.error(err.error);
+
           if (err.error) {
             if (this.errors.length > 0) {
-              this.errors = [];
+              this.errors = []; // Limpa o array de erros antes de adicionar novos
             }
+            // Adiciona as mensagens de erro ao array de erros
             for (let key in err.error) {
               if (err.error.hasOwnProperty(key)) {
                 this.errors.push(err.error[key]);
               }
             }
           } else {
-            this.errors.push('An unknown error occurred.');
+            this.errors.push('An unknown error occurred.'); // Adiciona uma mensagem de erro desconhecido
           }
-          
         }
       });
-      
-      console.log('Formulário enviado:', this.registerForm.value);
+
+      console.log('Formulário enviado:', this.registerForm.value); // Exibe os valores do formulário no console
     }
   }
 }
