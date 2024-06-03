@@ -93,6 +93,7 @@ export class LoginComponent {
     } else if (groups.includes('Student')) {
       this.router.navigate(['/student']);
     } else {
+      this.router.navigate(['']);
       this.errors.push('No valid group found for the user.');
     }
   }

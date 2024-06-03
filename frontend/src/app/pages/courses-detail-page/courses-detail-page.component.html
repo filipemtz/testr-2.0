@@ -3,7 +3,6 @@
 </div>
 
 <main>
-    
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections">
