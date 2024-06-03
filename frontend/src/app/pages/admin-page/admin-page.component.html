@@ -10,8 +10,8 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <tr *ngFor="let user of users">
-        <th scope="row">{{ user.id }}</th>
+      <tr *ngFor="let user of users; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>
