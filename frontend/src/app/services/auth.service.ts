@@ -18,7 +18,7 @@ export class AuthService {
       'Content-Type': 'application/json' 
     });
     const body = { username, password }; // Corpo da requisição contendo as credenciais do usuário
-    return this.httpClient.post<any>(`${this.baseUrl}accounts/login/`, body, { headers }).pipe(
+    return this.httpClient.post<any>(`${this.baseUrl}accounts/login/`, body, { headers, withCredentials: true }).pipe(
       tap(response => {
         // Salvar o usuário retornado na resposta em local storage
         localStorage.setItem('user', JSON.stringify(response.user));
