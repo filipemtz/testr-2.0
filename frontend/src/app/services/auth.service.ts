@@ -28,7 +28,7 @@ export class AuthService {
 
   // Método para logout do usuário
   logout(): Observable<any> {
-    return this.httpClient.post<any>(`${this.baseUrl}accounts/logout/`, {});
+    return this.httpClient.post<any>(`${this.baseUrl}accounts/logout/`,{}, {withCredentials: true});
   }
 
   // Método para registrar um novo usuário
