@@ -8,6 +8,7 @@ import { StudentPageComponent } from './pages/student-page/student-page.componen
 import { ProfessorPageComponent } from './pages/professor-page/professor-page.component';
 import { IndexPageComponent } from './pages/index-page/index-page.component';
 import { CoursesDetailPageComponent } from './pages/courses-detail-page/courses-detail-page.component';
+import { QuestionDetailPageComponent } from './pages/question-detail-page/question-detail-page.component';
 
 
 export const routes: Routes = [
@@ -26,7 +27,7 @@ export const routes: Routes = [
       },
       { 
         path: 'question/:id', 
-        component: QuestionDetailPageComponent 
+        component: QuestionDetailPageComponent
       },
       {
         path: 'admin',
