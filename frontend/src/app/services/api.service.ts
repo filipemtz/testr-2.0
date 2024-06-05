@@ -95,6 +95,17 @@ export class ApiService {
     );
   }
 
+  deleteQuestion(url: string){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.delete(url, {headers, withCredentials: true}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Método DELETE genérico para excluir dados
   delete<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
     return this.http.delete<T>(`${this.apiUrl}/${endpoint}`, { headers: headers, withCredentials: true }).pipe(

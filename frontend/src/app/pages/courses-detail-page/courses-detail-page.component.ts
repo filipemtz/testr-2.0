@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
@@ -6,6 +6,7 @@ import { Question } from '../../interfaces/question';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-courses-detail-page',
@@ -21,11 +22,15 @@ export class CoursesDetailPageComponent implements OnInit {
   idx: number = 1;
   cont: number = 0;
 
+  questionToDelete: any;
+  selectedQuestion: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiService: ApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +65,24 @@ export class CoursesDetailPageComponent implements OnInit {
       },
       error: err => {
         this.router.navigate(['/accounts/login']);
+      }
+    });
+  }
+
+  openDeleteModal(question: any, content: TemplateRef<any>) {
+    this.questionToDelete = question;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  confirmDelete(): void {
+    console.log(this.questionToDelete.url)
+    this.apiService.deleteQuestion(this.questionToDelete.url).subscribe({
+      next: () => {
+        this.questions = this.questions.filter(question => question.url !== this.questionToDelete.url);
+        this.modalService.dismissAll();
+      },
+      error: err => {
+        console.error(err);
       }
     });
   }

@@ -21,7 +21,7 @@ export class QuestionEditPageComponent implements OnInit {
       this.editForm = this.fb.group({
         name: ['', Validators.required],
         description: ['', Validators.required],
-        language: ['', Validators.required]
+        language: ['Python', Validators.required]
       });
    }
 

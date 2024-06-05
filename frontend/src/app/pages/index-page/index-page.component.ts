@@ -20,6 +20,7 @@ export class IndexPageComponent implements OnInit {
   courseToDelete: any;
   editForm: FormGroup;
   selectedCourse: any;
+  
   constructor(private authService: AuthService, private apiService: ApiService, private router: Router, 
     private modalService: NgbModal, private fb: FormBuilder) {
       this.editForm = this.fb.group({
