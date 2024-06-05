@@ -12,6 +12,12 @@ class Question(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, default='')
 
+    language = models.TextField(
+        max_length=2,
+        choices=Language.choices,
+        default=Language.PYTHON
+    )
+
     time_limit_seconds = models.FloatField(default=30)
     memory_limit = models.FloatField(default=200)
     cpu_limit = models.FloatField(default=0.25)

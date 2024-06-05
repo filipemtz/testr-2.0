@@ -14,9 +14,18 @@
           <div>
             <label for="description" class="name-form">Description:</label>
             <input id="description" type="text" class="form-control name-bar" formControlName="description">
-            <div *ngIf="editForm.get('description')?.invalid && (editForm.get('description')?.dirty || editForm.get('description')?.touched)" class="text-danger">
-              Nome da questão é obrigatório.
-            </div>
+          </div>
+
+          <div>
+            <label for="language" class="name-form">Language:</label>
+            <select class="form-control" id="language" name="language" [(ngModel)]="question.language" required>
+                <option value="" disabled>Select Language</option>
+                <option value="Python">Python</option>
+                <option value="C">C/C++</option>
+              </select>
+              <div *ngIf="question.controls.language?.touched && question.controls.language?.invalid" class="text-danger">
+                Please select a gender.
+              </div>
           </div>
 
         </form>
