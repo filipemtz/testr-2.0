@@ -53,4 +53,24 @@ export class QuestionEditPageComponent implements OnInit {
       }
     });
   }
+
+  confirmSave(): void {
+    if (this.editForm.valid) {
+      const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
+      console.log(updatedQuestion.url)
+      this.apiService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
+        next: () => {
+          this.resetForm();
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.selectedQuestion = null;
+    this.editForm.reset();
+  }
 }

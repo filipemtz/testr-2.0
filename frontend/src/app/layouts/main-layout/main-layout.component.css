@@ -29,6 +29,7 @@
     font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     width: 100%;
     position: absolute;
+    margin-top: auto;
     bottom: 0; 
     left: 0; 
     z-index: 10;
