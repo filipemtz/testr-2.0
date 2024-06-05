@@ -3,6 +3,7 @@ export interface Question {
 	url: string;
 	name: string;
 	description: string;
+	language: string;
 	created_at: string;
 	submission_deadline: string;
 	memory_limit: number;

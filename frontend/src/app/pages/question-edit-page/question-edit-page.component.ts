@@ -25,7 +25,7 @@ export class QuestionEditPageComponent implements OnInit {
       this.editForm = this.fb.group({
         name: ['', Validators.required],
         description: ['', Validators.required],
-        language: ['Python', Validators.required],
+        language: ['', Validators.required],
         time_limit_seconds: ['', Validators.required],
         memory_limit: ['', Validators.required],
         cpu_limit: ['', Validators.required],
@@ -41,6 +41,7 @@ export class QuestionEditPageComponent implements OnInit {
           this.apiService.getSection(id).subscribe( {next: response => {
             this.question = response;
             this.editForm.patchValue(response);
+            console.log(this.question.time_limit_seconds)
           },
           error: err => {
             console.log(err);
