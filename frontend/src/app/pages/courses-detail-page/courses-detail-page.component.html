@@ -13,7 +13,7 @@
                 <div *ngFor="let question of questions">
                     <div *ngIf="question.section == section.url">
                         <div class="questions">
-                            {{ idx }}. {{ question.name }}
+                            <a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }}</a>
                             {{ inc_idx() }}
                         </div>
                     </div>
