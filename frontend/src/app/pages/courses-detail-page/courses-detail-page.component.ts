@@ -19,6 +19,7 @@ export class CoursesDetailPageComponent implements OnInit {
   course: Course = {} as Course;
   sections: Section[] = [];
   questions: Question[] = [];
+  
   idx: number = 1;
   cont: number = 0;
 

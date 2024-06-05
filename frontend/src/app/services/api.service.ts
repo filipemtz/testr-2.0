@@ -51,6 +51,16 @@ export class ApiService {
       catchError(this.handleError));
   }
 
+  getSection(id: number): Observable<any> {
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/questions/${id}/`, { headers,  withCredentials: true }).pipe(
+      catchError(this.handleError));
+    }
+
   editCourse(link: string, data: any){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

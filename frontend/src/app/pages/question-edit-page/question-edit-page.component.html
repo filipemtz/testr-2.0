@@ -1,2 +1,38 @@
 <div class="question-title">Question Editor</div>
-<p>question-page works!</p>
+
+<main>
+    <div>
+        <form [formGroup]="editForm">
+          <div>
+            <label for="name" class="name-form">Name:</label>
+            <input id="name" type="text" class="form-control name-bar" formControlName="name">
+            <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
+              Nome da questão é obrigatório.
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="name-form">Description:</label>
+            <input id="description" type="text" class="form-control name-bar" formControlName="description">
+            <div *ngIf="editForm.get('description')?.invalid && (editForm.get('description')?.dirty || editForm.get('description')?.touched)" class="text-danger">
+              Nome da questão é obrigatório.
+            </div>
+          </div>
+
+        </form>
+      </div>
+</main>
+
+<ng-template #edit>
+	<div>
+	  <form [formGroup]="editForm">
+		<div class="mb-3">
+		  <label for="name">Name</label>
+		  <input id="name" type="text" class="form-control" formControlName="name">
+		  <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
+			Nome do curso é obrigatório.
+		  </div>
+		</div>
+	  </form>
+	</div>
+</ng-template>
