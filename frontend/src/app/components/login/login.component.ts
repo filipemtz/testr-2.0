@@ -18,9 +18,8 @@ import { AdminService } from '../../services/admin.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm: FormGroup;
-  loginValid: boolean = true;
-  errors: any[] = [];
+  loginForm: FormGroup; 
+  errors: any[] = []; // Array para armazenar erros de login
   user = {
     username: '',
     email: '',
@@ -29,11 +28,12 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private httpClient: HttpClient, private adminService: AdminService) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      username: ['', [Validators.required]], 
+      password: ['', [Validators.required]] 
     });
   }
 
+  // Método para submeter o formulário de login
   onLogin() {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
@@ -47,11 +47,11 @@ export class LoginComponent {
           if (err.error) {
             for (let key in err.error) {
               if (err.error.hasOwnProperty(key)) {
-                this.errors.push(err.error[key]);
+                this.errors.push(err.error[key]); // Adiciona erros ao array de erros
               }
             }
           } else {
-            this.errors.push('An unknown error occurred.');
+            this.errors.push('An unknown error occurred.'); // Adiciona mensagem de erro desconhecido
           }
         }
       });
@@ -59,12 +59,13 @@ export class LoginComponent {
     }
   }
 
+  // Método para obter nomes dos grupos do usuário
   getGroupNames() {
     const groups = this.user.groups;
     for(let group of groups) {
       this.adminService.getGroup(group).subscribe({
         next: response => {
-          this.user.groups.push(response.name);
+          this.user.groups.push(response.name); // Adiciona nome do grupo ao array de grupos
           this.redirectUser();
         },
         error: (err: HttpErrorResponse) => {
@@ -73,17 +74,18 @@ export class LoginComponent {
           if (err.error) {
             for (let key in err.error) {
               if (err.error.hasOwnProperty(key)) {
-                this.errors.push(err.error[key]);
+                this.errors.push(err.error[key]); // Adiciona erros ao array de erros
               }
             }
           } else {
-            this.errors.push('An unknown error occurred.');
+            this.errors.push('An unknown error occurred.'); // Adiciona mensagem de erro desconhecido
           }
         }
       });
     }
   }
 
+  // Método para redirecionar usuário baseado no grupo
   redirectUser() {
     const groups = this.user.groups;
     if (groups.includes('Admin')) {
@@ -93,8 +95,7 @@ export class LoginComponent {
     } else if (groups.includes('Student')) {
       this.router.navigate(['/student']);
     } else {
-      this.router.navigate(['']);
-      this.errors.push('No valid group found for the user.');
+      this.errors.push('No valid group found for the user.'); // Adiciona mensagem de grupo inválido
     }
   }
 }

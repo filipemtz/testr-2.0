@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-main-layout',
   standalone: true,
@@ -16,15 +17,14 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
-export class MainLayoutComponent implements OnInit{
-  isLogged = false;
+export class MainLayoutComponent implements OnInit {
+  isLogged = false; // Flag para verificar se o usuário está logado
   user = {
     username: '',
     email: '',
-  }
+  };
 
-
-
+  // Configuração dos itens da barra lateral
   sidebarItems = [
     {
       id: 'multi',
@@ -66,48 +66,32 @@ export class MainLayoutComponent implements OnInit{
 
   constructor(private authService: AuthService) {}
 
+  // Método de ciclo de vida que é chamado após a inicialização do componente
   ngOnInit(): void {
-    this.getProfile();
+    this.getProfile(); // Busca os dados do perfil do usuário ao inicializar o componente
   }
 
-  toggleSidebar() {
-    const sidebar = document.querySelector("#sidebar");
-    sidebar?.classList.toggle("expand");
-  }
-
-  toggleDropdown(event: MouseEvent) {
-    const target = event.currentTarget as HTMLElement;
-    const parent = target.parentElement;
-    const dropdown = parent?.querySelector('.sidebar-dropdown');
-
-    if (dropdown?.classList.contains('show')) {
-      parent?.classList.remove('expand');
-    } else {
-      parent?.classList.add('expand');
-    }
-  }
-
-  getProfile(){
-    // Lógica para buscar perfil de usuário
+  // Método que utiliza o AuthService para buscar o perfil do usuário
+  getProfile() {
     this.authService.profile().subscribe({
       next: response => {
-        this.isLogged = true;
-        this.user = response;
+        this.isLogged = true; // Define o usuário como logado
+        this.user = response; // Atualiza os dados do usuário
       },
       error: err => {
-        console.error(err);
+        console.error(err); 
       }
     });
   }
 
-  logout(){
+  // Método que utiliza o AuthService para realizar o logout do usuário
+  logout() {
     this.authService.logout().subscribe({
       next: response => {
-        console.log(response);
-        this.isLogged = false;
+        this.isLogged = false; 
       },
       error: err => {
-        console.error(err);
+        console.error(err); 
       }
     });
   }

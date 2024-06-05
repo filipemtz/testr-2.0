@@ -20,6 +20,12 @@
     text-decoration: none;
     font-size: 15pt;
   }
+
+  .course-link::hoover {
+    color: red;
+    text-decoration: none;
+    font-size: 15pt;
+  }
   
   .no-course-message {
     font-size: 18px;

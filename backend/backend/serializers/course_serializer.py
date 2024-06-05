@@ -6,3 +6,4 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Course
         fields = ['url', 'id', 'name', 'visible', 'teachers']
+        

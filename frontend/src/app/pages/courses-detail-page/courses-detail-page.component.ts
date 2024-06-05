@@ -19,6 +19,7 @@ export class CoursesDetailPageComponent implements OnInit {
   sections: Section[] = [];
   questions: Question[] = [];
   idx: number = 1;
+  cont: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +29,7 @@ export class CoursesDetailPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated().subscribe( {next: resp => {
+    this.authService.profile().subscribe( {next: resp => {
         // Pegar um curso baseado no id atual da pagina
         this.route.params.subscribe(params => {
           const id = params['id'];
@@ -39,7 +40,6 @@ export class CoursesDetailPageComponent implements OnInit {
             console.log(err);
           }});
         });
-
         // Pegar as sessões de um curso
         this.apiService.getSections().subscribe( {next: response => {
           console.log(response);  
@@ -64,11 +64,19 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
-  reset_id(){
+  reset_idx(){
     this.idx = 1;
   }
 
-  inc_id(){
+  inc_idx(){
     this.idx += 1;
+  }
+
+  reset_cont(){
+    this.cont = 0;
+  }
+
+  inc_cont(){
+    this.cont += 1;
   }
 }

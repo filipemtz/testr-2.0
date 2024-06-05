@@ -4,12 +4,7 @@
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <!-- Título do formulário -->
       <h2>Login</h2>
-
-      <!-- Exibir mensagem de erro se o login não for válido -->
-      <mat-error *ngIf="!loginValid">
-        Houve um problema ao logar. Por favor, tente novamente.
-      </mat-error>
-
+      
       <!-- Campo de e-mail -->
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>

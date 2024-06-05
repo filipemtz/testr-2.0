@@ -51,6 +51,15 @@ export class ApiService {
       catchError(this.handleError));
   }
 
+  editCourse(link: string, data: any){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.put<any>(link, data, {headers, withCredentials: true});
+  }
+
   getQuestions(): Observable<any> {
     const token = this.getCookie('token');
     const headers = new HttpHeaders({
@@ -71,6 +80,17 @@ export class ApiService {
   // Método PUT genérico para atualizar dados
   put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
     return this.http.put<T>(`${this.apiUrl}/${endpoint}`, data, { headers: headers, withCredentials: true }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteCourse(url: string){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${this.getCookie('token')}`
+    })
+
+    return this.http.delete(url, {headers, withCredentials: true}).pipe(
       catchError(this.handleError)
     );
   }

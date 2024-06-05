@@ -2,10 +2,6 @@
   <mat-card-content>
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <h2>Registrar</h2>
-      <!-- Se houver erro de registro, exibir mensagem -->
-      <mat-error *ngIf="!registerValid">
-        Houve um problema ao registrar. Por favor, tente novamente.
-      </mat-error>
 
       <!-- Campo de nome de usuário -->
       <mat-form-field appearance="outline">

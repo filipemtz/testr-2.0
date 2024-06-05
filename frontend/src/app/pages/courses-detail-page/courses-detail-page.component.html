@@ -10,15 +10,15 @@
                 <div class="section-item">
                     {{ section.name }}
                 </div>
-                {{ reset_id() }}
                 <div *ngFor="let question of questions">
                     <div *ngIf="question.section == section.url">
                         <div class="questions">
                             {{ idx }}. {{ question.name }}
-                            {{ inc_id() }}
+                            {{ inc_idx() }}
                         </div>
                     </div>
                 </div>
+                {{ reset_idx() }}
             </div>
         </div>
     </div>
