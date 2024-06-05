@@ -4,4 +4,4 @@ export interface Section {
     name: string;
     created_at: string;
     course: string;
-  }
+}

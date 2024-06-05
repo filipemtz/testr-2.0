@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-courses-detail-page',
   standalone: true,
-  imports: [ CommonModule, RouterModule],
+  imports: [ CommonModule, RouterModule, MatIconModule],
   templateUrl: './courses-detail-page.component.html',
   styleUrls: ['./courses-detail-page.component.css']
 })
@@ -48,7 +49,7 @@ export class CoursesDetailPageComponent implements OnInit {
         });
         // Pegar as sessões de um curso
         this.apiService.getSections().subscribe( {next: response => {
-          console.log(response);  
+          console.log(response);
           this.sections = response.results;
         }, 
         error: err => {

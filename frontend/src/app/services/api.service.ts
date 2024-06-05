@@ -51,7 +51,7 @@ export class ApiService {
       catchError(this.handleError));
   }
 
-  getSection(id: number): Observable<any> {
+  getQuestion(id: number): Observable<any> {
     const token = this.getCookie('token');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

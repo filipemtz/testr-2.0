@@ -1,30 +1,31 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
-  imports: [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
 export class QuestionEditPageComponent implements OnInit {
-  question: any;
   editForm: FormGroup;
   selectedQuestion: any;
 
   constructor(private authService: AuthService, 
     private apiService: ApiService, 
     private router: Router,
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
+    private location: Location,
     private fb: FormBuilder) {
       this.editForm = this.fb.group({
         name: ['', Validators.required],
-        description: ['', Validators.required],
+        description: [''],
         language: ['', Validators.required],
         time_limit_seconds: ['', Validators.required],
         memory_limit: ['', Validators.required],
@@ -38,10 +39,9 @@ export class QuestionEditPageComponent implements OnInit {
       next: response => {
         this.route.params.subscribe(params => {
           const id = params['id'];
-          this.apiService.getSection(id).subscribe( {next: response => {
-            this.question = response;
+          this.apiService.getQuestion(id).subscribe( {next: response => {
+            this.selectedQuestion = response;
             this.editForm.patchValue(response);
-            console.log(this.question.time_limit_seconds)
           },
           error: err => {
             console.log(err);
@@ -67,6 +67,13 @@ export class QuestionEditPageComponent implements OnInit {
         }
       });
     }
+    else{
+      console.log("invalid form");
+    }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   resetForm(): void {

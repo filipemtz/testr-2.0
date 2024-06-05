@@ -4,4 +4,4 @@ export interface Course {
     name: string;
     created_at: string;
     visible: boolean;
-  }
+}

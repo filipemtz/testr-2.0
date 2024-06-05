@@ -3,8 +3,8 @@
 </div>
 
 <main>
-
-    <div class="back-link"><a [routerLink]="['/']">Back</a></div> 
+    <div class="back-link"><a [routerLink]="['/']">Back</a></div>
+    <button class="course-link btn"><mat-icon>add</mat-icon>New Section</button>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections">
             <div *ngIf="section.course == course.url" >

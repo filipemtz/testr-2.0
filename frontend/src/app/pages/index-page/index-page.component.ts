@@ -19,12 +19,16 @@ export class IndexPageComponent implements OnInit {
   courses: Course[] = [];
   courseToDelete: any;
   editForm: FormGroup;
+  addForm: FormGroup;
   selectedCourse: any;
   
   constructor(private authService: AuthService, private apiService: ApiService, private router: Router, 
     private modalService: NgbModal, private fb: FormBuilder) {
       this.editForm = this.fb.group({
         name: ['', Validators.required]      
+      });
+      this.addForm = this.fb.group({
+        name: ['', Validators.required] 
       });
    }
 
@@ -49,10 +53,19 @@ export class IndexPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
+  openAddModal(course: any, content: TemplateRef<any>) {
+    this.courseToDelete = course;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
   openEditModal(course: any, content: TemplateRef<any>) {
     this.selectedCourse = course;
     this.editForm.patchValue(course);
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  confirmAdd(): void {
+
   }
 
   confirmSave(): void {
