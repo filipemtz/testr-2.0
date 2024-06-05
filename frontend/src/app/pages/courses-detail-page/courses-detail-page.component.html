@@ -14,6 +14,7 @@
                     <div *ngIf="question.section == section.url">
                         <div class="questions">
                             <a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }}</a>
+                            <button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
                             {{ inc_idx() }}
                         </div>
                     </div>

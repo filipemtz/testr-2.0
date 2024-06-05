@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-question-detail-page',
@@ -9,4 +11,15 @@ import { Component } from '@angular/core';
 })
 export class QuestionDetailPageComponent {
 
+  constructor(private authService: AuthService, private router: Router, ){}
+
+  ngOnInit(): void {
+    this.authService.profile().subscribe({
+      next: response => {
+      },
+      error: err => {
+        this.router.navigate(['/accounts/login']);
+      }
+    });
+  }
 }

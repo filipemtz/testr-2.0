@@ -3,7 +3,9 @@
     font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     font-weight: bold;
+    margin-bottom: 3%;
 }
+
 .questions {
   max-width: 40%;
   margin: auto auto;

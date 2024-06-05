@@ -35,7 +35,7 @@
         <!--Logout/User-->
         <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="isLogged">
           <li class="nav-item mx-1 my-1">
-            <a class="text-white" routerLink="/accounts/profile">Hi, {{ user.username }}</a>
+            <a class="text-white" routerLink="/accounts/profile">{{ user.username }}</a>
           </li>
           <li class="nav-item mx-1 my-1">
             <a class="btn btn-primary"  (click)="logout()">Logout</a>
