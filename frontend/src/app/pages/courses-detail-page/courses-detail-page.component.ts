@@ -66,39 +66,51 @@ export class CoursesDetailPageComponent implements OnInit {
   ngOnInit(): void {
     this.authService.profile().subscribe( {next: () => {
         // Pegar um curso baseado no id atual da pagina
-        this.route.params.subscribe(params => {
-          const id = params['id'];
-          this.apiService.getCourse(id).subscribe( {next: response => {
-            this.course = response;
-            this.cdr.detectChanges();
-          },
-          error: err => {
-            console.log(err);
-          }});
-        });
-
-        // Pegar as sessões de um curso
-        this.apiService.getSections().subscribe( {next: response => {
-          this.sections = response.results;
-          this.cdr.detectChanges();
-        }, 
-        error: err => {
-          console.log(err);
-        }});
-
-        // Pegar as questoes de uma sessão
-        this.apiService.getQuestions().subscribe( {next: response => {
-          this.questions = response.results;
-        },
-        error: err => {
-          console.log(err);
-        }});
+        this.loadSections();
+        this.loadCourse();
+        this.loadQuestions();
       },
-      
+
       error: err => {
         this.router.navigate(['/accounts/login']);
       }
     });
+  }
+
+  //Carrega todas as seções
+  loadSections() {
+    this.apiService.getSections().subscribe( {next: response => {
+      this.sections = response.results;
+      this.cdr.detectChanges();
+    }, 
+    error: err => {
+      console.log(err);
+    }});
+  }
+
+  // Carrega o curso da página atual
+  loadCourse(){
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      this.apiService.getCourse(id).subscribe( {next: response => {
+        this.course = response;
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.log(err);
+      }});
+    });
+  }
+
+  //Carrega todas as questões
+  loadQuestions() {
+    // Pegar as questoes de uma sessão
+    this.apiService.getQuestions().subscribe( {next: response => {
+      this.questions = response.results;
+    },
+    error: err => {
+      console.log(err);
+    }});
   }
 
   openDeleteQuestionModal(question: any, content: TemplateRef<any>) {
@@ -131,6 +143,7 @@ export class CoursesDetailPageComponent implements OnInit {
           this.addForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
+          this.cdr.detectChanges();
         },
         error: err => {
           console.error(err);
@@ -154,12 +167,24 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
+  /*confirmDelete(): void {
+    this.apiService.delete(this.courseToDelete.url).subscribe({
+      next: () => {
+        this.courses = this.courses.filter(course => course.url !== this.courseToDelete.url);
+        this.modalService.dismissAll();
+      },
+      error: err => {
+        console.error(err);
+      }
+    });
+  }*/
+
   confirmDeleteSection(): void {
-    console.log(this.sectionToDelete.url)
     this.apiService.delete(this.sectionToDelete.url).subscribe({
       next: () => {
         this.sections = this.sections.filter(section => section.url !== this.sectionToDelete.url);
         this.modalService.dismissAll();
+        this.cdr.detectChanges();
       },
       error: err => {
         console.error(err);

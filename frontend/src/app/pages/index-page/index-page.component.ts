@@ -39,8 +39,11 @@ export class IndexPageComponent implements OnInit {
     visible: boolean;
 }*/
   
-  constructor(private authService: AuthService, private apiService: ApiService, private router: Router, 
-    private modalService: NgbModal, private fb: FormBuilder) {
+  constructor(private authService: AuthService, 
+    private apiService: ApiService, 
+    private router: Router, 
+    private modalService: NgbModal, 
+    private fb: FormBuilder) {
       this.editForm = this.fb.group({
         name: ['', Validators.required]      
       });
@@ -124,7 +127,6 @@ export class IndexPageComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    console.log(this.courseToDelete.url)
     this.apiService.delete(this.courseToDelete.url).subscribe({
       next: () => {
         this.courses = this.courses.filter(course => course.url !== this.courseToDelete.url);
