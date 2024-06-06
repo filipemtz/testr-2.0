@@ -75,8 +75,7 @@ export class IndexPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  openAddModal(course: any, content: TemplateRef<any>) {
-    this.courseToDelete = course;
+  openAddModal(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -94,9 +93,10 @@ export class IndexPageComponent implements OnInit {
 
       this.apiService.post('courses/', newCourse).subscribe({
         next: course => {
-          this.resetForm();
+          this.addForm.reset();
           this.baseCourse.teachers = [];
           this.courses.push(course);
+          this.modalService.dismissAll();
         },
         error: err => {
           console.error(err);
@@ -113,7 +113,7 @@ export class IndexPageComponent implements OnInit {
 
       this.apiService.edit(this.selectedCourse.url, updatedCourse).subscribe({
         next: () => {
-          this.addForm.reset();
+          this.resetForm();
           this.courses = this.courses.map(course => course.url === updatedCourse.url ? updatedCourse : course);
         },
         error: err => {

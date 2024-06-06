@@ -4,7 +4,6 @@
 
 <main>
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <button class="new-question btn" (click)="openAddSectionModal(addSectionModal)"><mat-icon>add</mat-icon> New Section</button>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections">
             <div *ngIf="section.course == course.url" >
@@ -36,27 +35,6 @@
 
 <ng-template #noSections>
     <p class="no-sections-message">No sections are available.</p>
-</ng-template>
-
-<ng-template #addSectionModal let-modal>
-	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<form [formGroup]="addForm">
-		  <div class="mb-3">
-			<label for="name">Name</label>
-			<input id="name" type="text" class="form-control" formControlName="name">
-			<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-			  Nome do curso é obrigatório.
-			</div>
-		  </div>
-		</form>
-	  </div>
-	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	</div>
 </ng-template>
 
 <ng-template #deleteSectionModal let-modal>
