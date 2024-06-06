@@ -12,6 +12,14 @@
   margin: auto auto;
   font-size: 15px;
 }
+
+.new-section {
+  color: blue;
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15pt;
+  max-width: 50%;
+  margin-left: 24%;
+}
   
 .section-item {
   font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

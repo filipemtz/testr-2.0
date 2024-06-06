@@ -4,4 +4,4 @@ from ..models.section import Section
 class SectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Section
-        fields = ['url', 'id', 'course', 'name', 'created_at']
+        fields = ['url', 'id', 'course', 'name']

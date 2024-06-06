@@ -4,7 +4,7 @@
 
 <main>
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <button class="new-question btn" (click)="openAddSectionModal(addSectionModal)"><mat-icon>add</mat-icon> New Section</button>
+    <button class="new-section btn" (click)="openAddSectionModal(course, addSectionModal)"><mat-icon>add</mat-icon> New Section</button>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections">
             <div *ngIf="section.course == course.url" >
@@ -56,6 +56,7 @@
 	  </div>
 	<div class="modal-footer">
 	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
+	  <button type="button" class="btn btn-danger" (click)="confirmAddSection()">Criar</button>
 	</div>
 </ng-template>
 

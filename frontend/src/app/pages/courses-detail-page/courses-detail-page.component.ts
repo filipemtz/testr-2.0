@@ -34,6 +34,12 @@ export class CoursesDetailPageComponent implements OnInit {
   sectionToDelete: any;
   selectedSection: any;
 
+  baseSection: Section = {
+    name: "",
+    course: ""
+  };
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -81,7 +87,6 @@ export class CoursesDetailPageComponent implements OnInit {
 
         // Pegar as questoes de uma sessão
         this.apiService.getQuestions().subscribe( {next: response => {
-          console.log(response);  
           this.questions = response.results;
         },
         error: err => {
@@ -104,7 +109,8 @@ export class CoursesDetailPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  openAddSectionModal(content: TemplateRef<any>) {
+  openAddSectionModal(course: any, content: TemplateRef<any>) {
+    this.baseSection.course = course.url;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -112,6 +118,25 @@ export class CoursesDetailPageComponent implements OnInit {
     this.selectedSection = section;
     this.editForm.patchValue(section);
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  confirmAddSection(): void {
+    if(this.addForm.valid){
+      const newSection = {...this.baseSection, ...this.addForm.value}
+
+      this.apiService.post('sections/', newSection).subscribe({
+        next: section => {
+          this.addForm.reset();
+          this.sections.push(section);
+          this.modalService.dismissAll();
+        },
+        error: err => {
+          console.error(err);
+        }});
+    }
+    else{
+      console.log("invalid form");
+    }
   }
 
   confirmDelete(): void {
