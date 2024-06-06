@@ -58,7 +58,7 @@ export class QuestionEditPageComponent implements OnInit {
     if (this.editForm.valid) {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
       console.log(updatedQuestion.url)
-      this.apiService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
+      this.apiService.edit(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();
         },

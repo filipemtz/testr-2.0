@@ -16,11 +16,28 @@ import {MatIconModule} from '@angular/material/icon';
   styleUrl: './index-page.component.css'  
 })
 export class IndexPageComponent implements OnInit {
-  courses: Course[] = [];
-  courseToDelete: any;
   editForm: FormGroup;
   addForm: FormGroup;
+
+  courses: any[] = [];
+  courseToDelete: any;
   selectedCourse: any;
+  user: any;
+  teachers: any[] = [];
+
+  baseCourse: Course = {
+    name: "",
+    visible: true,
+    teachers: []
+  };
+
+  /*export interface Course {
+    id: number;
+    url: string;
+    name: string;
+    created_at: string;
+    visible: boolean;
+}*/
   
   constructor(private authService: AuthService, private apiService: ApiService, private router: Router, 
     private modalService: NgbModal, private fb: FormBuilder) {
@@ -28,24 +45,29 @@ export class IndexPageComponent implements OnInit {
         name: ['', Validators.required]      
       });
       this.addForm = this.fb.group({
-        name: ['', Validators.required] 
+        name: ['', Validators.required]
       });
    }
 
   ngOnInit(): void {
     this.authService.profile().subscribe({
       next: response => {
-        this.apiService.getCourses().subscribe( {next: response => {
-          this.courses = response.results;
-        },
-        error: err => {
-          console.log(err);
-        }});
+        this.user  = response;
+        this.loadCourses();
       },
       error: err => {
         this.router.navigate(['/accounts/login']);
       }
     });
+  }
+
+  loadCourses() {
+    this.apiService.getCourses().subscribe( {next: response => {
+      this.courses = response.results;
+    },
+    error: err => {
+      console.log(err);
+    }});
   }
 
   openDeleteModal(course: any, content: TemplateRef<any>) {
@@ -65,16 +87,33 @@ export class IndexPageComponent implements OnInit {
   }
 
   confirmAdd(): void {
+    if(this.addForm.valid){
 
+      this.baseCourse.teachers.push(this.user.url);
+      const newCourse = {...this.baseCourse, ...this.addForm.value}
+
+      this.apiService.post('courses/', newCourse).subscribe({
+        next: course => {
+          this.resetForm();
+          this.baseCourse.teachers = [];
+          this.courses.push(course);
+        },
+        error: err => {
+          console.error(err);
+        }});
+    }
+    else{
+      console.log("invalid form");
+    }
   }
 
   confirmSave(): void {
     if (this.editForm.valid) {
       const updatedCourse = { ...this.selectedCourse, ...this.editForm.value };
 
-      this.apiService.editCourse(this.selectedCourse.url, updatedCourse).subscribe({
+      this.apiService.edit(this.selectedCourse.url, updatedCourse).subscribe({
         next: () => {
-          this.resetForm();
+          this.addForm.reset();
           this.courses = this.courses.map(course => course.url === updatedCourse.url ? updatedCourse : course);
         },
         error: err => {
@@ -86,7 +125,7 @@ export class IndexPageComponent implements OnInit {
 
   confirmDelete(): void {
     console.log(this.courseToDelete.url)
-    this.apiService.deleteCourse(this.courseToDelete.url).subscribe({
+    this.apiService.delete(this.courseToDelete.url).subscribe({
       next: () => {
         this.courses = this.courses.filter(course => course.url !== this.courseToDelete.url);
         this.modalService.dismissAll();

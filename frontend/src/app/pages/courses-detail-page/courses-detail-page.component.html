@@ -4,7 +4,6 @@
 
 <main>
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <button class="course-link btn"><mat-icon>add</mat-icon>New Section</button>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections">
             <div *ngIf="section.course == course.url" >
@@ -12,7 +11,7 @@
                     {{ section.name }} 
                 </div>
                 <div *ngFor="let question of questions">
-                    <div *ngIf="question.section == section.url">
+                    <div *ngIf="question.section == section.url;">
                         <div class="questions">
                             <a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }} </a>
                             <button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
@@ -21,9 +20,14 @@
                         </div>
                     </div>
                 </div>
-                {{ reset_idx() }}
+                {{ inc_cont() }}
             </div>
+            {{ reset_idx() }}
         </div>
+        <div *ngIf="cont > 0; else noSections">
+
+        </div>
+        {{ reset_cont() }}
     </div>
 </main>
 

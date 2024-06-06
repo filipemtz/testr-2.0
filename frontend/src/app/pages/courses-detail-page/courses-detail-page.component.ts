@@ -36,7 +36,7 @@ export class CoursesDetailPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.profile().subscribe( {next: resp => {
+    this.authService.profile().subscribe( {next: () => {
         // Pegar um curso baseado no id atual da pagina
         this.route.params.subscribe(params => {
           const id = params['id'];
@@ -55,6 +55,12 @@ export class CoursesDetailPageComponent implements OnInit {
         error: err => {
           console.log(err);
         }});
+
+        this.apiService.getUrl("http://127.0.0.1:8000/courses/1/sections/").subscribe({ 
+          next: resp => {
+            console.log(resp);
+          }
+        })
 
         // Pegar as questoes de uma sessão
         this.apiService.getQuestions().subscribe( {next: response => {
@@ -78,7 +84,7 @@ export class CoursesDetailPageComponent implements OnInit {
 
   confirmDelete(): void {
     console.log(this.questionToDelete.url)
-    this.apiService.deleteQuestion(this.questionToDelete.url).subscribe({
+    this.apiService.delete(this.questionToDelete.url).subscribe({
       next: () => {
         this.questions = this.questions.filter(question => question.url !== this.questionToDelete.url);
         this.modalService.dismissAll();

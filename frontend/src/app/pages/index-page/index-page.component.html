@@ -1,6 +1,6 @@
 <div class="course-title">Courses</div>
 <main>
-	<button class="course-link btn" (click)="openAddModal(courses, addModal)"><mat-icon>add</mat-icon>New Question</button>
+	<button class="new-question btn" (click)="openAddModal(courses, addModal)"><mat-icon>add</mat-icon> New Question</button>
 	<div *ngIf="courses.length > 0; else noCourses" class="courses">
 		<div *ngFor="let course of courses" class="course-item">
 			<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>
@@ -52,7 +52,7 @@
 
 <ng-template #addModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Adicionar curso</h4>
+	  <h4 class="modal-title" id="modal-basic-title">Criar novo curso</h4>
 	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
@@ -68,6 +68,6 @@
 	  </div>
 	<div class="modal-footer">
 	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmAdd()">Crar</button>
+	  <button type="button" class="btn btn-danger" (click)="confirmAdd()">Criar</button>
 	</div>
 </ng-template>

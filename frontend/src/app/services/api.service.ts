@@ -19,6 +19,17 @@ export class ApiService {
     );
   }
 
+  getUrl(url: string): Observable<any> {
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+
+    return this.http.get<any>(`${url}`, {headers}).pipe(
+      catchError(this.handleError));
+  }
+
   // Exemplo teste de get especifico com token
   getCourses(): Observable<any> {
     const token = this.getCookie('token');
@@ -51,6 +62,16 @@ export class ApiService {
       catchError(this.handleError));
   }
 
+  getSectionsByCourse(id: number): Observable<any> {
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/courses/${id}/sections/`, { headers}).pipe(
+      catchError(this.handleError));
+  }
+
   getQuestion(id: number): Observable<any> {
     const token = this.getCookie('token');
     const headers = new HttpHeaders({
@@ -80,18 +101,22 @@ export class ApiService {
       catchError(this.handleError));
   }
 
-  editQuestion(link: string, data: any){
+  edit(url: string, data: any){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Token ${this.getCookie('token')}`
     })
 
-    return this.http.put<any>(link, data, {headers, withCredentials: true});
+    return this.http.put<any>(url, data, {headers, withCredentials: true});
   }
 
-  // Método POST genérico para enviar dados
-  post<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.post<T>(`${this.apiUrl}/${endpoint}`, data, { headers: headers, withCredentials: true }).pipe(
+  post(endpoint: string, data: any){
+    const token = this.getCookie('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`
+    });
+    return this.http.post<any>(`${this.apiUrl}/${endpoint}`, data, { headers, withCredentials: true }).pipe(
       catchError(this.handleError)
     );
   }
@@ -103,31 +128,13 @@ export class ApiService {
     );
   }
 
-  deleteCourse(url: string){
+  delete(url: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Token ${this.getCookie('token')}`
     })
 
     return this.http.delete(url, {headers, withCredentials: true}).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  deleteQuestion(url: string){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${this.getCookie('token')}`
-    })
-
-    return this.http.delete(url, {headers, withCredentials: true}).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  // Método DELETE genérico para excluir dados
-  delete<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.delete<T>(`${this.apiUrl}/${endpoint}`, { headers: headers, withCredentials: true }).pipe(
       catchError(this.handleError)
     );
   }

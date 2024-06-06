@@ -13,8 +13,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [permissions.IsAuthenticated]
-    #authentication_classes = [SessionAuthentication]
-
+    
     @action(detail=True, methods=['get'])
     def sections(self, request, pk=None):
         course = self.get_object()

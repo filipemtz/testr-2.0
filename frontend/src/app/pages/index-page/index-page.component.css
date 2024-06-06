@@ -20,17 +20,21 @@
     color: blue;
     text-decoration: none;
     font-size: 15pt;
+    max-width: 100%;
+    margin: auto auto;
   }
 
-  .course-link::hoover {
-    color: red;
-    text-decoration: none;
+  .new-question {
+    color: blue;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 15pt;
+    max-width: 50%;
+    margin-left: 24%;
+    margin-bottom: 1%;
   }
-  
+
   .no-course-message {
-    font-size: 18px;
-    color: black;
+    font-size: 1.2rem;
     font-weight: bold;
     margin: 0 auto;
   }
