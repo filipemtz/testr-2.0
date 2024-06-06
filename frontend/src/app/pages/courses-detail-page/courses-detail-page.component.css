@@ -8,9 +8,10 @@
 }
 
 .questions {
-  max-width: 40%;
+  max-width: 45%;
   margin: auto auto;
   font-size: 15px;
+  padding: 0.25%;
 }
 
 .new-section {
@@ -27,8 +28,7 @@
   font-weight: bold;
   margin: 0 auto;
   max-width: 50%;
-  margin-bottom: 1%;
-  margin-top: 1%;
+  margin-bottom: 0.5%;
 }
 
 .back-link {

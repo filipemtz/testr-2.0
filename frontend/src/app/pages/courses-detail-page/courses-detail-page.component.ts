@@ -76,6 +76,7 @@ export class CoursesDetailPageComponent implements OnInit {
             console.log(err);
           }});
         });
+
         // Pegar as sessões de um curso
         this.apiService.getSections().subscribe( {next: response => {
           this.sections = response.results;
@@ -93,6 +94,7 @@ export class CoursesDetailPageComponent implements OnInit {
           console.log(err);
         }});
       },
+      
       error: err => {
         this.router.navigate(['/accounts/login']);
       }

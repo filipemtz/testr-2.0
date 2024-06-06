@@ -49,7 +49,8 @@ export class ApiService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`
     });
-    return this.http.get<any>(`${this.apiUrl}/courses/${id}/`, { headers, withCredentials: true });
+    return this.http.get<any>(`${this.apiUrl}/courses/${id}/`, { headers }).pipe(
+      catchError(this.handleError));
   }
 
   getSections(): Observable<any> {
