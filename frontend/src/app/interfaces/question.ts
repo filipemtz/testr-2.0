@@ -1,10 +1,9 @@
 export interface Question {
-	id: number;
-	url: string;
+	id?: number;
+	url?: string;
 	name: string;
 	description: string;
 	language: string;
-	created_at: string;
 	submission_deadline: string;
 	memory_limit: number;
 	time_limit_seconds: number;

@@ -34,7 +34,7 @@
           </div>
 
           <div>
-            <label for="memory_limit" class="base-form">Time limit seconds:</label>
+            <label for="memory_limit" class="base-form">Memory limit:</label>
             <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
             <div *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)" class="text-danger">
                 Limite de memória obrigatório.

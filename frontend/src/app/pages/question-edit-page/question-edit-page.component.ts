@@ -61,6 +61,7 @@ export class QuestionEditPageComponent implements OnInit {
       this.apiService.edit(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();
+          this.goBack();
         },
         error: err => {
           console.error(err);

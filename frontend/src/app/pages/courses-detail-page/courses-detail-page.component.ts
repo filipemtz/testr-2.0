@@ -23,10 +23,14 @@ export class CoursesDetailPageComponent implements OnInit {
   questions: Question[] = [];
 
   addForm: FormGroup;
+  addQuestionForm: FormGroup;
   editForm: FormGroup;
   
   idx: number = 1;
   cont: number = 0;
+  cont_question: number = 0;
+  currentSectionId: number = -1;
+  id: number = -1;
 
   questionToDelete: any;
   selectedQuestion: any;
@@ -38,6 +42,17 @@ export class CoursesDetailPageComponent implements OnInit {
     name: "",
     course: ""
   };
+
+  /*baseQuestion: Question = {
+    section: '',
+    name: '',
+    description: '',
+    language: 'PT',
+    memory_limit: 0,
+    time_limit_seconds: 0,
+    cpu_limit: 0,
+    submission_deadline: new Date()
+  }*/
 
 
   constructor(
@@ -53,6 +68,9 @@ export class CoursesDetailPageComponent implements OnInit {
       name: ['', Validators.required]      
     });
     this.addForm = this.fb.group({
+      name: ['', Validators.required]
+    });
+    this.addQuestionForm = this.fb.group({
       name: ['', Validators.required]
     });
   }
@@ -128,6 +146,11 @@ export class CoursesDetailPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
+  openAddQuestionModal(course: any, content: TemplateRef<any>) {
+    this.baseSection.course = course.url;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
   openEditSectionModal(section: any, content: TemplateRef<any>) {
     this.selectedSection = section;
     this.editForm.patchValue(section);
@@ -167,18 +190,6 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
-  /*confirmDelete(): void {
-    this.apiService.delete(this.courseToDelete.url).subscribe({
-      next: () => {
-        this.courses = this.courses.filter(course => course.url !== this.courseToDelete.url);
-        this.modalService.dismissAll();
-      },
-      error: err => {
-        console.error(err);
-      }
-    });
-  }*/
-
   confirmDeleteSection(): void {
     this.apiService.delete(this.sectionToDelete.url).subscribe({
       next: () => {
@@ -210,6 +221,11 @@ export class CoursesDetailPageComponent implements OnInit {
     }
   }
 
+  hasQuestionWithSectionUrl(id: number): boolean {
+    const sectionUrl = this.sections[id].url;
+    return this.questions.some(question => question.section === sectionUrl);
+  }
+
   reset_idx(){
     this.idx = 1;
   }
@@ -224,5 +240,13 @@ export class CoursesDetailPageComponent implements OnInit {
 
   inc_cont(){
     this.cont += 1;
+  }
+
+  reset_cont_q(){
+    this.cont_question = 0;
+  }
+
+  inc_cont_q(){
+    this.cont_question +=1;
   }
 }

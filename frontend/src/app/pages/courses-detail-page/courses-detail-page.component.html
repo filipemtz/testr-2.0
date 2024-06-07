@@ -2,30 +2,38 @@
     {{ course.name }}
 </div>
 
-<main>
+<main class="base">
     <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <button class="new-section btn" (click)="openAddSectionModal(course, addSectionModal)"><mat-icon>add</mat-icon> New Section</button>
+    <button class="new-section btn" (click)="openAddSectionModal(course, addSectionModal)">
+		<mat-icon>add</mat-icon> 
+		New Section
+	</button>
     <div *ngIf="sections.length > 0; else noSections">
-        <div *ngFor="let section of sections">
+        <div *ngFor="let section of sections; index as section_idx">
             <div *ngIf="section.course == course.url" >
                 <div class="section-item">
                     {{ section.name }}
                     <button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="openEditSectionModal(section, editSectionModal)"></button>
 			        <button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
                 </div>
-                <div *ngFor="let question of questions">
-                    <div *ngIf="question.section == section.url;">
-                        <div class="questions">
-                            <a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }} </a>
-                            <button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
-                            <button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
-                            {{ inc_idx() }}
-                        </div>
-                    </div>
+				<button class="new-question btn" (click)="openAddQuestionModal(section, addQuestionModal)">
+					<mat-icon>add</mat-icon> 
+					New Question
+				</button>
+				
+				<div *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions">
+                	<div *ngFor="let question of questions; index as question_idx">
+						<div *ngIf="question.section == section.url">
+							<div class="questions">
+								<a [routerLink]="['/question', question.id]" class="question-link">{{ question_idx + 1 }}. {{ question.name }} </a>
+								<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
+								<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
+							</div>
+						</div>
+					</div>
                 </div>
                 {{ inc_cont() }}
             </div>
-            {{ reset_idx() }}
         </div>
         <div *ngIf="cont > 0; else noSections">
 
@@ -38,6 +46,10 @@
     <p class="no-sections-message">No sections are available.</p>
 </ng-template>
 
+<ng-template #noQuestions>
+    <p class="no-questions-message">No questions are available.</p>
+</ng-template>
+
 <ng-template #addSectionModal let-modal>
 	<div class="modal-header">
 	  <h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
@@ -45,6 +57,28 @@
 	</div>
 	<div class="modal-body">
 		<form [formGroup]="addForm">
+		  <div class="mb-3">
+			<label for="name">Name</label>
+			<input id="name" type="text" class="form-control" formControlName="name">
+			<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
+			  Nome do curso é obrigatório.
+			</div>
+		  </div>
+		</form>
+	  </div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
+	  <button type="button" class="btn btn-danger" (click)="confirmAddSection()">Criar</button>
+	</div>
+</ng-template>
+
+<ng-template #addQuestionModal let-modal>
+	<div class="modal-header">
+	  <h4 class="modal-title" id="modal-basic-title">Criar nova questão</h4>
+	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="addQuestionForm">
 		  <div class="mb-3">
 			<label for="name">Name</label>
 			<input id="name" type="text" class="form-control" formControlName="name">
