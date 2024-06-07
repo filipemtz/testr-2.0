@@ -28,9 +28,6 @@ export class CoursesDetailPageComponent implements OnInit {
   
   idx: number = 1;
   cont: number = 0;
-  cont_question: number = 0;
-  currentSectionId: number = -1;
-  id: number = -1;
 
   questionToDelete: any;
   selectedQuestion: any;
@@ -267,13 +264,5 @@ export class CoursesDetailPageComponent implements OnInit {
 
   inc_cont(){
     this.cont += 1;
-  }
-
-  reset_cont_q(){
-    this.cont_question = 0;
-  }
-
-  inc_cont_q(){
-    this.cont_question +=1;
   }
 }

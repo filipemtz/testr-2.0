@@ -25,15 +25,17 @@
                 	<div *ngFor="let question of questions; index as question_idx">
 						<div *ngIf="question.section == section.url">
 							<div class="questions">
-								<a [routerLink]="['/question', question.id]" class="question-link">{{ question_idx + 1 }}. {{ question.name }} </a>
+								<a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }} </a>
 								<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
 								<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
+								{{ inc_idx() }}
 							</div>
 						</div>
 					</div>
                 </div>
                 {{ inc_cont() }}
             </div>
+			{{ reset_idx() }}
         </div>
         <div *ngIf="cont > 0; else noSections">
 
