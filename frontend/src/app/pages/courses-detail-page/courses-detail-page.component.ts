@@ -22,7 +22,7 @@ export class CoursesDetailPageComponent implements OnInit {
   sections: Section[] = [];
   questions: Question[] = [];
 
-  addForm: FormGroup;
+  addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
   editForm: FormGroup;
   
@@ -43,7 +43,7 @@ export class CoursesDetailPageComponent implements OnInit {
     course: ""
   };
 
-  /*baseQuestion: Question = {
+  baseQuestion: Question = {
     section: '',
     name: '',
     description: '',
@@ -51,8 +51,8 @@ export class CoursesDetailPageComponent implements OnInit {
     memory_limit: 0,
     time_limit_seconds: 0,
     cpu_limit: 0,
-    submission_deadline: new Date()
-  }*/
+    submission_deadline: new Date().toISOString()
+  }
 
 
   constructor(
@@ -64,22 +64,25 @@ export class CoursesDetailPageComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
   ) {
+
     this.editForm = this.fb.group({
       name: ['', Validators.required]      
     });
-    this.addForm = this.fb.group({
+    
+    this.addSectionForm = this.fb.group({
       name: ['', Validators.required]
     });
+
     this.addQuestionForm = this.fb.group({
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      description: [''],
+      language: ['', Validators.required],
+      time_limit_seconds: ['', Validators.required],
+      memory_limit: ['', Validators.required],
+      cpu_limit: ['', Validators.required],
+      submission_deadline: ['', Validators.required]
     });
   }
-
-  /*{
-    "course": null,
-    "name": "",
-    "created_at": null
-}*/
 
   ngOnInit(): void {
     this.authService.profile().subscribe( {next: () => {
@@ -146,8 +149,8 @@ export class CoursesDetailPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  openAddQuestionModal(course: any, content: TemplateRef<any>) {
-    this.baseSection.course = course.url;
+  openAddQuestionModal(section: any, content: TemplateRef<any>) {
+    this.baseQuestion.section = section.url;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -157,13 +160,37 @@ export class CoursesDetailPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
+  confirmAddQuestion(): void {
+    if (this.addQuestionForm.valid) {
+      const newQuestion = {...this.baseQuestion, ...this.addQuestionForm.value};
+
+      console.log(this.baseQuestion);
+      console.log(newQuestion);
+      console.log(this.addQuestionForm.value);
+
+      this.apiService.post('questions/', newQuestion).subscribe({
+        next: question => {
+          this.addQuestionForm.reset();
+          this.questions.push(question);
+          this.modalService.dismissAll();
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    } else {
+      console.log("invalid form");
+    }
+  }
+
   confirmAddSection(): void {
-    if(this.addForm.valid){
-      const newSection = {...this.baseSection, ...this.addForm.value}
+    if(this.addSectionForm.valid){
+      const newSection = {...this.baseSection, ...this.addSectionForm.value}
 
       this.apiService.post('sections/', newSection).subscribe({
         next: section => {
-          this.addForm.reset();
+          this.addSectionForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
           this.cdr.detectChanges();
