@@ -17,6 +17,17 @@ backend:
   allowed_hosts: ["0.0.0.0", "127.0.0.1", "localhost"]
   # Whether or not the backend should run in debug mode
   debug: false
+  # CORS Settings
+  cors_allowed_origins: ["http://localhost:4200", "http://127.0.0.1:4200", "http://127.0.0.1"]
+
+  cors_allow_credentials: true
+
+  csrf_cookie_secure: true
+  session_cookie_secure: true
+  csrf_cookie_samesite: "None"
+  session_cookie_samesite: "None"
+
+  csrf_trusted_origins: ["http://localhost:4200", "http://127.0.0.1:4200", "http://127.0.0.1"]
 
 judge:
   # directory in which submissions will be stored.
