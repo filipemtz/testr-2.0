@@ -42,7 +42,6 @@ export class ApiService {
       catchError(this.handleError));
   }
 
-  // método para buscar uma pergunta específica com autenticação por sessão
   getCourse(id: number): Observable<any> {
     const token = this.getCookie('token');
     const headers = new HttpHeaders({

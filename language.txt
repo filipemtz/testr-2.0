@@ -1,8 +1,0 @@
-<div>
-        <label for="language">language</label>
-        <select class="form-control" id="language" formControlName="language">
-          <option value="" disabled>Select language</option>
-          <option value="PT">Python</option>
-          <option value="CC">C/C++</option>
-        </select>
-      </div>

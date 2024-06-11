@@ -87,6 +87,7 @@ export class CoursesDetailPageComponent implements OnInit {
         this.loadSections();
         this.loadCourse();
         this.loadQuestions();
+        
       },
 
       error: err => {
@@ -99,7 +100,6 @@ export class CoursesDetailPageComponent implements OnInit {
   loadSections() {
     this.apiService.getSections().subscribe( {next: response => {
       this.sections = response.results;
-      this.cdr.detectChanges();
     }, 
     error: err => {
       console.log(err);
@@ -190,7 +190,7 @@ export class CoursesDetailPageComponent implements OnInit {
           this.addSectionForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
-          this.cdr.detectChanges();
+          
         },
         error: err => {
           console.error(err);
