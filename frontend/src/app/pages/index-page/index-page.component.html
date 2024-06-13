@@ -1,6 +1,6 @@
 <div class="course-title">Courses</div>
 <main>
-	<button class="new-question btn" (click)="openAddModal(addModal)"><mat-icon>add</mat-icon> New Question</button>
+	<button class="new-question btn" (click)="openAddModal(addModal)"><mat-icon>add</mat-icon> New Course</button>
 	<div *ngIf="courses.length > 0; else noCourses" class="courses">
 		<div *ngFor="let course of courses" class="course-item">
 			<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>

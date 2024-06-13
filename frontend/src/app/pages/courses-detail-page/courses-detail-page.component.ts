@@ -19,8 +19,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 })
 export class CoursesDetailPageComponent implements OnInit {
   course: Course = {} as Course;
-  sections: Section[] = [];
-  questions: Question[] = [];
+  sections: any[] = [];
+  questions = [] as Question[];
 
   addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
@@ -37,7 +37,9 @@ export class CoursesDetailPageComponent implements OnInit {
 
   baseSection: Section = {
     name: "",
-    course: ""
+    course: "",
+    url: "",
+    id: 0
   };
 
   baseQuestion: Question = {
@@ -87,7 +89,6 @@ export class CoursesDetailPageComponent implements OnInit {
         this.loadSections();
         this.loadCourse();
         this.loadQuestions();
-        
       },
 
       error: err => {
@@ -99,6 +100,7 @@ export class CoursesDetailPageComponent implements OnInit {
   //Carrega todas as seções
   loadSections() {
     this.apiService.getSections().subscribe( {next: response => {
+      console.log(response.results)
       this.sections = response.results;
     }, 
     error: err => {
@@ -161,16 +163,12 @@ export class CoursesDetailPageComponent implements OnInit {
     if (this.addQuestionForm.valid) {
       const newQuestion = {...this.baseQuestion, ...this.addQuestionForm.value};
 
-      console.log(this.baseQuestion);
-      console.log(newQuestion);
-      console.log(this.addQuestionForm.value);
-
       this.apiService.post('questions/', newQuestion).subscribe({
         next: question => {
           this.addQuestionForm.reset();
           this.questions.push(question);
           this.modalService.dismissAll();
-          this.cdr.detectChanges();
+          
         },
         error: err => {
           console.error(err);
@@ -182,11 +180,13 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   confirmAddSection(): void {
+    
     if(this.addSectionForm.valid){
       const newSection = {...this.baseSection, ...this.addSectionForm.value}
 
       this.apiService.post('sections/', newSection).subscribe({
         next: section => {
+          console.log(section)
           this.addSectionForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
