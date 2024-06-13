@@ -55,7 +55,6 @@ export class LoginComponent {
           }
         }
       });
-      console.log('Form Submitted', this.loginForm.value);
     }
   }
 
