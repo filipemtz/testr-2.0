@@ -152,10 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
-    ]
-
+    'EXCEPTION_HANDLER': 'accounts.exceptions.status_code_handler',
 }
 
 # CORS Settings
@@ -170,3 +167,4 @@ CSRF_COOKIE_SAMESITE = config_data['backend']['csrf_cookie_samesite']
 SESSION_COOKIE_SAMESITE = config_data['backend']['session_cookie_samesite']
 
 CSRF_TRUSTED_ORIGINS = config_data['backend']['csrf_trusted_origins']
+

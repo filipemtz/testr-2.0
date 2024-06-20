@@ -1,21 +1,20 @@
 
 from django.contrib.auth.models import User
-from rest_framework import serializers
-from django.contrib.auth import authenticate
+from rest_framework.serializers import ModelSerializer
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer class for the User model.
-
-    This serializer is used to convert User model instances into JSON
-    representations and vice versa. It specifies the fields that should be
-    included in the serialized output.
-
-    Attributes:
-        model (class): The User model class.
-        fields (list): The fields to be included in the serialized output.
-
-    """
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['id', 'username', 'email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        
+        if password is not None:
+            instance.set_password(password)
+            
+        instance.save()
+        return instance
