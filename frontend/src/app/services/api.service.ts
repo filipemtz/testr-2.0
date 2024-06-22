@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Question } from '../interfaces/question';
 
 @Injectable({
   providedIn: 'root'
@@ -13,141 +14,48 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   // Método GET genérico para buscar dados
-  get<T>(endpoint: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}/${endpoint}`, { headers: headers, withCredentials: true }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  getUrl(url: string): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-
-    return this.http.get<any>(`${url}`, {headers}).pipe(
-      catchError(this.handleError));
+  getUrl(url: string){
+    return this.http.get<any>(`${url}`, {withCredentials: true});
   }
 
   // Exemplo teste de get especifico com token
-  getCourses(): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-
-    return this.http.get<any>(this.apiUrl + '/courses/', {headers, withCredentials: true}).pipe(
-      catchError(this.handleError));
+  getCourses() {
+    return this.http.get<any>(this.apiUrl + '/courses/', {withCredentials: true});
   }
 
-  getCourse(id: number): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/courses/${id}/`, { headers }).pipe(
-      catchError(this.handleError));
+  getCourse(id: number) {
+    return this.http.get<any>(`${this.apiUrl}/courses/${id}/`, { withCredentials: true });
   }
 
-  getSections(): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/sections/`, { headers }).pipe(
-      catchError(this.handleError));
+  getSections() {
+    return this.http.get<any>(`${this.apiUrl}/sections/`, { withCredentials: true });
   }
 
-  getSectionsByCourse(id: number): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/courses/${id}/sections/`, { headers}).pipe(
-      catchError(this.handleError));
+  getSectionsByCourse(id: number) {
+    return this.http.get(`${this.apiUrl}/courses/${id}/sections/`, {withCredentials: true});
   }
 
-  getQuestion(id: number): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/questions/${id}/`, { headers,  withCredentials: true }).pipe(
-      catchError(this.handleError));
-    }
+  getQuestion(id: number) {
+    return this.http.get(`${this.apiUrl}/questions/${id}/`, { withCredentials: true });
+  }
 
   editCourse(link: string, data: any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${this.getCookie('token')}`
-    })
-
-    return this.http.put<any>(link, data, {headers, withCredentials: true});
+    return this.http.put(link, data, { withCredentials: true});
   }
 
-  getQuestions(): Observable<any> {
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/questions/`, { headers,  withCredentials: true }).pipe(
-      catchError(this.handleError));
+  getQuestions():  Observable<{ results: Question[] }>{
+    return this.http.get<{ results: Question[] }>(`${this.apiUrl}/questions/`, { withCredentials: true });
   }
 
   edit(url: string, data: any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${this.getCookie('token')}`
-    })
-
-    return this.http.put<any>(url, data, {headers, withCredentials: true});
+    return this.http.put(url, data, { withCredentials: true});
   }
 
   post(endpoint: string, data: any){
-    const token = this.getCookie('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`
-    });
-    return this.http.post<any>(`${this.apiUrl}/${endpoint}`, data, { headers, withCredentials: true }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  // Método PUT genérico para atualizar dados
-  put<T>(endpoint: string, data: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}/${endpoint}`, data, { headers: headers, withCredentials: true }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post(`${this.apiUrl}/${endpoint}`, data, { withCredentials: true });
   }
 
   delete(url: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${this.getCookie('token')}`
-    })
-
-    return this.http.delete(url, {headers, withCredentials: true}).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  // Manipulação de erros : Todo: Desenvolver um tratamento de erro mais robusto
-  private handleError(error: HttpErrorResponse) {
-    return throwError(error);
-  }
-
-  private getCookie(name: string): string | null {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-    return null;
+    return this.http.delete(url, { withCredentials: true});
   }
 }

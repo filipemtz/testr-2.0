@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content>
     <!-- Formulário de login -->
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <form [formGroup]="form" (ngSubmit)="submit()">
       <!-- Título do formulário -->
       <h2>Login</h2>
       
@@ -11,7 +11,7 @@
         <input matInput formControlName="username" required>
         <mat-icon matSuffix>person</mat-icon> <!-- Ícone de pessoa -->
         <!-- Exibir mensagem de erro se o campo de username for inválido -->
-        <mat-error *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)">
+        <mat-error *ngIf="form.get('username')?.invalid && (form.get('username')?.dirty || form.get('username')?.touched)">
           O username é obrigatório.
         </mat-error>
       </mat-form-field>
@@ -22,23 +22,16 @@
         <input matInput type="password" formControlName="password" required>
         <mat-icon matSuffix>lock</mat-icon> <!-- Ícone de cadeado -->
         <!-- Exibir mensagem de erro se o campo de senha for inválido -->
-        <mat-error *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+        <mat-error *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)">
           A senha é obrigatória.
         </mat-error>
       </mat-form-field>
       
       <!-- Botão de login -->
-      <button id="login-button" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+      <button id="login-button" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
         <mat-icon>login</mat-icon> <!-- Ícone de login -->
         Logar
       </button>
-
-      <!-- Exibir mensagens de erro -->
-      <mat-error *ngIf="errors.length > 0">
-        <ul>
-          <li *ngFor="let error of errors">{{ error }}</li>
-        </ul>
-      </mat-error>
     </form>
   </mat-card-content>
 </mat-card>

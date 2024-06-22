@@ -1,14 +1,20 @@
 <mat-card>
   <mat-card-content>
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <form [formGroup]="form" (submit)="submit()">
       <h2>Registrar</h2>
 
       <!-- Campo de nome de usuário -->
       <mat-form-field appearance="outline">
         <mat-label>Nome de usuário</mat-label>
-        <input matInput type="text" formControlName="username" required>
-        <mat-icon matSuffix>person</mat-icon> <!-- Ícone do usuário -->
-        <mat-error *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)">
+        <input matInput type="text" formControlName="username" required />
+        <mat-icon matSuffix>person</mat-icon>
+        <!-- Ícone do usuário -->
+        <mat-error
+          *ngIf="
+            form.get('username')?.invalid &&
+            (form.get('username')?.dirty || form.get('username')?.touched)
+          "
+        >
           O nome de usuário é obrigatório.
         </mat-error>
       </mat-form-field>
@@ -16,9 +22,15 @@
       <!-- Campo de e-mail -->
       <mat-form-field appearance="outline">
         <mat-label>E-mail</mat-label>
-        <input matInput type="email" formControlName="email" required>
-        <mat-icon matSuffix>email</mat-icon> <!-- Ícone de e-mail -->
-        <mat-error *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
+        <input matInput type="email" formControlName="email" required />
+        <mat-icon matSuffix>email</mat-icon>
+        <!-- Ícone de e-mail -->
+        <mat-error
+          *ngIf="
+            form.get('email')?.invalid &&
+            (form.get('email')?.dirty || form.get('email')?.touched)
+          "
+        >
           Por favor, insira um e-mail válido.
         </mat-error>
       </mat-form-field>
@@ -26,9 +38,15 @@
       <!-- Campo de senha -->
       <mat-form-field appearance="outline">
         <mat-label>Senha</mat-label>
-        <input matInput type="password" formControlName="password" required>
-        <mat-icon matSuffix>lock</mat-icon> <!-- Ícone de cadeado -->
-        <mat-error *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+        <input matInput type="password" formControlName="password" required />
+        <mat-icon matSuffix>lock</mat-icon>
+        <!-- Ícone de cadeado -->
+        <mat-error
+          *ngIf="
+            form.get('password')?.invalid &&
+            (form.get('password')?.dirty || form.get('password')?.touched)
+          "
+        >
           A senha é obrigatória.
         </mat-error>
       </mat-form-field>
@@ -36,30 +54,43 @@
       <!-- Campo de confirmação de senha -->
       <mat-form-field appearance="outline">
         <mat-label>Confirmar senha</mat-label>
-        <input matInput type="password" formControlName="password2" required>
-        <mat-icon matSuffix>lock</mat-icon> <!-- Ícone de cadeado -->
-        <mat-error *ngIf="registerForm.get('password2')?.invalid && (registerForm.get('password2')?.dirty || registerForm.get('password2')?.touched)">
+        <input
+          matInput
+          type="password"
+          formControlName="password_confirm"
+          required
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+        <!-- Ícone de cadeado -->
+        <mat-error
+          *ngIf="
+            form.get('password_confirm')?.invalid &&
+            (form.get('password_confirm')?.dirty ||
+              form.get('password_confirm')?.touched)
+          "
+        >
           Por favor, confirme sua senha.
         </mat-error>
       </mat-form-field>
 
       <!-- Opção para selecionar se é professor ou aluno -->
-      <mat-radio-group formControlName="group">
+      <!-- <mat-radio-group formControlName="group">
         <mat-radio-button value="Professor">Professor</mat-radio-button>
         <mat-radio-button value="Student">Aluno</mat-radio-button>
-      </mat-radio-group>
+      </mat-radio-group> -->
 
       <!-- Botão de registro com ícone -->
-      <button id="register-button" mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
-        <mat-icon>person_add</mat-icon> <!-- Ícone de adicionar usuário -->
+      <button
+        id="register-button"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        <mat-icon>person_add</mat-icon>
+        <!-- Ícone de adicionar usuário -->
         Registrar
       </button>
-      <!-- Exibe erros dentro da variavel errors -->
-      <mat-error *ngIf="errors">
-        <ul>
-          <li *ngFor="let error of errors">{{ error }}</li>
-        </ul>
-      </mat-error>
     </form>
   </mat-card-content>
 </mat-card>
