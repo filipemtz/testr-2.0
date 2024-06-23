@@ -10,7 +10,7 @@
 	</button>
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections; index as section_idx">
-            <div *ngIf="section.course == course.url" >
+            <div *ngIf="section.course == course.id" >
                 <div class="section-item">
                     {{ section.name }}
                     <button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="openEditSectionModal(section, editSectionModal)"></button>
@@ -23,7 +23,7 @@
 				
 				<div *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions">
                 	<div *ngFor="let question of questions; index as question_idx">
-						<div *ngIf="question.section == section.url">
+						<div *ngIf="question.section == section.id">
 							<div class="questions">
 								<a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }} </a>
 								<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>

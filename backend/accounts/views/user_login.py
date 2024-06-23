@@ -29,7 +29,7 @@ class UserLoginAPIView(APIView):
         UserToken.objects.create(
             user_id=user.id, 
             token=refresh_token, 
-            expired_at=datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=30)
+            expired_at=datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
         )
 
         response = Response()

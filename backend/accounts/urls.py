@@ -4,9 +4,9 @@ from rest_framework import routers
 
 from .views import *
 
-# router = routers.DefaultRouter()
+router = routers.DefaultRouter()
 
-# router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet)
 # router.register(r'groups', GroupViewSet)
 
 urlpatterns = [
@@ -15,7 +15,7 @@ urlpatterns = [
     path('register/', UserRegisterAPIView.as_view(), name='register'),
     path('profile/', UserProfileAPIView.as_view(), name='profile'),
     path('refresh/', UserRefreshAPIView.as_view(), name='refresh'),
-    # path('', include(router.urls)),
+    path('', include(router.urls)),
 ]
 
 

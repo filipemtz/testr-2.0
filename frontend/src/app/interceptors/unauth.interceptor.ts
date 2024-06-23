@@ -15,14 +15,13 @@ export const unauthErrorInterceptor: HttpInterceptorFn = (req, next) => {
         error.status === 401) {
           return authService.refresh().pipe(
             switchMap((res: any) => {
-              console.log(res);
               localStorage.setItem('token', res.token);
               return next(req.clone({
                 headers: req.headers.set('Authorization', `Bearer ${res.token}`),
               }));
             }),
             catchError((error) => {
-              console.log('error')
+              console.log('error');
               if (error.status == '403' || error.status === '401') {
                 authService.logout();
               }

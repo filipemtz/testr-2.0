@@ -21,7 +21,7 @@ export class AuthService {
   }
 
   profile(){
-    return this.http.get(`${this.api}/profile/`);
+    return this.http.get(`${this.api}/profile/` ,{withCredentials: true});
   }
 
   refresh(){

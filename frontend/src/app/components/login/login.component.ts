@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   submit(){
-    this.authService.login(this.form.getRawValue()).subscribe({
+     this.authService.login(this.form.getRawValue()).subscribe({
       next: (res : any) => {
         localStorage.setItem('token', res.token);
         AuthService.authEmitter.emit(true);

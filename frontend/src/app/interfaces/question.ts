@@ -8,5 +8,5 @@ export interface Question {
 	memory_limit: number;
 	time_limit_seconds: number;
 	cpu_limit: number;
-	section: string;
+	section: number;
 }

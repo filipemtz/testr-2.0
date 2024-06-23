@@ -1,5 +1,4 @@
-<!--Navbar-->
-<!-- <nav class="navbar navbar-expand-lg sticky-top custom-nav-color" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg sticky-top custom-nav-color" data-bs-theme="dark">
   <div class="container">
 
     <a class="navbar-brand fs-4" href="#">Testr 2.0</a>
@@ -18,7 +17,7 @@
 
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-center flex-grow-1">
-          <li *ngFor="let item of sidebarItems" class="nav-item mx-1">  
+          <li *ngFor="let item of sidebarItems" class="nav-item mx-1 mt-2">  
             <a *ngIf="!item.dropdown"  class="nav-link" [routerLink]="[item.link]">{{ item.label }}</a>
             <div *ngIf="item.dropdown" ngbDropdown>
               <a class="nav-link" ngbDropdownToggle role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.label }}</a>
@@ -31,12 +30,10 @@
           </li>
         </ul>
         
-        
-
         <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="authenticated">
-          <li class="nav-item mx-1 my-1">
+          <!-- <li class="nav-item mx-1 my-1">
             <a class="text-white" routerLink="/accounts/profile">{{ user.username }}</a>
-          </li>
+          </li> -->
           <li class="nav-item mx-1 my-1">
             <a class="btn btn-primary"  (click)="logout()">Logout</a>
           </li>
@@ -54,8 +51,4 @@
       </div>
     </div>
   </div>
-</nav> -->
-<app-nav></app-nav>
-<main class="container mt-3">
-  <router-outlet></router-outlet>
-</main>
+</nav>

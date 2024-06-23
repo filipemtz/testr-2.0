@@ -1,0 +1,29 @@
+@media(max-width: 991px) {
+  .sidebar{
+      background-color: var(--main-bg-color);
+  }
+
+  .dropdown-menu{
+      width: 100%;
+  }
+  
+}
+.custom-nav-color {
+  background-color: var(--main-bg-color);
+}
+
+.dropdown-menu{
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+  border: none;
+
+}
+
+.dropdown-item{
+  font-size: 0.9em;
+}
+
+.dropdown-item:hover{
+  background-color: var(--hover-bg-color);
+}
+

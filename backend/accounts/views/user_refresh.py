@@ -16,7 +16,7 @@ class UserRefreshAPIView(APIView):
             token=refresh_token, 
             expired_at__gt=datetime.datetime.now(tz=timezone.utc)
         ).exists():
-            raise exceptions.AuthenticationFailed('unauthenticated')
+            raise exceptions.AuthenticationFailed('unauthenticated oiasda')
         
         access_token = create_access_token(id)
         return Response({

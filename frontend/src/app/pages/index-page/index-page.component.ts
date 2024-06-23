@@ -1,79 +1,85 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { ApiService } from '../../services/api.service';
+import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-index-page',
   standalone: true,
-  imports: [ CommonModule, MatIconModule, RouterModule, FormsModule, ReactiveFormsModule ],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './index-page.component.html',
-  styleUrl: './index-page.component.css'  
+  styleUrls: ['./index-page.component.css'],
 })
 export class IndexPageComponent implements OnInit {
   editForm: FormGroup;
   addForm: FormGroup;
 
-  courses: any[] = [];
-  courseToDelete: any;
-  selectedCourse: any;
+  courses: Course[] = [];
+  courseToDelete: Course | null = null;
+  selectedCourse: Course | null = null;
   user: any;
-  teachers: any[] = [];
 
   baseCourse: Course = {
-    name: "",
+    name: '',
     visible: true,
-    teachers: []
+    teachers: [],
   };
 
-  /*export interface Course {
-    id: number;
-    url: string;
-    name: string;
-    created_at: string;
-    visible: boolean;
-}*/
-  
-  constructor(private authService: AuthService, 
-    private apiService: ApiService, 
-    private router: Router, 
-    private modalService: NgbModal, 
-    private fb: FormBuilder) {
-      this.editForm = this.fb.group({
-        name: ['', Validators.required]      
-      });
-      this.addForm = this.fb.group({
-        name: ['', Validators.required]
-      });
-   }
+  constructor(
+    private authService: AuthService,
+    private courseService: CourseService,
+    private router: Router,
+    private modalService: NgbModal,
+    private fb: FormBuilder,
+  ) {
+    this.editForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+    this.addForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.authService.profile().subscribe({
-      next: response => {
-        this.user  = response;
+      next: (response) => {
+        this.user = response;
+        console.log(this.user);
         this.loadCourses();
       },
-      error: err => {
-        this.router.navigate(['/accounts/login']);
-      }
     });
   }
 
   loadCourses() {
-    this.apiService.getCourses().subscribe( {next: response => {
-      this.courses = response.results;
-    },
-    error: err => {
-      console.log(err);
-    }});
+    this.courseService.getCourses().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.courses = response.results;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
-  openDeleteModal(course: any, content: TemplateRef<any>) {
+  openDeleteModal(course: Course, content: TemplateRef<any>) {
     this.courseToDelete = course;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
@@ -82,63 +88,67 @@ export class IndexPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  openEditModal(course: any, content: TemplateRef<any>) {
+  openEditModal(course: Course, content: TemplateRef<any>) {
     this.selectedCourse = course;
     this.editForm.patchValue(course);
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   confirmAdd(): void {
-    if(this.addForm.valid){
+    if (this.addForm.valid) {
+      this.baseCourse.teachers.push(this.user.id);
+      const newCourse = { ...this.baseCourse, ...this.addForm.value };
 
-      this.baseCourse.teachers.push(this.user.url);
-      const newCourse = {...this.baseCourse, ...this.addForm.value}
-
-      this.apiService.post('courses/', newCourse).subscribe({
-        next: course => {
+      this.courseService.createCourse(newCourse).subscribe({
+        next: (course) => {
           this.addForm.reset();
           this.baseCourse.teachers = [];
           this.courses.push(course);
           this.modalService.dismissAll();
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
-        }});
-    }
-    else{
-      console.log("invalid form");
+        },
+      });
+    } else {
+      console.log('invalid form');
     }
   }
 
   confirmSave(): void {
-    if (this.editForm.valid) {
+    if (this.editForm.valid && this.selectedCourse && this.selectedCourse.url) {
       const updatedCourse = { ...this.selectedCourse, ...this.editForm.value };
 
-      this.apiService.edit(this.selectedCourse.url, updatedCourse).subscribe({
+      this.courseService.updateCourse(this.selectedCourse!.url, updatedCourse).subscribe({
         next: () => {
           this.resetForm();
-          this.courses = this.courses.map(course => course.url === updatedCourse.url ? updatedCourse : course);
+          this.courses = this.courses.map((course) =>
+            course.url === updatedCourse.url ? updatedCourse : course,
+          );
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
-        }
+        },
       });
     }
   }
 
   confirmDelete(): void {
-    this.apiService.delete(this.courseToDelete.url).subscribe({
-      next: () => {
-        this.courses = this.courses.filter(course => course.url !== this.courseToDelete.url);
-        this.modalService.dismissAll();
-      },
-      error: err => {
-        console.error(err);
-      }
-    });
+    if (this.courseToDelete && this.courseToDelete.url) {
+      this.courseService.deleteCourse(this.courseToDelete.url).subscribe({
+        next: () => {
+          this.courses = this.courses.filter(
+            (course) => course.url !== this.courseToDelete!.url,
+          );
+          this.modalService.dismissAll();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+    }
   }
 
-  // Método para resetar o formulário e limpar o usuário selecionado
   resetForm(): void {
     this.selectedCourse = null;
     this.editForm.reset();
