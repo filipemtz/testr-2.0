@@ -31,5 +31,4 @@ export class CourseService {
     return this.http.delete<void>(url, { withCredentials: true });
   }
 
-
 }

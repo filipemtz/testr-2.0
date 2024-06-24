@@ -9,8 +9,10 @@
 					<div class="btn-group">
 						<button type="button" [routerLink]="['/course', course.id]"
 						class="btn btn-sm btn-outline-primary">View</button>
+
 						<button type="button" class="btn btn-sm btn-outline-secondary"
 						(click)="openEditModal(course, editModal)">Edit</button>
+
 						<button type="button" class="btn btn-sm btn-outline-danger"
 						(click)="openDeleteModal(course, deleteModal)">Delete</button>
 					</div>
@@ -30,6 +32,14 @@
 
 
 <ng-template #noCourses>
+	<div class="col">
+		<div class="card h-100 new-question border-0 "(click)="openAddModal(addModal)">
+			<div class="card-body d-flex align-items-center justify-content-center">
+					<i class="fa-regular fa-plus fa-xl me-1"></i>
+					<div class="">New Course</div>
+			</div>
+		</div>
+	</div>
 	<p class="no-course-message">No courses are available.</p>
 </ng-template>
 

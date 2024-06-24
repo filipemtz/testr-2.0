@@ -1,6 +1,6 @@
 
 .login-layout {
-  background: linear-gradient(45deg, var(--primary-color), var(--main-bg-color)); 
+  background: #224385;
   height: 100vh; /* Define a altura como 100% da altura da tela */
   display: flex;
   align-items: center; /* Centraliza verticalmente */

@@ -36,10 +36,14 @@ export class IndexPageComponent implements OnInit {
   selectedCourse: Course | null = null;
   user: any;
 
+  newCourseName: string = '';
+  addingCourse = false;
+
   baseCourse: Course = {
-    name: '',
+    name: "",
     visible: true,
     teachers: [],
+    isEditing: false
   };
 
   constructor(
@@ -147,6 +151,57 @@ export class IndexPageComponent implements OnInit {
       });
     }
   }
+
+  enableEdit(course: any) {
+    this.selectedCourse = course;
+    course.isEditing = true;
+  }
+
+  confirmEdit(course: any) {
+    const updatedCourse = { ...this.selectedCourse, ...course };
+    this.courseService.updateCourse(updatedCourse.url, updatedCourse).subscribe({
+        next: () => {
+          course.isEditing = false;
+        },
+        error: err => {
+          console.error(err);
+        }
+    });
+  }
+
+  cancelEdit(course: any) {
+    course.isEditing = false;
+    this.loadCourses();
+  }
+
+  enableAdd(){
+    this.addingCourse = true;
+  }
+
+  addCourse() {
+    if(this.newCourseName.trim()) {
+      const newCourse = { ...this.baseCourse, name: this.newCourseName, teachers: [this.user.url] };
+      this.courseService.createCourse(newCourse).subscribe({
+        next: course => {
+          this.courses.push(course);
+          this.newCourseName = '';
+          this.addingCourse = false;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    } 
+    else {
+      console.log('Course name is required.');
+    }
+  }
+
+  cancelAdd() {
+    this.addingCourse = false;
+    this.loadCourses();
+  }
+
 
   resetForm(): void {
     this.selectedCourse = null;
