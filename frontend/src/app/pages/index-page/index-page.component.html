@@ -1,6 +1,6 @@
 <div class="course-title">Courses</div>
 <main>
-	<button class="new-question btn" (click)="openAddModal(addModal)">
+	<button class="new-question btn" (click)="enableAdd()">
 		<mat-icon>add</mat-icon> 
 		New Course
 	</button>
@@ -13,11 +13,17 @@
 			</div>
 
 			<div *ngIf="course.isEditing">
-				<input [(ngModel)]="course.name" class="form-control-md inline-edit"/>
+				<input [(ngModel)]="course.name" class="form-control-sm inline-edit"/>
 				<button class="fa-solid fa-check btn text-success" aria-hidden="true" (click)="confirmEdit(course)"></button>
 				<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="cancelEdit(course)"></button>
 			</div>
 		</div>
+	</div>
+
+	<div *ngIf="addingCourse" class="add-course">
+		<input [(ngModel)]="newCourseName" placeholder="Course Name" class="form-control-sm inline-add"/>
+		<button class="fa-solid fa-check btn text-success" aria-hidden="true" (click)="addCourse()"></button>
+		<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="cancelAdd()"></button>
 	</div>
 </main>
 

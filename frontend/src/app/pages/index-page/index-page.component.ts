@@ -25,7 +25,8 @@ export class IndexPageComponent implements OnInit {
   user: any;
   teachers: any[] = [];
 
-  isEditing = false;
+  newCourseName: string = '';
+  addingCourse = false;
 
   baseCourse: Course = {
     name: "",
@@ -68,13 +69,9 @@ export class IndexPageComponent implements OnInit {
     }});
   }
 
-  openDeleteModal(course: any, content: TemplateRef<any>) {
-    this.courseToDelete = course;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
   openAddModal(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+    this.addingCourse = true;
   }
 
   openEditModal(course: any, content: TemplateRef<any>) {
@@ -83,9 +80,13 @@ export class IndexPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
+  openDeleteModal(course: any, content: TemplateRef<any>) {
+    this.courseToDelete = course;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
   confirmAdd(): void {
     if(this.addForm.valid){
-
       this.baseCourse.teachers.push(this.user.url);
       const newCourse = {...this.baseCourse, ...this.addForm.value}
 
@@ -98,7 +99,8 @@ export class IndexPageComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-        }});
+        }
+      });
     }
     else{
       console.log("invalid form");
@@ -152,6 +154,34 @@ export class IndexPageComponent implements OnInit {
 
   cancelEdit(course: any) {
     course.isEditing = false;
+    this.loadCourses();
+  }
+
+  enableAdd(){
+    this.addingCourse = true;
+  }
+
+  addCourse() {
+    if(this.newCourseName.trim()) {
+      const newCourse = { ...this.baseCourse, name: this.newCourseName, teachers: [this.user.url] };
+      this.apiService.post('courses/', newCourse).subscribe({
+        next: course => {
+          this.courses.push(course);
+          this.newCourseName = '';
+          this.addingCourse = false;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    } 
+    else {
+      console.log('Course name is required.');
+    }
+  }
+
+  cancelAdd() {
+    this.addingCourse = false;
     this.loadCourses();
   }
 
