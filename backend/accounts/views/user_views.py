@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from ..serializers import UserSerializer
 
 from rest_framework import permissions, viewsets
+from accounts.authentication import JWTAuthentication
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -11,6 +12,6 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 	
  

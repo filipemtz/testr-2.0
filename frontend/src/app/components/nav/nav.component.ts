@@ -13,7 +13,9 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class NavComponent implements OnInit {
   authenticated = false;
-  user : any;
+  user : any = {
+    username: '',
+  }
   constructor(private authService: AuthService, private router: Router) {}
 
   sidebarItems = [

@@ -58,10 +58,10 @@ export class AdminPageComponent implements OnInit {
     if (this.editForm.valid) {
       const updatedUser = { ...this.selectedUser, ...this.editForm.value };
 
-      this.adminService.editUser(this.selectedUser.url, updatedUser).subscribe({
+      this.adminService.editUser(this.selectedUser.id, updatedUser).subscribe({
         next: () => {
           this.resetForm();
-          this.users = this.users.map(user => user.url === updatedUser.url ? updatedUser : user);
+          this.users = this.users.map(user => user.id === updatedUser.id ? updatedUser : user);
         },
         error: err => {
           console.error(err);
@@ -72,9 +72,10 @@ export class AdminPageComponent implements OnInit {
 
   // Método para confirmar a deleção do usuário
   confirmDelete(): void {
-    this.adminService.deleteUser(this.userToDelete.url).subscribe({
+    console.log(this.userToDelete);
+    this.adminService.deleteUser(this.userToDelete.id).subscribe({
       next: () => {
-        this.users = this.users.filter(user => user.url !== this.userToDelete.url);
+        this.users = this.users.filter(user => user.id !== this.userToDelete.id);
         this.modalService.dismissAll();
       },
       error: err => {

@@ -1,5 +1,7 @@
+<h1 class="display-2 text-center mb-4">
+	Administração de Usuários
+</h1>
 <div class="admin-page table-responsive">
-  <h1>Página de Administração</h1>
   <table class="table table-striped table-hover">  
     <thead>
       <tr>
@@ -15,8 +17,8 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>
-          <button class="fa-solid fa-pen-to-square btn text-warning" (click)="onEdit(user, content)"></button>
-          <button class="fa-solid fa-trash btn text-danger" (click)="openDeleteModal(user, deleteModal)"></button>
+          <button class="fa-solid fa-pencil btn text-secondaryary" (click)="onEdit(user, content)"></button>
+          <button class="fa-solid fa-close btn text-danger" (click)="openDeleteModal(user, deleteModal)"></button>
         </td>
       </tr>
     </tbody>
@@ -47,8 +49,8 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-    <button type="button" class="btn btn-outline-primary" (click)="onSave()">Salvar</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="onSave()">Salvar</button>
   </div>
 </ng-template>
 
@@ -61,7 +63,7 @@
     Tem certeza que deseja deletar o usuário {{ userToDelete?.username }}?
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
     <button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
   </div>
 </ng-template>
