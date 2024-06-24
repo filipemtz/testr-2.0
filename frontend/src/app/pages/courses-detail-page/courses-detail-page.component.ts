@@ -86,13 +86,9 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.profile().subscribe({
-      next: () => {
-        this.loadSections();
-        this.loadCourse();
-        this.loadQuestions();
-      },
-    });
+    this.loadSections();
+    this.loadCourse();
+    this.loadQuestions();
   }
 
   loadSections() {

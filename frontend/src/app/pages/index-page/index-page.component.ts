@@ -61,7 +61,6 @@ export class IndexPageComponent implements OnInit {
     this.authService.profile().subscribe({
       next: (response) => {
         this.user = response;
-        console.log(this.user);
         this.loadCourses();
       },
     });
