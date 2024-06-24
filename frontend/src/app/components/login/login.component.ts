@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {  HttpErrorResponse } from '@angular/common/http';
 import { AdminService } from '../../services/admin.service';
 
 @Component({
@@ -26,7 +26,11 @@ export class LoginComponent {
     groups: [] as string[]
   };
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private httpClient: HttpClient, private adminService: AdminService) {
+  constructor(private fb: FormBuilder, 
+    private router: Router, 
+    private authService: AuthService, 
+    private location: Location,
+    private adminService: AdminService) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]], 
       password: ['', [Validators.required]] 
@@ -40,6 +44,7 @@ export class LoginComponent {
         next: response => {
           this.user = response.user;
           this.getGroupNames();
+          this.location.back();
         },
         error: (err: HttpErrorResponse) => {
           console.log(err.error);
