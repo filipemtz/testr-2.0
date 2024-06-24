@@ -4,4 +4,5 @@ export interface Course {
     name: string;
     visible: boolean;
     teachers: string[];
+    isEditing: boolean;
 }

@@ -1,11 +1,22 @@
 <div class="course-title">Courses</div>
 <main>
-	<button class="new-question btn" (click)="openAddModal(addModal)"><mat-icon>add</mat-icon> New Course</button>
+	<button class="new-question btn" (click)="openAddModal(addModal)">
+		<mat-icon>add</mat-icon> 
+		New Course
+	</button>
 	<div *ngIf="courses.length > 0; else noCourses" class="courses">
-		<div *ngFor="let course of courses" class="course-item">
-			<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>
-			<button class="fa-solid fa-pencil btn text-danger" aria-hidden="true" (click)="openEditModal(course, editModal)"></button>
-			<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteModal(course, deleteModal)"></button>
+		<div *ngFor="let course of courses">
+			<div *ngIf="!course.isEditing" class="course">
+				<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>
+				<button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="enableEdit(course)"></button>
+				<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteModal(course, deleteModal)"></button>
+			</div>
+
+			<div *ngIf="course.isEditing">
+				<input [(ngModel)]="course.name" class="form-control-md inline-edit"/>
+				<button class="fa-solid fa-check btn text-success" aria-hidden="true" (click)="confirmEdit(course)"></button>
+				<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="cancelEdit(course)"></button>
+			</div>
 		</div>
 	</div>
 </main>

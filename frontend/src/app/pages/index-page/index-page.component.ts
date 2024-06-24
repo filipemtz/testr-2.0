@@ -25,19 +25,14 @@ export class IndexPageComponent implements OnInit {
   user: any;
   teachers: any[] = [];
 
+  isEditing = false;
+
   baseCourse: Course = {
     name: "",
     visible: true,
-    teachers: []
+    teachers: [],
+    isEditing: false
   };
-
-  /*export interface Course {
-    id: number;
-    url: string;
-    name: string;
-    created_at: string;
-    visible: boolean;
-}*/
   
   constructor(private authService: AuthService, 
     private apiService: ApiService, 
@@ -58,7 +53,7 @@ export class IndexPageComponent implements OnInit {
         this.user  = response;
         this.loadCourses();
       },
-      error: err => {
+      error: () => {
         this.router.navigate(['/accounts/login']);
       }
     });
@@ -136,6 +131,28 @@ export class IndexPageComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  enableEdit(course: any) {
+    this.selectedCourse = course;
+    course.isEditing = true;
+  }
+
+  confirmEdit(course: any) {
+    const updatedCourse = { ...this.selectedCourse, ...course };
+    this.apiService.edit(this.selectedCourse.url, updatedCourse).subscribe({
+        next: () => {
+          course.isEditing = false;
+        },
+        error: err => {
+          console.error(err);
+        }
+    });
+  }
+
+  cancelEdit(course: any) {
+    course.isEditing = false;
+    this.loadCourses();
   }
 
   // Método para resetar o formulário e limpar o usuário selecionado
