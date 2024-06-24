@@ -7,17 +7,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     Serializer class for user registration.
 
     This serializer is used to validate and serialize user registration data.
-    It includes fields for username, email, password, password2, and group.
+    It includes fields for username, email, password, and group.
     """
-
-    email = serializers.EmailField()
-    password = serializers.CharField(min_length=6, write_only=True)
-    password2 = serializers.CharField(min_length=6, write_only=True)
     group = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2', 'group']
+        fields = ['username', 'email', 'password', 'group']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -29,16 +25,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         This method is called when a valid user registration data is provided.
         It creates a new user using the validated data and returns the user instance.
         """
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
+        password = validated_data.pop('password', None)
+        group = validated_data.pop('group', None)
+        instance = self.Meta.model(**validated_data)
         
-        group_name = validated_data['group']
-        group = Group.objects.get(name=group_name)
-        user.groups.add(group)
-        return user
+        if password is not None:
+            instance.set_password(password)
+            
+        if group is not None:
+            group_instance = Group.objects.get(name=group)
+            if group_instance is None:
+                raise serializers.ValidationError({'group': f'{group} Grupo inválido.'})
+            
+        instance.save()
+        instance.groups.add(group_instance)
+        return instance
     
     def validate(self, data):
         """
@@ -51,18 +52,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         username = data['username'].strip()
         email = data['email'].strip()
         password = data['password'].strip()
-        password2 = data['password2'].strip()
         group = data['group'].strip()
         
-        if not password or len(password) < 8:
-            raise serializers.ValidationError({'password': 'A senha deve conter no mínimo 8 caracteres.'})
-        
-        if not password2:
-            raise serializers.ValidationError({'password2': 'Este campo é obrigatório.'})
-        
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError({'password': 'Senhas não conferem.'})
-        
+        if not password or len(password) < 6:
+            raise serializers.ValidationError({'password': 'A senha deve conter no mínimo 6 caracteres.'})
+
         if User.objects.filter(username=username).exists():
             raise serializers.ValidationError({'username': 'Este usuário já existe.'})
         
@@ -70,7 +64,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'email': 'Este email já está em uso.'})
         
         if not Group.objects.filter(name=group).exists():
-            
             raise serializers.ValidationError({'group': f'{group} Grupo inválido.'})
         
         return data

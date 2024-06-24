@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -35,11 +37,54 @@ export class LoginComponent implements OnInit {
   submit(){
      this.authService.login(this.form.getRawValue()).subscribe({
       next: (res : any) => {
+        localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
-        // AuthService.authEmitter.emit(true);
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
+        
+        const groups = res.user.groups;
+        this.getUserGroups(groups).subscribe(groups_ => {
+          this.redirectTo(groups_);
+        });
+
+        
+      
       }
     });
+  }
+
+  getUserGroups(groups: any[]) {
+    if (!groups.length) {
+      return of([]); // Return an observable of an empty array if no groups
+    }
+  
+    const groupObservables = groups.map(groupId => 
+      this.authService.getGroup(groupId).pipe(
+        catchError(error => {
+          console.error('Error fetching group', groupId, error);
+          return of(null); // In case of error, return null or a default value
+        })
+      )
+    );
+  
+    return forkJoin(groupObservables).pipe(
+      map(results => 
+        results
+          .filter(group => group !== null) // Filter out any null results due to errors
+          .map(group => group.name) // Assuming the group object has a 'name' property
+      )
+    );
+  }
+
+  redirectTo(groups: any[]) {
+    if (groups.includes('Admin')) {
+      this.router.navigate(['/admin']);
+    } else if (groups.includes('Student')) {
+      this.router.navigate(['/student']);
+    } else if (groups.includes('Professor')) {
+      this.router.navigate(['/professor']);
+    } else{
+      this.router.navigate(['/']);
+    }
   }
 }

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from rest_framework import permissions, viewsets
 from ..serializers.group_serializer import GroupSerializer
-
+from accounts.authentication import JWTAuthentication
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -9,4 +9,5 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+

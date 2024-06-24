@@ -31,4 +31,12 @@ export class AuthService {
   logout(){
     return this.http.post(`${this.api}/logout/`, {}, {withCredentials: true});
   }
+
+  getGroups(){
+    return this.http.get<any>(`${this.api}/groups/`, {withCredentials: true});
+  }
+
+  getGroup(id: number){
+    return this.http.get<any>(`${this.api}/groups/${id}/`, {withCredentials: true});
+  }
 }

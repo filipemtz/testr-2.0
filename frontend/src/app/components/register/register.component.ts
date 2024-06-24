@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'app-register',
@@ -33,7 +34,8 @@ export class RegisterComponent implements OnInit {
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      password_confirm: ['', Validators.required]
+      password_confirm: ['', Validators.required],
+      group: ['Student', Validators.required]
     });    
   }
 
@@ -41,7 +43,7 @@ export class RegisterComponent implements OnInit {
     console.log(this.form.getRawValue());
     this.authService.register(this.form.getRawValue()).subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['accounts/login']);
       }
     });
   }

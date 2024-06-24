@@ -9,6 +9,7 @@ import datetime
 
 from ..authentication import create_access_token, create_refresh_token
 from ..models import UserToken
+from ..serializers import UserSerializer
     
 class UserLoginAPIView(APIView):
     def post(self, request):
@@ -32,9 +33,11 @@ class UserLoginAPIView(APIView):
             expired_at=datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
         )
 
+
         response = Response()
         response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
         response.data = {
-            'token': access_token
+            'token': access_token,
+            'user': UserSerializer(user).data
         }
         return response
