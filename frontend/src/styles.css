@@ -38,13 +38,13 @@ h1 {
   display: flex;
 }
 
-.main {
+/* .main {
   min-height: 100vh;
   width: 100%;
   overflow: hidden;
   transition: all 0.35s ease-in-out;
   background-color: #fafbfe;
-}
+} */
 
 /* 
 .button-primary {
@@ -92,5 +92,7 @@ h1 {
   font-size: 1rem;
 } */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+  font-size: 1.0rem;
+}
+

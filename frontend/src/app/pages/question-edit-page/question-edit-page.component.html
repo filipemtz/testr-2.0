@@ -1,65 +1,77 @@
-<div class="question-title">Question Editor</div>
+<h1 class="display-2 text-center mb-4">Question Editor</h1>
+<a class="icon-link icon-link-hover mb-2" style="cursor:pointer" (click)="goBack()">
+  <i class="bi fa-solid fa-arrow-left"></i>
+  Back
+</a>
+<br>
 
-<main>
+<div>
+  <form [formGroup]="editForm">
     <div>
-        <form [formGroup]="editForm">
-          <div>
-            <label for="name" class="base-form">Name:</label>
-            <input id="name" type="text" class="form-control base-bar" formControlName="name">
-            <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-              Nome da questão é obrigatório.
-            </div>
-          </div>
-
-          <div>
-            <label for="description" class="base-form">Description:</label>
-            <input id="description" type="text" class="form-control base-bar" formControlName="description">
-          </div>
-
-          <div>
-            <label for="language" class="base-form">Language:</label>
-            <select class="form-control" id="language" formControlName="language">
-              <option value="" disabled>Select language</option>
-              <option value="PT">Python</option>
-              <option value="CC">C/C++</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="time_limit_seconds" class="base-form">Time limit seconds:</label>
-            <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
-            <div *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)" class="text-danger">
-                Tempo limite de execução em segundos obrigatório.
-              </div>
-          </div>
-
-          <div>
-            <label for="memory_limit" class="base-form">Memory limit:</label>
-            <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
-            <div *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)" class="text-danger">
-                Limite de memória obrigatório.
-              </div>
-          </div>
-
-          <div>
-            <label for="cpu_limit" class="base-form">CPU limit:</label>
-            <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
-            <div *ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)" class="text-danger">
-                Limite da CPU obrigatório.
-              </div>
-          </div>
-
-          <div>
-            <label for="submission_deadline" class="base-form">Submission deadline:</label>
-            <input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
-            <div *ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)" class="text-danger">
-                Data limite obrigatória.
-              </div>
-          </div>
-          <div>
-              <button type="button" class="btn btn-primary col-2" (click)="confirmSave()">Salvar</button>
-              <button type="button" class="btn btn-outline-dark col-2 go-back-btn" (click)="goBack()">Cancelar</button>
-          </div>
-        </form>
+      <label for="name" class="base-form">Name:</label>
+      <input id="name" type="text" class="form-control base-bar" formControlName="name">
+      <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+        class="text-danger">
+        Nome da questão é obrigatório.
       </div>
-</main>
+    </div>
+
+    <div>
+      <label for="description" class="base-form">Description:</label>
+      <input id="description" type="text" class="form-control base-bar" formControlName="description">
+    </div>
+
+    <div>
+      <label for="language" class="base-form">Language:</label>
+      <select class="form-control" id="language" formControlName="language">
+        <option value="" disabled>Select language</option>
+        <option value="PT">Python</option>
+        <option value="CC">C/C++</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="time_limit_seconds" class="base-form">Time limit seconds:</label>
+      <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
+      <div
+        *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
+        class="text-danger">
+        Tempo limite de execução em segundos obrigatório.
+      </div>
+    </div>
+
+    <div>
+      <label for="memory_limit" class="base-form">Memory limit:</label>
+      <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
+      <div
+        *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
+        class="text-danger">
+        Limite de memória obrigatório.
+      </div>
+    </div>
+
+    <div>
+      <label for="cpu_limit" class="base-form">CPU limit:</label>
+      <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
+      <div
+        *ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)"
+        class="text-danger">
+        Limite da CPU obrigatório.
+      </div>
+    </div>
+
+    <div>
+      <label for="submission_deadline" class="base-form">Submission deadline:</label>
+      <input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
+      <div
+        *ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)"
+        class="text-danger">
+        Data limite obrigatória.
+      </div>
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary col-2" (click)="confirmSave()">Salvar</button>
+      <button type="button" class="btn btn-outline-secondary col-2 go-back-btn" (click)="goBack()">Cancelar</button>
+    </div>
+  </form>
+</div>

@@ -1,14 +1,33 @@
-<div class="course-title">Courses</div>
-<main>
-	<button class="new-question btn" (click)="openAddModal(addModal)"><mat-icon>add</mat-icon> New Course</button>
-	<div *ngIf="courses.length > 0; else noCourses" class="courses">
-		<div *ngFor="let course of courses" class="course-item">
-			<a [routerLink]="['/course', course.id]" class="course-link">{{ course.name }}</a>
-			<button class="fa-solid fa-pencil btn text-danger" aria-hidden="true" (click)="openEditModal(course, editModal)"></button>
-			<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteModal(course, deleteModal)"></button>
+<h1 class="display-2 text-center mb-4">Courses</h1>
+
+<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+	<div *ngFor="let course of courses" class="col">
+		<div class="card shadow-sm">
+			<div class="card-body">
+				<h5 class="card-title mb-5" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="btn-group">
+						<button type="button" [routerLink]="['/course', course.id]"
+						class="btn btn-sm btn-outline-primary">View</button>
+						<button type="button" class="btn btn-sm btn-outline-secondary"
+						(click)="openEditModal(course, editModal)">Edit</button>
+						<button type="button" class="btn btn-sm btn-outline-danger"
+						(click)="openDeleteModal(course, deleteModal)">Delete</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-</main>
+	<div class="col">
+		<div class="card h-100 new-question border-0 "(click)="openAddModal(addModal)">
+			<div class="card-body d-flex align-items-center justify-content-center">
+					<i class="fa-regular fa-plus fa-xl me-1"></i>
+					<div class="">New Course</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <ng-template #noCourses>
 	<p class="no-course-message">No courses are available.</p>
@@ -16,58 +35,60 @@
 
 <ng-template #editModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Editar curso</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Editar curso</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-	  <form [formGroup]="editForm">
-		<div class="mb-3">
-		  <label for="name">Name</label>
-		  <input id="name" type="text" class="form-control" formControlName="name">
-		  <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-			Nome do curso é obrigatório.
-		  </div>
-		</div>
-	  </form>
+		<form [formGroup]="editForm">
+			<div class="mb-3">
+				<label for="name">Name</label>
+				<input id="name" type="text" class="form-control" formControlName="name">
+				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+					class="text-danger">
+					Nome do curso é obrigatório.
+				</div>
+			</div>
+		</form>
 	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-primary" (click)="confirmSave()">Salvar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-primary" (click)="confirmSave()">Salvar</button>
 	</div>
 </ng-template>
 
 <ng-template #deleteModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Deletar curso</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Deletar curso</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-	  Tem certeza que deseja deletar o curso?
+		Tem certeza que deseja deletar o curso?
 	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
 	</div>
 </ng-template>
 
 <ng-template #addModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Criar novo curso</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Criar novo curso</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
 		<form [formGroup]="addForm">
-		  <div class="mb-3">
-			<label for="name">Name</label>
-			<input id="name" type="text" class="form-control" formControlName="name">
-			<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-			  Nome do curso é obrigatório.
+			<div class="mb-3">
+				<label for="name">Name</label>
+				<input id="name" type="text" class="form-control" formControlName="name">
+				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+					class="text-danger">
+					Nome do curso é obrigatório.
+				</div>
 			</div>
-		  </div>
 		</form>
-	  </div>
+	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmAdd()">Criar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-primary" (click)="confirmAdd()">Criar</button>
 	</div>
 </ng-template>

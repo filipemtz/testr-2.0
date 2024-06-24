@@ -19,7 +19,6 @@ $frontend-theme: mat.define-light-theme((
     accent: $frontend-accent,
     warn: $frontend-warn,
   ),
-  typography: mat.define-typography-config(),
   density: 0
 ));
 

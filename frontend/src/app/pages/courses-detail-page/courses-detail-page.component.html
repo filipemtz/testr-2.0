@@ -1,193 +1,225 @@
-<div class="course-name">
-    {{ course.name }}
-</div>
+<h1 class="display-2 text-center mb-4">
+	{{ course.name }}
+</h1>
+<a class="icon-link icon-link-hover mb-2" [routerLink]="['/']">
+	<i class="bi fa-solid fa-arrow-left"></i>
+	Back
+</a>
+<br>
 
-<main class="base">
-    <div class="back-link"><a [routerLink]="['/']">Back</a></div>
-    <button class="new-section btn" (click)="openAddSectionModal(course, addSectionModal)">
-		<mat-icon>add</mat-icon> 
-		New Section
-	</button>
-    <div *ngIf="sections.length > 0; else noSections">
-        <div *ngFor="let section of sections; index as section_idx">
-            <div *ngIf="section.course == course.id" >
-                <div class="section-item">
-                    {{ section.name }}
-                    <button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="openEditSectionModal(section, editSectionModal)"></button>
-			        <button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
-                </div>
-				<button class="new-question btn" (click)="openAddQuestionModal(section, addQuestionModal)">
-					<mat-icon>add</mat-icon> 
-					New Question
-				</button>
-				
-				<div *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions">
-                	<div *ngFor="let question of questions; index as question_idx">
-						<div *ngIf="question.section == section.id">
-							<div class="questions">
-								<a [routerLink]="['/question', question.id]" class="question-link">{{ idx }}. {{ question.name }} </a>
-								<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-primary" aria-hidden="true"></button>
-								<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
+<div *ngIf="sections.length > 0; else noSections" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+	<div *ngFor="let section of sections; index as section_idx" class="col">
+		<div *ngIf="section.course == course.id">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">{{ section.name }}</h5>
+					<ul *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions" class="list-group list-group-flush">
+						<li *ngFor="let question of questions; index as question_idx" class="list-group-item ">
+							<div *ngIf="question.section == section.id" class="d-flex justify-content-between flex-wrap">
+								<a [routerLink]="['/question', question.id]" class="text-dark">{{ idx }}. {{ question.name }} </a>
+								<div class="d-flex justify-content-end">
+									<button class="fa-solid btn fa-eye text-primary" aria-hidden="true"
+										[routerLink]="['/question', question.id]"></button>
+									<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-secondary"
+										aria-hidden="true"></button>
+									<button class="fa-solid fa-close btn text-danger" aria-hidden="true"
+										(click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
+								</div>
 								{{ inc_idx() }}
 							</div>
+
+						</li>
+					</ul>
+					{{ inc_cont() }}
+
+					<div class="d-flex justify-content-between align-items-center mt-2">
+						<div class="btn-group">
+							<button type="button" class="btn btn-sm btn-outline-primary"
+								(click)="openAddQuestionModal(section, addQuestionModal)"><i
+									class="fa-regular fa-plus fa-sm me-1"></i>New Question</button>
+							<button type="button" class="btn btn-sm btn-outline-secondary"
+								(click)="openEditSectionModal(section, editSectionModal)">Edit</button>
+							<button type="button" class="btn btn-sm btn-outline-danger"
+								(click)="openDeleteSectionModal(section, deleteSectionModal)">Delete</button>
 						</div>
 					</div>
-                </div>
-                {{ inc_cont() }}
-            </div>
-			{{ reset_idx() }}
-        </div>
-        <div *ngIf="cont > 0; else noSections">
+				</div>
+			</div>
 
-        </div>
-        {{ reset_cont() }}
-    </div>
-</main>
+
+		</div>
+		{{ reset_idx() }}
+	</div>
+	<div style="width:100%" >
+		<div class="card new-section border-0 " (click)="openAddSectionModal(course, addSectionModal)">
+			<div class="card-body d-flex align-items-center justify-content-center">
+				<i class="fa-regular fa-plus fa-xl me-1"></i>
+				<div class="">New Section</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="cont > 0; else noSections">
+
+	</div>
+	{{ reset_cont() }}
+</div>
+
 
 <ng-template #noSections>
-    <p class="no-sections-message">No sections are available.</p>
+	<p class="no-sections-message">No sections are available.</p>
 </ng-template>
 
 <ng-template #noQuestions>
-    <p class="no-questions-message">No questions are available.</p>
+	<p class="no-questions-message">No questions are available.</p>
 </ng-template>
 
 <ng-template #addSectionModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
 		<form [formGroup]="addSectionForm">
-		  <div class="mb-3">
-			<label for="name">Name</label>
-			<input id="name" type="text" class="form-control" formControlName="name">
-			<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-			  Nome do curso é obrigatório.
+			<div class="mb-3">
+				<label for="name">Name</label>
+				<input id="name" type="text" class="form-control" formControlName="name">
+				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+					class="text-danger">
+					Nome do curso é obrigatório.
+				</div>
 			</div>
-		  </div>
 		</form>
-	  </div>
+	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmAddSection()">Criar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-primary" (click)="confirmAddSection()">Criar</button>
 	</div>
 </ng-template>
 
 <ng-template #addQuestionModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Criar nova questão</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Criar nova questão</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
 		<form [formGroup]="addQuestionForm">
 			<div>
-			  <label for="name" class="base-form">Name:</label>
-			  <input id="name" type="text" class="form-control base-bar" formControlName="name">
-			  <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-				Nome da questão é obrigatório.
-			  </div>
-			</div>
-  
-			<div>
-			  <label for="description" class="base-form">Description:</label>
-			  <input id="description" type="text" class="form-control base-bar" formControlName="description">
-			</div>
-  
-			<div>
-			  <label for="language" class="base-form">Language:</label>
-			  <select class="form-control" id="language" formControlName="language">
-				<option value="" disabled>Select language</option>
-				<option value="PT">Python</option>
-				<option value="CC">C/C++</option>
-			  </select>
-			</div>
-  
-			<div>
-			  <label for="time_limit_seconds" class="base-form">Time limit seconds:</label>
-			  <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
-			  <div *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)" class="text-danger">
-				  Tempo limite de execução em segundos obrigatório.
+				<label for="name" class="base-form">Name:</label>
+				<input id="name" type="text" class="form-control base-bar" formControlName="name">
+				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+					class="text-danger">
+					Nome da questão é obrigatório.
 				</div>
 			</div>
-  
+
 			<div>
-			  <label for="memory_limit" class="base-form">Memory limit:</label>
-			  <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
-			  <div *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)" class="text-danger">
-				  Limite de memória obrigatório.
+				<label for="description" class="base-form">Description:</label>
+				<input id="description" type="text" class="form-control base-bar" formControlName="description">
+			</div>
+
+			<div>
+				<label for="language" class="base-form">Language:</label>
+				<select class="form-control" id="language" formControlName="language">
+					<option value="" disabled>Select language</option>
+					<option value="PT">Python</option>
+					<option value="CC">C/C++</option>
+				</select>
+			</div>
+
+			<div>
+				<label for="time_limit_seconds" class="base-form">Time limit seconds:</label>
+				<input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
+				<div
+					*ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
+					class="text-danger">
+					Tempo limite de execução em segundos obrigatório.
 				</div>
 			</div>
-  
+
 			<div>
-			  <label for="cpu_limit" class="base-form">CPU limit:</label>
-			  <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
-			  <div *ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)" class="text-danger">
-				  Limite da CPU obrigatório.
+				<label for="memory_limit" class="base-form">Memory limit:</label>
+				<input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
+				<div
+					*ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
+					class="text-danger">
+					Limite de memória obrigatório.
 				</div>
 			</div>
-  
+
 			<div>
-			  <label for="submission_deadline" class="base-form">Submission deadline:</label>
-			  <input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
-			  <div *ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)" class="text-danger">
-				  Data limite obrigatória.
+				<label for="cpu_limit" class="base-form">CPU limit:</label>
+				<input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
+				<div
+					*ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)"
+					class="text-danger">
+					Limite da CPU obrigatório.
 				</div>
 			</div>
-		  </form>
-	  </div>
+
+			<div>
+				<label for="submission_deadline" class="base-form">Submission deadline:</label>
+				<input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
+				<div
+					*ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)"
+					class="text-danger">
+					Data limite obrigatória.
+				</div>
+			</div>
+		</form>
+	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmAddQuestion()">Criar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="confirmAddQuestion()">Criar</button>
 	</div>
 </ng-template>
 
 <ng-template #deleteSectionModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-	  Tem certeza que deseja deletar a seção?
+		Tem certeza que deseja deletar a seção?
 	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmDeleteSection()">Deletar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="confirmDeleteSection()">Deletar</button>
 	</div>
-  </ng-template>
+</ng-template>
 
-  <ng-template #deleteQuestionModal let-modal>
+<ng-template #deleteQuestionModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-	  Tem certeza que deseja deletar a questão?
+		Tem certeza que deseja deletar a questão?
 	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
 	</div>
-  </ng-template>
+</ng-template>
 
-  <ng-template #editSectionModal let-modal>
+<ng-template #editSectionModal let-modal>
 	<div class="modal-header">
-	  <h4 class="modal-title" id="modal-basic-title">Editar seção</h4>
-	  <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<h4 class="modal-title" id="modal-basic-title">Editar seção</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-	  <form [formGroup]="editForm">
-		<div class="mb-3">
-		  <label for="name">Name</label>
-		  <input id="name" type="text" class="form-control" formControlName="name">
-		  <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)" class="text-danger">
-			Nome da seção é obrigatório.
-		  </div>
-		</div>
-	  </form>
+		<form [formGroup]="editForm">
+			<div class="mb-3">
+				<label for="name">Name</label>
+				<input id="name" type="text" class="form-control" formControlName="name">
+				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
+					class="text-danger">
+					Nome da seção é obrigatório.
+				</div>
+			</div>
+		</form>
 	</div>
 	<div class="modal-footer">
-	  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Cancelar</button>
-	  <button type="button" class="btn btn-primary" (click)="confirmSaveSection()">Salvar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-primary" (click)="confirmSaveSection()">Salvar</button>
 	</div>
 </ng-template>

@@ -3,8 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ApiService } from '../../services/api.service';
+
 import {MatIconModule} from '@angular/material/icon';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-question-edit-page',
@@ -18,7 +19,7 @@ export class QuestionEditPageComponent implements OnInit {
   selectedQuestion: any;
 
   constructor(private authService: AuthService, 
-    private apiService: ApiService, 
+    private questionService: QuestionService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -39,7 +40,7 @@ export class QuestionEditPageComponent implements OnInit {
       next: response => {
         this.route.params.subscribe(params => {
           const id = params['id'];
-          this.apiService.getQuestion(id).subscribe( {next: response => {
+          this.questionService.getQuestion(id).subscribe( {next: response => {
             this.selectedQuestion = response;
             this.editForm.patchValue(response);
           },
@@ -58,7 +59,7 @@ export class QuestionEditPageComponent implements OnInit {
     if (this.editForm.valid) {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
       console.log(updatedQuestion.url)
-      this.apiService.edit(this.selectedQuestion.url, updatedQuestion).subscribe({
+      this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();
           this.goBack();

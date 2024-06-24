@@ -1,4 +1,4 @@
-.base {
+/* .base {
   font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -74,4 +74,13 @@
   font-size: 15px;
   padding: 0.25%;
   margin-bottom: 2%;
+} */
+
+.new-section{
+  cursor: pointer;
+}
+
+.new-section:hover{
+  color: white;
+  background-color: var(--main-bg-color);
 }
