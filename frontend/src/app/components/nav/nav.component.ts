@@ -13,7 +13,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class NavComponent implements OnInit {
   authenticated = false;
-
+  user : any;
   constructor(private authService: AuthService, private router: Router) {}
 
   sidebarItems = [
@@ -56,6 +56,13 @@ export class NavComponent implements OnInit {
   ];
   ngOnInit(): void {
     this.authenticated = localStorage.getItem('authenticated') === 'true';
+    if (this.authenticated){
+      this.authService.profile().subscribe({
+        next: (res: any) => {
+          this.user = res;
+        }
+      });
+    }
     // AuthService.authEmitter.subscribe((authenticated) => {
     //   this.authenticated = authenticated;
     //   console.log('olaaaa');
