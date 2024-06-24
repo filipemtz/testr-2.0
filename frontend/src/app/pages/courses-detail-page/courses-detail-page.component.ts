@@ -39,7 +39,8 @@ export class CoursesDetailPageComponent implements OnInit {
     name: "",
     course: "",
     url: "",
-    id: 0
+    id: 0,
+    isEditing: false
   };
 
   baseQuestion: Question = {
@@ -248,6 +249,28 @@ export class CoursesDetailPageComponent implements OnInit {
   hasQuestionWithSectionUrl(id: number): boolean {
     const sectionUrl = this.sections[id].url;
     return this.questions.some(question => question.section === sectionUrl);
+  }
+
+  enableEditSection(section: any) {
+    this.selectedSection = section;
+    section.isEditing = true;
+  }
+
+  confirmEditSection(section: any) {
+    const updatedSection = { ...this.selectedSection, ...section };
+    this.apiService.edit(this.selectedSection.url, updatedSection).subscribe({
+        next: () => {
+          section.isEditing = false;
+        },
+        error: err => {
+          console.error(err);
+        }
+    });
+  }
+
+  cancelEditSection(section: any) {
+    section.isEditing = false;
+    this.loadSections();
   }
 
   reset_idx(){

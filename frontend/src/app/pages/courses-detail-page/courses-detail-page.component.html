@@ -11,11 +11,18 @@
     <div *ngIf="sections.length > 0; else noSections">
         <div *ngFor="let section of sections; index as section_idx">
             <div *ngIf="section.course == course.url" >
-                <div class="section-item">
+                <div *ngIf="!section.isEditing" class="section-item">
                     {{ section.name }}
-                    <button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="openEditSectionModal(section, editSectionModal)"></button>
+					<button class="fa-solid fa-pencil btn text-primary" aria-hidden="true" (click)="enableEditSection(section)"></button>
 			        <button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
                 </div>
+
+				<div *ngIf="section.isEditing" class="section-item">
+					<input [(ngModel)]="section.name" class="form-control-md inline-edit"/>
+					<button class="fa-solid fa-check btn text-success" aria-hidden="true" (click)="confirmEditSection(section)"></button>
+					<button class="fa-solid fa-close btn text-danger" aria-hidden="true" (click)="cancelEditSection(section)"></button>
+				</div>
+
 				<button class="new-question btn" (click)="openAddQuestionModal(section, addQuestionModal)">
 					<mat-icon>add</mat-icon> 
 					New Question

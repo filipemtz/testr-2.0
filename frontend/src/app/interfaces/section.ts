@@ -3,4 +3,5 @@ export interface Section {
     url?: string;
     name: string;
     course: string;
+    isEditing: boolean;
 }
