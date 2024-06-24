@@ -36,7 +36,8 @@ export class LoginComponent implements OnInit {
      this.authService.login(this.form.getRawValue()).subscribe({
       next: (res : any) => {
         localStorage.setItem('token', res.token);
-        AuthService.authEmitter.emit(true);
+        localStorage.setItem('authenticated', 'true');
+        // AuthService.authEmitter.emit(true);
         this.router.navigate(['/']);
       }
     });

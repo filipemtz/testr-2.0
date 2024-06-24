@@ -10,7 +10,7 @@ export class AuthService {
 
   api = 'http://localhost:8000/accounts';
  
-  static authEmitter = new EventEmitter<boolean>();
+  // static authEmitter = new EventEmitter<boolean>();
 
   register(body: any){
     return this.http.post(`${this.api}/register/`, body);

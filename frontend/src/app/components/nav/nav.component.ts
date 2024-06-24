@@ -55,17 +55,20 @@ export class NavComponent implements OnInit {
     }
   ];
   ngOnInit(): void {
-    AuthService.authEmitter.subscribe((authenticated) => {
-      this.authenticated = authenticated;
-      console.log('olaaaa');
-    });
+    this.authenticated = localStorage.getItem('authenticated') === 'true';
+    // AuthService.authEmitter.subscribe((authenticated) => {
+    //   this.authenticated = authenticated;
+    //   console.log('olaaaa');
+    // });
   }
 
   logout() {
     this.authService.logout().subscribe({
       next: () => {
         localStorage.removeItem('token');
-        AuthService.authEmitter.emit(false);
+        localStorage.removeItem('authenticated');
+        this.authenticated = false;
+        // AuthService.authEmitter.emit(false);
         this.router.navigate(['/']);
       },
     });
