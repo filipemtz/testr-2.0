@@ -50,20 +50,20 @@
 		</div>
 		{{ reset_idx() }}
 	</div>
-	<div style="width:100%" >
-		<div class="card new-section border-0 " (click)="openAddSectionModal(course, addSectionModal)">
-			<div class="card-body d-flex align-items-center justify-content-center">
-				<i class="fa-regular fa-plus fa-xl me-1"></i>
-				<div class="">New Section</div>
-			</div>
-		</div>
-	</div>
 	<div *ngIf="cont > 0; else noSections">
 
 	</div>
 	{{ reset_cont() }}
 </div>
 
+<div style="width:100%" class="mt-3" >
+	<div class="card new-section border-0 " (click)="openAddSectionModal(course, addSectionModal)">
+		<div class="card-body d-flex align-items-center justify-content-center">
+			<i class="fa-regular fa-plus fa-xl me-1"></i>
+			<div class="">New Section</div>
+		</div>
+	</div>
+</div>
 
 <ng-template #noSections>
 	<p class="no-sections-message">No sections are available.</p>
