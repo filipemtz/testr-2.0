@@ -21,8 +21,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 })
 export class CoursesDetailPageComponent implements OnInit {
   course: Course = {} as Course;
-  sections: Section[] = [];
-  questions: Question[] = [];
+  sections: Section[] = [] as Section[];
+  questions: Question[] = [] as Question[];
 
   addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
@@ -94,7 +94,9 @@ export class CoursesDetailPageComponent implements OnInit {
   loadSections() {
     this.sectionService.getSections().subscribe({
       next: response => {
-        this.sections = response.results;
+        const id = this.route.snapshot.params['id'];
+        this.sections = response.results.filter(section => section.course == id
+        );
       },
       error: err => {
         console.log(err);
@@ -258,5 +260,30 @@ export class CoursesDetailPageComponent implements OnInit {
 
   inc_cont() {
     this.cont += 1;
+  }
+
+  enableEditSection(section: Section) {
+    section.isEditing = true;
+  }
+
+  cancelEditSection(section: Section) {
+    section.isEditing = false;
+    this.loadSections(); // Optionally reload sections to revert changes
+  }
+
+  confirmEditSection(section: Section) {
+    if (section.url) {
+      const updatedSection = { ...section, name: section.name };
+
+      this.sectionService.editSection(section.url, updatedSection).subscribe({
+        next: () => {
+          section.isEditing = false;
+          this.loadSections();
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    }
   }
 }

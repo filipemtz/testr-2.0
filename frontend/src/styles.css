@@ -96,3 +96,13 @@ html {
   font-size: 1.0rem;
 }
 
+.input-inline{
+  border: none;
+  padding: 0;
+  display: block;
+  width: 100%;
+}
+
+.input-inline:focus {
+  outline: none;
+}

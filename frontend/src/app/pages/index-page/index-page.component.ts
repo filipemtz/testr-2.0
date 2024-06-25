@@ -38,7 +38,7 @@ export class IndexPageComponent implements OnInit {
 
   newCourseName: string = '';
   addingCourse = false;
-
+  
   baseCourse: Course = {
     name: "",
     visible: true,
@@ -152,24 +152,28 @@ export class IndexPageComponent implements OnInit {
     }
   }
 
-  enableEdit(course: any) {
+  enableEdit(course: Course) {
     this.selectedCourse = course;
     course.isEditing = true;
   }
 
-  confirmEdit(course: any) {
-    const updatedCourse = { ...this.selectedCourse, ...course };
-    this.courseService.updateCourse(updatedCourse.url, updatedCourse).subscribe({
+  confirmEdit(course: Course) {
+    if (this.selectedCourse && this.selectedCourse.url) {
+      const updatedCourse = { ...this.selectedCourse, name: course.name };
+
+      this.courseService.updateCourse(this.selectedCourse.url, updatedCourse).subscribe({
         next: () => {
           course.isEditing = false;
+          this.loadCourses();
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
-        }
-    });
+        },
+      });
+    }
   }
 
-  cancelEdit(course: any) {
+  cancelEdit(course: Course) {
     course.isEditing = false;
     this.loadCourses();
   }

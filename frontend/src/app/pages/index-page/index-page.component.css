@@ -1,17 +1,17 @@
+.card-title {
+  cursor: pointer;
+}
 
-  .card-title{
-    cursor: pointer;
-  }
+.card-title:hover {
+  color: #007bff;
+}
 
-  .card-title:hover{
-    color: #007bff;
-  }
+.new-question {
+  cursor: pointer;
+}
 
-  .new-question{
-    cursor: pointer;
-  }
+.new-question:hover {
+  color: white;
+  background-color: var(--main-bg-color);
+}
 
-  .new-question:hover{
-    color: white;
-    background-color: var(--main-bg-color);
-  }
