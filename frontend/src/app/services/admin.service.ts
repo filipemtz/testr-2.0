@@ -22,12 +22,4 @@ export class AdminService {
   deleteUser(id : number){
     return this.http.delete<any>(`${this.api}/${id}/`, {withCredentials: true});
   }
-
-  getGroups(){
-    return this.http.get<any>(`http://localhost:8000/accounts/groups/`, {withCredentials: true});
-  }
-
-  getGroup(link: string){
-    return this.http.get<any>(link, {withCredentials: true});
-  }
 }

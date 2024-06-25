@@ -7,7 +7,7 @@ from .views import *
 router = routers.DefaultRouter()
 
 router.register(r'users', UserViewSet)
-# router.register(r'groups', GroupViewSet)
+router.register(r'groups', GroupViewSet)
 
 urlpatterns = [
     path('login/', UserLoginAPIView.as_view(), name='login'),

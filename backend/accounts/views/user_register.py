@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from  rest_framework.response import Response
 from rest_framework import exceptions
-from ..serializers import UserSerializer
+from ..serializers import UserRegisterSerializer
 
 class UserRegisterAPIView(APIView):
     def post(self, request):
@@ -11,7 +11,7 @@ class UserRegisterAPIView(APIView):
         if data['password'] != data['password_confirm']:
             raise exceptions.APIException('Passwords do not match')
         
-        serializer = UserSerializer(data=data)
+        serializer = UserRegisterSerializer(data=data)
         
         serializer.is_valid(raise_exception=True)
         serializer.save()
