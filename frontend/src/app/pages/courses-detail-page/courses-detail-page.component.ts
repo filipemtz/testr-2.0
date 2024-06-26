@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrls: ['./courses-detail-page.component.css']
 })
 export class CoursesDetailPageComponent implements OnInit {
+  @ViewChild('sectionInput') sectionInput!: ElementRef;
   course: Course = {} as Course;
   sections: Section[] = [] as Section[];
   questions: Question[] = [] as Question[];
@@ -264,6 +265,9 @@ export class CoursesDetailPageComponent implements OnInit {
 
   enableEditSection(section: Section) {
     section.isEditing = true;
+    setTimeout(() => {
+      this.sectionInput.nativeElement.focus();
+    });
   }
 
   cancelEditSection(section: Section) {

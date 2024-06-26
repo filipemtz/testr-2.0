@@ -12,7 +12,7 @@
 			<div class="card shadow-sm">
 				<div class="card-body">
 					<div *ngIf="section.isEditing; else viewMode">
-            <input type="text" class="input-inline h5 mb-5" [(ngModel)]="section.name" />
+            <input #sectionInput type="text" class="input-inline h5 mb-5" [(ngModel)]="section.name" />
             <div class="d-flex justify-content-between">
 							<div class="btn-group">	
 								<button class="btn btn-sm btn-outline-primary" (click)="confirmEditSection(section)">Salvar</button>
