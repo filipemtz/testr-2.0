@@ -4,6 +4,7 @@
 
 .card-title:hover {
   color: #007bff;
+  text-decoration: underline;
 }
 
 .new-question {

@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 
 import {MatIconModule} from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
+import { Question } from '../../interfaces/question';
 
 @Component({
   selector: 'app-question-edit-page',

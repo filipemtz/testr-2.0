@@ -1,11 +1,9 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 
 export const unauthErrorInterceptor: HttpInterceptorFn = (req, next) => {
-  const authToken = localStorage.getItem('token');
-
   const authService = inject(AuthService);
   
   return next(req).pipe(

@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
-import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +24,8 @@ export class CoursesDetailPageComponent implements OnInit {
   sections: Section[] = [] as Section[];
   questions: Question[] = [] as Question[];
 
+  courseSections: Section[] = [] as Section[];
+ 
   addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
   editForm: FormGroup;
@@ -62,7 +63,6 @@ export class CoursesDetailPageComponent implements OnInit {
     private questionService: QuestionService,
     private sectionService: SectionService,
     private courseService: CourseService,
-    private authService: AuthService,
     private modalService: NgbModal,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -92,6 +92,15 @@ export class CoursesDetailPageComponent implements OnInit {
     this.loadQuestions();
   }
 
+  loadCourseSections(){
+    this.courseService.getSections(this.course.id ?? -1).subscribe({
+      next: (response : any) => {
+        console.log(response);
+        this.courseSections = response;
+      }
+    })
+  }
+
   loadSections() {
     this.sectionService.getSections().subscribe({
       next: response => {
@@ -111,6 +120,7 @@ export class CoursesDetailPageComponent implements OnInit {
       this.courseService.getCourse(id).subscribe({
         next: response => {
           this.course = response;
+          this.loadCourseSections();
           this.cdr.detectChanges();
         },
         error: err => {

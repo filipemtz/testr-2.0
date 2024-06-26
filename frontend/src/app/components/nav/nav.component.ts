@@ -78,7 +78,7 @@ export class NavComponent implements OnInit {
         localStorage.removeItem('authenticated');
         this.authenticated = false;
         // AuthService.authEmitter.emit(false);
-        this.router.navigate(['/']);
+        this.router.navigate(['/accounts/login']);
       },
     });
   }

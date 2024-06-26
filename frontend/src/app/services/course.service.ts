@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course } from '../interfaces/course';
+import { Section } from '../interfaces/section';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,10 @@ export class CourseService {
 
   getCourse(id: number): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/${id}/`, { withCredentials: true });
+  }
+
+  getSections(id: number): Observable<{results: Section[]}> {
+      return this.http.get<{results: Section[]}>(`${this.apiUrl}/${id}/sections/`, { withCredentials : true});
   }
 
   updateCourse(url: string, data: Course): Observable<Course> {
