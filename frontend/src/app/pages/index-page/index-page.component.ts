@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
@@ -27,7 +27,9 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './index-page.component.html',
   styleUrls: ['./index-page.component.css'],
 })
+
 export class IndexPageComponent implements OnInit {
+  @ViewChild('courseInput') courseInput!: ElementRef;
   editForm: FormGroup;
   addForm: FormGroup;
 
@@ -52,6 +54,7 @@ export class IndexPageComponent implements OnInit {
     private router: Router,
     private modalService: NgbModal,
     private fb: FormBuilder,
+    private elementRef: ElementRef,
   ) {
     this.editForm = this.fb.group({
       name: ['', Validators.required],
@@ -155,6 +158,9 @@ export class IndexPageComponent implements OnInit {
   enableEdit(course: Course) {
     this.selectedCourse = course;
     course.isEditing = true;
+    setTimeout(() => {
+      this.courseInput.nativeElement.focus();
+    });
   }
 
   confirmEdit(course: Course) {
