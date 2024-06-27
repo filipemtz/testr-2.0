@@ -45,7 +45,9 @@ export class IndexPageComponent implements OnInit {
     name: "",
     visible: true,
     teachers: [],
-    isEditing: false
+    isEditing: false,
+    id: -1,
+    url: ''
   };
 
   constructor(

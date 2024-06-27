@@ -19,21 +19,6 @@
   padding: 0;
 }
 
-a {
-  text-decoration: none;
-  color: var(--primary-color); 
-}
-
-li {
-  list-style: none;
-}
-
-h1 {
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: var(--dark-color); 
-}
-
 .wrapper {
   display: flex;
 }
@@ -91,10 +76,6 @@ h1 {
   color: var(--dark-color);
   font-size: 1rem;
 } */
-
-html {
-  font-size: 1.0rem;
-}
 
 .input-inline{
   border: none;

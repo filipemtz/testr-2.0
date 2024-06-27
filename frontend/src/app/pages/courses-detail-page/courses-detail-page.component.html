@@ -7,75 +7,41 @@
 </a>
 <br>
 
-<div style="width:100%" class="mb-3" >
-	<div class="card new-section border-0" (click)="openAddSectionModal(course, addSectionModal)">
-		<div class="card-body d-flex align-items-center justify-content-center">
-			<i class="fa-regular fa-plus fa-xl me-1"></i>
-			<div class="">New Section</div>
-		</div>
-	</div>
-</div>
+<button class="btn btn-outline-primary" (click)="openAddSectionModal(addSectionModal)">
+	<i class="fa-regular fa-plus"></i>
+	Nova Seção
+</button>
 
-<div *ngIf="courseSections.length > 0; else noSections" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-	<div *ngFor="let section of courseSections; index as section_idx" class="col">
-			<div class="card shadow-sm">
-				<div class="card-body">
-					<div *ngIf="section.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
-						<input #sectionInput type="text" class="input-inline h5 mb-5" [(ngModel)]="section.name" />
-						<div class="d-flex justify-content-between align-items-center">
-							<button class="btn btn-sm btn-outline-primary" (click)="confirmEditSection(section)">Salvar</button>
-							<button class="btn btn-sm btn-outline-secondary" (click)="cancelEditSection(section)">Cancelar</button>
-						</div>
-					</div>
-
-					<ng-template #viewMode>
-						<h5 class="card-title">{{ section.name }}</h5>
-						<ul *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions" class="list-group list-group-flush">
-							<li *ngFor="let question of questions; index as question_idx" class="list-group-item">
-								<div *ngIf="question.section == section.id" class="d-flex justify-content-between flex-wrap">
-									<a [routerLink]="['/question', question.id]" class="text-dark">{{ idx }}. {{ question.name }} </a>
-									<div class="d-flex justify-content-end">
-										<button class="fa-solid btn fa-eye text-primary" aria-hidden="true"
-												[routerLink]="['/question', question.id]">
-										</button>
-										<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-secondary"
-												aria-hidden="true">
-										</button>
-										<button class="fa-solid fa-close btn text-danger" aria-hidden="true"
-												(click)="openDeleteQuestionModal(question, deleteQuestionModal)">
-										</button>
-									</div>
-									{{ inc_idx() }}
-								</div>
-							</li>
-						</ul>
-						{{ inc_cont() }}
-						<div class="d-flex justify-content-between align-items-center mt-2">
-							<div class="btn-group">
-								<button type="button" class="btn btn-sm btn-outline-primary"
-										(click)="openAddQuestionModal(section, addQuestionModal)">
-									<i class="fa-regular fa-plus fa-sm me-1"></i>New Question
-								</button>
-								<button type="button" class="btn btn-sm btn-outline-secondary" (click)="enableEditSection(section)">Edit</button>
-								<button type="button" class="btn btn-sm btn-outline-danger" (click)="openDeleteSectionModal(section, deleteSectionModal)">Delete</button>
-							</div>
-						</div>
-					</ng-template>
-
-				</div>
+<div *ngIf="sections.length > 0; else noSections">
+	<div *ngFor="let section of sections;">
+		<div *ngIf="section.isEditing; else viewSection" class="d-flex flex-wrap justify-content-start">
+			<input class="form-control form-control-lg fw-semibold w-50"  [(ngModel)]="section.name" />
+			<div class="d-flex align-items-center">
+				<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1" (click)="confirmEditSection(section)"></button>
+				<button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1" (click)="section.isEditing=false"></button>
 			</div>
-		{{ reset_idx() }}
+		</div>
+		<ng-template #viewSection>
+			<div class="d-flex justify-content-start align-items-center">
+				<h4 class="p-2">{{ section.name }}</h4>
+				<button type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1" (click)="section.isEditing=true"></button>
+				<button type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1" (click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
+			</div>
+				<div *ngIf="section.questions?.length ?? -1 > 0; else noQuestions">
+					<div *ngFor="let question of section.questions">
+						{{ question.name }}
+					</div>
+				</div>
+		</ng-template>
 	</div>
-	<div *ngIf="cont > 0; else noSections"></div>
-	{{ reset_cont() }}
 </div>
 
 <ng-template #noSections>
-	<p class="">No sections are available.</p>
+	<p class="">Não existem seções disponíveis.</p>
 </ng-template>
 
 <ng-template #noQuestions>
-	<p class="">No questions are available.</p>
+	<p class="">Não existem questões disponíveis.</p>
 </ng-template>
 
 <ng-template #addSectionModal let-modal>
@@ -101,7 +67,7 @@
 	</div>
 </ng-template>
 
-<ng-template #addQuestionModal let-modal>
+<!-- <ng-template #addQuestionModal let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Criar nova questão</h4>
 		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
@@ -176,7 +142,7 @@
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
 		<button type="button" class="btn btn-danger" (click)="confirmAddQuestion()">Criar</button>
 	</div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #deleteSectionModal let-modal>
 	<div class="modal-header">
@@ -184,7 +150,7 @@
 		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
-		Tem certeza que deseja deletar a seção?
+		Tem certeza que deseja deletar a seção {{ sectionToDelete?.name}}?
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
@@ -192,7 +158,7 @@
 	</div>
 </ng-template>
 
-<ng-template #deleteQuestionModal let-modal>
+<!-- <ng-template #deleteQuestionModal let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
 		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
@@ -204,27 +170,4 @@
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
 		<button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
 	</div>
-</ng-template>
-
-<ng-template #editSectionModal let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Editar seção</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<form [formGroup]="editForm">
-			<div class="mb-3">
-				<label for="name">Name</label>
-				<input id="name" type="text" class="form-control" formControlName="name">
-				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
-					class="text-danger">
-					Nome da seção é obrigatório.
-				</div>
-			</div>
-		</form>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-		<button type="button" class="btn btn-primary" (click)="confirmSaveSection()">Salvar</button>
-	</div>
-</ng-template>
+</ng-template> -->
