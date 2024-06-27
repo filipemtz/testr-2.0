@@ -6,65 +6,9 @@
 	Back
 </a>
 <br>
-<div *ngIf="sections.length > 0; else noSections" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-	<div *ngFor="let section of sections; index as section_idx" class="col">
-		<div *ngIf="section.course == course.id">
-			<div class="card shadow-sm">
-				<div class="card-body">
-					<div *ngIf="section.isEditing; else viewMode">
-            <input #sectionInput type="text" class="input-inline h5 mb-5" [(ngModel)]="section.name" />
-            <div class="d-flex justify-content-between">
-							<div class="btn-group">	
-								<button class="btn btn-sm btn-outline-primary" (click)="confirmEditSection(section)">Salvar</button>
-								<button class="btn btn-sm btn-outline-secondary" (click)="cancelEditSection(section)">Cancelar</button>
-							</div>
-            </div>
-          </div>
-          <ng-template #viewMode>
-            <h5 class="card-title">{{ section.name }}</h5>
-            <ul *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions" class="list-group list-group-flush">
-              <li *ngFor="let question of questions; index as question_idx" class="list-group-item">
-                <div *ngIf="question.section == section.id" class="d-flex justify-content-between flex-wrap">
-                  <a [routerLink]="['/question', question.id]" class="text-dark">{{ idx }}. {{ question.name }} </a>
-                  <div class="d-flex justify-content-end">
-                    <button class="fa-solid btn fa-eye text-primary" aria-hidden="true"
-                            [routerLink]="['/question', question.id]"></button>
-                    <button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-secondary"
-                            aria-hidden="true"></button>
-                    <button class="fa-solid fa-close btn text-danger" aria-hidden="true"
-                            (click)="openDeleteQuestionModal(question, deleteQuestionModal)"></button>
-                  </div>
-                  {{ inc_idx() }}
-                </div>
-              </li>
-            </ul>
-            {{ inc_cont() }}
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-primary"
-                        (click)="openAddQuestionModal(section, addQuestionModal)">
-                  <i class="fa-regular fa-plus fa-sm me-1"></i>New Question
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" (click)="enableEditSection(section)">Edit</button>
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="openDeleteSectionModal(section, deleteSectionModal)">Delete</button>
-              </div>
-            </div>
-          </ng-template>
 
-				</div>
-			</div>
-
-
-		</div>
-		{{ reset_idx() }}
-	</div>
-	<div *ngIf="cont > 0; else noSections">
-	</div>
-	{{ reset_cont() }}
-</div>
-
-<div style="width:100%" class="mt-3" >
-	<div class="card new-section border-0 " (click)="openAddSectionModal(course, addSectionModal)">
+<div style="width:100%" class="mb-3" >
+	<div class="card new-section border-0" (click)="openAddSectionModal(course, addSectionModal)">
 		<div class="card-body d-flex align-items-center justify-content-center">
 			<i class="fa-regular fa-plus fa-xl me-1"></i>
 			<div class="">New Section</div>
@@ -72,12 +16,66 @@
 	</div>
 </div>
 
+<div *ngIf="courseSections.length > 0; else noSections" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+	<div *ngFor="let section of courseSections; index as section_idx" class="col">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<div *ngIf="section.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
+						<input #sectionInput type="text" class="input-inline h5 mb-5" [(ngModel)]="section.name" />
+						<div class="d-flex justify-content-between align-items-center">
+							<button class="btn btn-sm btn-outline-primary" (click)="confirmEditSection(section)">Salvar</button>
+							<button class="btn btn-sm btn-outline-secondary" (click)="cancelEditSection(section)">Cancelar</button>
+						</div>
+					</div>
+
+					<ng-template #viewMode>
+						<h5 class="card-title">{{ section.name }}</h5>
+						<ul *ngIf="hasQuestionWithSectionUrl(section_idx); else noQuestions" class="list-group list-group-flush">
+							<li *ngFor="let question of questions; index as question_idx" class="list-group-item">
+								<div *ngIf="question.section == section.id" class="d-flex justify-content-between flex-wrap">
+									<a [routerLink]="['/question', question.id]" class="text-dark">{{ idx }}. {{ question.name }} </a>
+									<div class="d-flex justify-content-end">
+										<button class="fa-solid btn fa-eye text-primary" aria-hidden="true"
+												[routerLink]="['/question', question.id]">
+										</button>
+										<button [routerLink]="['/question/edit', question.id]" class="fa-solid fa-pencil btn text-secondary"
+												aria-hidden="true">
+										</button>
+										<button class="fa-solid fa-close btn text-danger" aria-hidden="true"
+												(click)="openDeleteQuestionModal(question, deleteQuestionModal)">
+										</button>
+									</div>
+									{{ inc_idx() }}
+								</div>
+							</li>
+						</ul>
+						{{ inc_cont() }}
+						<div class="d-flex justify-content-between align-items-center mt-2">
+							<div class="btn-group">
+								<button type="button" class="btn btn-sm btn-outline-primary"
+										(click)="openAddQuestionModal(section, addQuestionModal)">
+									<i class="fa-regular fa-plus fa-sm me-1"></i>New Question
+								</button>
+								<button type="button" class="btn btn-sm btn-outline-secondary" (click)="enableEditSection(section)">Edit</button>
+								<button type="button" class="btn btn-sm btn-outline-danger" (click)="openDeleteSectionModal(section, deleteSectionModal)">Delete</button>
+							</div>
+						</div>
+					</ng-template>
+
+				</div>
+			</div>
+		{{ reset_idx() }}
+	</div>
+	<div *ngIf="cont > 0; else noSections"></div>
+	{{ reset_cont() }}
+</div>
+
 <ng-template #noSections>
-	<p class="no-sections-message">No sections are available.</p>
+	<p class="">No sections are available.</p>
 </ng-template>
 
 <ng-template #noQuestions>
-	<p class="no-questions-message">No questions are available.</p>
+	<p class="">No questions are available.</p>
 </ng-template>
 
 <ng-template #addSectionModal let-modal>

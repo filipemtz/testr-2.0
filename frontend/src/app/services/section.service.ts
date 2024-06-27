@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Section } from '../interfaces/section';
+import { Question } from '../interfaces/question';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class SectionService {
 
   getSection(id: number): Observable<Section> {
     return this.http.get<Section>(`${this.apiUrl}/${id}/`, { withCredentials: true });
+  }
+
+  getQuestions(id: number): Observable<{ results: Question[] }> {
+    return this.http.get<{ results: Question[] }>(`${this.apiUrl}/${id}/questions/`);
   }
 
   postSection(data: Section): Observable<Section> {

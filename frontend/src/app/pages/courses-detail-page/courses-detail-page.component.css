@@ -1,4 +1,4 @@
-/* .base {
+.base {
   font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -17,6 +17,30 @@
   padding: 0.25%;
 }
 
+.inline-edit{
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15pt;
+  margin-bottom: 2.5%;
+  width: 30%;
+}
+
+.inline-add {
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15pt;
+  width: 15%;
+  /*
+  border: none;
+  outline: none;
+  
+  */
+}
+
+.add-course {
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15pt;
+  margin-left: 25%;
+}
+
 .base-form{
   font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
@@ -29,18 +53,17 @@
   margin-bottom: 0.3%;
 }
 
-.new-section {
-  color: blue;
-  font-size: 12pt;
-  max-width: 50%;
-  margin-left: 24%;
-}
-
 .new-question {
   color: blue;
   font-size: 12pt;
-  max-width: 100%;
   margin-left: 26.5%;
+  display: flex;
+}
+
+.inline-edit{
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5rem;
+  width: 30%;
 }
   
 .section-item {
@@ -74,7 +97,7 @@
   font-size: 15px;
   padding: 0.25%;
   margin-bottom: 2%;
-} */
+}
 
 .new-section{
   cursor: pointer;

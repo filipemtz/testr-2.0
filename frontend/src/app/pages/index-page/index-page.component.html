@@ -11,6 +11,7 @@
 						<a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
 					</div>
 				</div>
+				
 				<ng-template #viewMode>
 					<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
 						<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
 import { Question } from '../../interfaces/question';
@@ -25,6 +25,7 @@ export class CoursesDetailPageComponent implements OnInit {
   questions: Question[] = [] as Question[];
 
   courseSections: Section[] = [] as Section[];
+  sectionQuestions: Question[] = [] as Question[];
  
   addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
@@ -59,7 +60,6 @@ export class CoursesDetailPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private questionService: QuestionService,
     private sectionService: SectionService,
     private courseService: CourseService,
@@ -87,7 +87,6 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSections();
     this.loadCourse();
     this.loadQuestions();
   }
@@ -95,23 +94,18 @@ export class CoursesDetailPageComponent implements OnInit {
   loadCourseSections(){
     this.courseService.getSections(this.course.id ?? -1).subscribe({
       next: (response : any) => {
-        console.log(response);
         this.courseSections = response;
       }
     })
   }
 
-  loadSections() {
-    this.sectionService.getSections().subscribe({
-      next: response => {
-        const id = this.route.snapshot.params['id'];
-        this.sections = response.results.filter(section => section.course == id
-        );
-      },
-      error: err => {
-        console.log(err);
+  loadSectionQuestions(id: number){
+    this.sectionService.getQuestions(id).subscribe({
+      next: (response : any) => {
+        console.log(response);
+        this.sectionQuestions = response;
       }
-    });
+    })
   }
 
   loadCourse() {
@@ -193,7 +187,7 @@ export class CoursesDetailPageComponent implements OnInit {
       this.sectionService.postSection(newSection).subscribe({
         next: section => {
           this.addSectionForm.reset();
-          this.sections.push(section);
+          this.courseSections.push(section);
           this.modalService.dismissAll();
         },
         error: err => {
@@ -223,7 +217,7 @@ export class CoursesDetailPageComponent implements OnInit {
     if (this.sectionToDelete && this.sectionToDelete.url) {
       this.sectionService.deleteSection(this.sectionToDelete.url).subscribe({
         next: () => {
-          this.sections = this.sections.filter(section => section.url !== this.sectionToDelete!.url);
+          this.courseSections = this.courseSections.filter(section => section.url !== this.sectionToDelete!.url);
           this.modalService.dismissAll();
           this.cdr.detectChanges();
         },
@@ -243,7 +237,7 @@ export class CoursesDetailPageComponent implements OnInit {
           this.editForm.reset();
           this.modalService.dismissAll();
           this.selectedSection = null;
-          this.sections = this.sections.map(section => section.url === updatedSection.url ? updatedSection : section);
+          this.courseSections = this.courseSections.map(section => section.url === updatedSection.url ? updatedSection : section);
         },
         error: err => {
           console.error(err);
@@ -253,7 +247,7 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   hasQuestionWithSectionUrl(id: number): boolean {
-    const sectionId = this.sections[id].id;
+    const sectionId = this.courseSections[id].id;
     return this.questions.some(question => question.section === sectionId);
   }
 
@@ -282,7 +276,7 @@ export class CoursesDetailPageComponent implements OnInit {
 
   cancelEditSection(section: Section) {
     section.isEditing = false;
-    this.loadSections(); // Optionally reload sections to revert changes
+    this.loadCourseSections(); // Optionally reload sections to revert changes
   }
 
   confirmEditSection(section: Section) {
@@ -292,7 +286,7 @@ export class CoursesDetailPageComponent implements OnInit {
       this.sectionService.editSection(section.url, updatedSection).subscribe({
         next: () => {
           section.isEditing = false;
-          this.loadSections();
+          this.loadCourseSections();
         },
         error: err => {
           console.error(err);
