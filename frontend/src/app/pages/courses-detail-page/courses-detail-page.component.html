@@ -23,7 +23,7 @@
 				<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
 					(click)="confirmEditSection(section)"></button>
 				<button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1"
-					(click)="section.isEditing=false"></button>
+					(click)="cancelEditSection(section)"></button>
 			</div>
 		</div>
 		<!--Modo de visualização da seção-->
@@ -36,33 +36,22 @@
 					(click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
 			</div>
 		</ng-template>
+
 		<!--Questões da seção -->
 		<ol *ngIf="section.questions?.length ?? -1 > 0; else noQuestions"
 			class="list-group list-group-numbered list-group-flush ">
 			<li *ngFor="let question of section.questions"  class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
-				<!--Modo de edição da questão-->
-				<div *ngIf="question.isEditing; else viewQuestion" class="ms-1 d-flex flex-wrap justify-content-start w-100" >
-					<input class="form-control form-control fw-semibold w-50" [(ngModel)]="question.name" />
-					<div class="d-flex align-items-center">
-						<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
-							(click)="confirmEditQuestion(question)"></button>
-						<button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1"
-							(click)="question.isEditing=false"></button>
-					</div>
-				</div>
 				<!--Modo de visualização da questão-->
-				<ng-template #viewQuestion>
-					<div class="ms-1 d-flex justify-content-start align-items-center">
-						<a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  [routerLink]="['/question', question.id]">{{ question.name }}</a>
-						<button type="button" class="btn btn-sm rounded-circle text-primary ms-1" (click)="question.isEditing=true">
-							<i class="fa-solid fa-pencil fa-sm"></i>
-						</button>
-						<button type="button" class="btn btn-sm rounded-circle text-danger ms-1"
-							(click)="openDeleteQuestionModal(question, deleteQuestionModal)">
-							<i class="fa-solid fa-trash fa-sm"></i>
-						</button>
-					</div>
-				</ng-template>
+				<div class="ms-1 d-flex justify-content-start align-items-center">
+					<a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  [routerLink]="['/question', question.id]">{{ question.name }}</a>
+					<button type="button" class="btn btn-sm rounded-circle text-primary ms-1" [routerLink]="['/question',question.id,'edit']">
+						<i class="fa-solid fa-pencil fa-sm"></i>
+					</button>
+					<button type="button" class="btn btn-sm rounded-circle text-danger ms-1"
+						(click)="openDeleteQuestionModal(question, deleteQuestionModal)">	
+						<i class="fa-solid fa-trash fa-sm"></i>
+					</button>
+				</div>
 			</li>
 		</ol>
 		<!--Botão de adicionar questão-->

@@ -63,7 +63,6 @@ export class CoursesDetailPageComponent implements OnInit {
     this.loadCourse();
   }
 
-
   // Recupera um array de seções de um determinado curso
   loadSections(courseId : number){
     this.courseService.getSections(courseId).subscribe({
@@ -186,5 +185,10 @@ export class CoursesDetailPageComponent implements OnInit {
         this.modalService.dismissAll();
       },
     });
+  }
+
+  cancelEditSection(section : Section): void {
+    section.isEditing = false;
+    this.loadSections(this.course.id);
   }
 }

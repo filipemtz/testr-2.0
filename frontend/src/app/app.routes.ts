@@ -31,7 +31,7 @@ export const routes: Routes = [
         component: QuestionDetailPageComponent
       },
       { 
-        path: 'question/edit/:id', 
+        path: 'question/:id/edit', 
         component: QuestionEditPageComponent
       },
       {
