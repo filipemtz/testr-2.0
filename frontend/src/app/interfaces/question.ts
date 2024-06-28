@@ -1,6 +1,6 @@
 export interface Question {
-	id?: number;
-	url?: string;
+	id: number;
+	url: string;
 	name: string;
 	description: string;
 	language: string;
@@ -9,4 +9,5 @@ export interface Question {
 	time_limit_seconds: number;
 	cpu_limit: number;
 	section: number;
+	isEditing?: boolean;
 }

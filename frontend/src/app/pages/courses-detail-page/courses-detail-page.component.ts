@@ -26,26 +26,12 @@ export class CoursesDetailPageComponent implements OnInit {
 
   addSectionForm: FormGroup;
   addQuestionForm: FormGroup;
-  editForm: FormGroup;
 
   questionToDelete: Question | null = null;
   selectedQuestion: Question | null = null;
 
   sectionToDelete: Section | null = null;
   selectedSection: Section | null = null;
-
-  baseQuestion: Question = {
-    section: -1,
-    name: '',
-    description: '',
-    language: 'PT',
-    memory_limit: 0,
-    time_limit_seconds: 0,
-    cpu_limit: 0,
-    submission_deadline: new Date().toISOString(),
-    id: -1,
-    url: ''
-  };
 
   constructor(
     private route: ActivatedRoute,
@@ -56,9 +42,7 @@ export class CoursesDetailPageComponent implements OnInit {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
   ) {
-    this.editForm = this.fb.group({
-      name: ['', Validators.required]
-    });
+
 
     this.addSectionForm = this.fb.group({
       name: ['', Validators.required]
@@ -79,16 +63,6 @@ export class CoursesDetailPageComponent implements OnInit {
     this.loadCourse();
   }
 
-  // Recupera um array de questões de um determinada seção
-  loadQuestions(sectionId: number) : Question[] {
-    this.sectionService.getQuestions(sectionId).subscribe({
-      next: (response : any) => {
-        console.log(response);
-        return response as Question[];
-      }
-    });
-    return [];
-  }
 
   // Recupera um array de seções de um determinado curso
   loadSections(courseId : number){
@@ -97,8 +71,13 @@ export class CoursesDetailPageComponent implements OnInit {
         console.log(response);
         this.sections = response;
         this.sections.forEach((element: Section) => {
-          console.log(element)
-          element.questions = this.loadQuestions(element.id);
+          // Recupera um array de questões de uma determinada seção
+          this.sectionService.getQuestions(element.id).subscribe({
+            next: (response : any) => {
+              element.questions = response;
+              console.log(element.questions);
+            }
+          });
         });
       }
     })
@@ -114,40 +93,7 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
-  // openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
-  //   this.questionToDelete = question;
-  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  // }
-
- 
-  
-
-  // openAddQuestionModal(section: Section, content: TemplateRef<any>) {
-  //   this.baseQuestion.section = section.id ?? -1;
-  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  // }
-
-
-
-  // confirmAddQuestion(): void {
-  //   if (this.addQuestionForm.valid) {
-  //     const newQuestion: Question = { ...this.baseQuestion, ...this.addQuestionForm.value };
-
-  //     this.questionService.postQuestion(newQuestion).subscribe({
-  //       next: (question: Question) => {
-  //         this.addQuestionForm.reset();
-  //         this.questions.push(question);
-  //         this.modalService.dismissAll();
-  //       },
-  //       error: err => {
-  //         console.error(err);
-  //       }
-  //     });
-  //   } else {
-  //     console.log("invalid form");
-  //   }
-  // }
-
+  // Sections
   openAddSectionModal(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
@@ -195,44 +141,50 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
-  // confirmDelete(): void {
-  //   if (this.questionToDelete && this.questionToDelete.url) {
-  //     this.questionService.deleteQuestion(this.questionToDelete.url).subscribe({
-  //       next: () => {
-  //         this.questions = this.questions.filter(question => question.url !== this.questionToDelete!.url);
-  //         this.modalService.dismissAll();
-  //       },
-  //       error: err => {
-  //         console.error(err);
-  //       }
-  //     });
-  //   }
-  // }
+  // Questions
+  openAddQuestionModal(section: Section, content: TemplateRef<any>) {
+    this.selectedSection = section;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
 
-  
+  confirmAddQuestion(): void {
+    if (this.addQuestionForm.valid && this.selectedSection) {
+      const newQuestion: Question = { section: this.selectedSection.id, ...this.addQuestionForm.value };
 
-  // confirmSaveSection(): void {
-  //   if (this.editForm.valid && this.selectedSection && this.selectedSection.url) {
-  //     const updatedSection = { ...this.selectedSection, ...this.editForm.value };
+      this.questionService.postQuestion(newQuestion).subscribe({
+        next: question => {
+          this.addQuestionForm.reset();
+          this.selectedSection!.questions?.push(question);
+          this.modalService.dismissAll();
+        },
+      });
+    } else {
+      console.log("invalid form");
+    }
+  }
 
-  //     this.sectionService.editSection(this.selectedSection!.url, updatedSection).subscribe({
-  //       next: () => {
-  //         this.editForm.reset();
-  //         this.modalService.dismissAll();
-  //         this.selectedSection = null;
-  //         this.courseSections = this.courseSections.map(section => section.url === updatedSection.url ? updatedSection : section);
-  //       },
-  //       error: err => {
-  //         console.error(err);
-  //       }
-  //     });
-  //   }
-  // }
+  confirmEditQuestion(question: Question) {
+    this.questionService.editQuestion(question.url, question).subscribe({
+      next: () => {
+        question.isEditing = false;
+      },
+    });
+  }
 
-  // hasQuestionWithSectionUrl(id: number): boolean {
-  //   const sectionId = this.courseSections[id].id;
-  //   return this.questions.some(question => question.section === sectionId);
-  // }
+  openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
+    this.questionToDelete = question;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
 
-  
+  confirmDeleteQuestion(): void {
+    this.questionService.deleteQuestion(this.questionToDelete?.url ?? '').subscribe({
+      next: () => {
+        this.sections = this.sections.map(section => {
+          section.questions = section.questions?.filter(question => question.url !== this.questionToDelete!.url);
+          return section;
+        });
+        this.modalService.dismissAll();
+      },
+    });
+  }
 }
