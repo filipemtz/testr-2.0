@@ -10,6 +10,7 @@ import { IndexPageComponent } from './pages/index-page/index-page.component';
 import { CoursesDetailPageComponent } from './pages/courses-detail-page/courses-detail-page.component';
 import { QuestionDetailPageComponent } from './pages/question-detail-page/question-detail-page.component';
 import { QuestionEditPageComponent } from './pages/question-edit-page/question-edit-page.component';
+import { QuestionCreatePageComponent } from './pages/question-create-page/question-create-page.component';
 
 
 export const routes: Routes = [
@@ -21,6 +22,10 @@ export const routes: Routes = [
       {
         path: '',
         component: IndexPageComponent
+      },
+      {
+        path: 'question-create',
+        component: QuestionCreatePageComponent
       },
       { 
         path: 'course/:id', 

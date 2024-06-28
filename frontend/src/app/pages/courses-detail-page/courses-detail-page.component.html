@@ -8,7 +8,7 @@
 <br>
 
 <!--Botão de adicionar seção-->
-<button class="btn text-primary mb-2" (click)="openAddSectionModal(addSectionModal)">
+<button class="btn text-primary mb-1" (click)="openAddSectionModal(addSectionModal)">
 	<i class="fa-regular fa-plus"></i>
 	Nova Seção
 </button>
@@ -40,7 +40,7 @@
 		<!--Questões da seção -->
 		<ol *ngIf="section.questions?.length ?? -1 > 0; else noQuestions"
 			class="list-group list-group-numbered list-group-flush ">
-			<li *ngFor="let question of section.questions"  class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
+			<li *ngFor="let question of section.questions"  class="list-group-item d-flex justify-content-start align-items-center">
 				<!--Modo de visualização da questão-->
 				<div class="ms-1 d-flex justify-content-start align-items-center">
 					<a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  [routerLink]="['/question', question.id]">{{ question.name }}</a>
@@ -55,7 +55,7 @@
 			</li>
 		</ol>
 		<!--Botão de adicionar questão-->
-		<button class="btn text-primary " (click)="openAddQuestionModal(section, addQuestionModal)">
+		<button class="btn text-primary" (click)="openAddQuestionModal(section,addQuestionModal)">
 			<i class="fa-regular fa-plus"></i>
 			Nova Questão
 		</button>

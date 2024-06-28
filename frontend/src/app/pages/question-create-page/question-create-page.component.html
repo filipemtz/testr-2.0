@@ -1,0 +1,80 @@
+<h1 class="display-2 text-center mb-3">Nova Questão</h1>
+<a class="icon-link icon-link-hover mb-2" style="cursor:pointer" (click)="goBack()">
+    <i class="bi fa-solid fa-arrow-left"></i>
+    Back
+</a>
+<br>
+
+<div><!--Corpo-->
+    <form [formGroup]="addQuestionForm">
+        <!--Nome da questão-->
+        <div class="mb-2">
+            <label for="name">Name:</label>
+            <input id="name" type="text" class="form-control" formControlName="name">
+            <div
+                *ngIf="addQuestionForm.get('name')?.invalid && (addQuestionForm.get('name')?.dirty || addQuestionForm.get('name')?.touched)"
+                class="text-danger">
+                Nome da questão é obrigatório.
+            </div>
+        </div>
+        <!--Descrição da questão-->
+        <div class="mb-2">
+            <label for="description">Description:</label>
+            <input id="description" type="text" class="form-control" formControlName="description">
+        </div>
+        <!--Linguagem da questão-->
+        <div class="mb-2">
+            <label for="language">Language:</label>
+            <select class="form-control" id="language" formControlName="language">
+                <option value="" disabled>Select language</option>
+                <option value="PT">Python</option>
+                <option value="CC">C/C++</option>
+            </select>
+        </div>
+        <!--Código da questão-->
+        <div class="mb-2">
+            <label for="time_limit_seconds">Time limit seconds:</label>
+            <input id="time_limit_seconds" type="number" class="form-control" formControlName="time_limit_seconds">
+            <div
+                *ngIf="addQuestionForm.get('time_limit_seconds')?.invalid && (addQuestionForm.get('time_limit_seconds')?.dirty || addQuestionForm.get('time_limit_seconds')?.touched)"
+                class="text-danger">
+                Tempo limite de execução em segundos obrigatório.
+            </div>
+        </div>
+        <!--Memória limite-->
+        <div class="mb-2">
+            <label for="memory_limit">Memory limit:</label>
+            <input id="memory_limit" type="number" class="form-control" formControlName="memory_limit">
+            <div
+                *ngIf="addQuestionForm.get('memory_limit')?.invalid && (addQuestionForm.get('memory_limit')?.dirty || addQuestionForm.get('memory_limit')?.touched)"
+                class="text-danger">
+                Limite de memória obrigatório.
+            </div>
+        </div>
+        <!--Limite de CPU-->
+        <div class="mb-2">
+            <label for="cpu_limit">CPU limit:</label>
+            <input id="cpu_limit" type="number" class="form-control" formControlName="cpu_limit">
+            <div
+                *ngIf="addQuestionForm.get('cpu_limit')?.invalid && (addQuestionForm.get('cpu_limit')?.dirty || addQuestionForm.get('cpu_limit')?.touched)"
+                class="text-danger">
+                Limite da CPU obrigatório.
+            </div>
+        </div>
+        <!--Data limite de submissão-->
+        <div class="mb-2">
+            <label for="submission_deadline">Submission deadline:</label>
+            <input id="submission_deadline" type="text" class="form-control" formControlName="submission_deadline">
+            <div
+                *ngIf="addQuestionForm.get('submission_deadline')?.invalid && (addQuestionForm.get('submission_deadline')?.dirty || addQuestionForm.get('submission_deadline')?.touched)"
+                class="text-danger">
+                Data limite obrigatória.
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="mt-2">
+    <button type="button" class="btn btn-primary col-2">Salvar</button>
+    <button type="button" class="btn btn-outline-secondary col-2 go-back-btn" (click)="goBack()">Cancelar</button>
+  </div>
