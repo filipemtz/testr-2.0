@@ -17,6 +17,7 @@ class JWTAuthentication(BaseAuthentication):
         raise exceptions.AuthenticationFailed('unauthenticated')
 
 def create_access_token(id):
+    #Cria um token com o algoritmo de codificação HS256 que expira em 30 segundos
     return jwt.encode({
         'user_id': id,
         'exp' : datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=30),
@@ -32,6 +33,7 @@ def decode_access_token(token):
         raise exceptions.AuthenticationFailed('unauthenticated')
 
 def create_refresh_token(id):
+    #Cria um token com o algoritmo de codificação HS256 que expira em 7 dias
     return jwt.encode({
         'user_id': id,
         'exp' : datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7),

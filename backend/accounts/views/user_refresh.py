@@ -18,6 +18,9 @@ class UserRefreshAPIView(APIView):
         ).exists():
             raise exceptions.AuthenticationFailed('unauthenticated oiasda')
         
+        # A cada vez que o usuário necessitar acessar algum funcionalidade do sistema
+        # será utilizado o refresh token, que gerará um novo acess_token para resgatar
+        # as informações necessárias
         access_token = create_access_token(id)
         return Response({
             'token': access_token

@@ -23,21 +23,21 @@ export const routes: Routes = [
         path: '',
         component: IndexPageComponent
       },
-      {
-        path: 'question-create',
-        component: QuestionCreatePageComponent
-      },
       { 
         path: 'course/:id', 
         component: CoursesDetailPageComponent 
       },
       { 
         path: 'question/:id', 
-        component: QuestionDetailPageComponent
+        component: QuestionDetailPageComponent,
       },
       { 
         path: 'question/:id/edit', 
         component: QuestionEditPageComponent
+      },
+      {
+        path: 'question/create/:sectionId',
+        component: QuestionCreatePageComponent
       },
       {
         path: 'admin',

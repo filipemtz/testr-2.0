@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { OnInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CourseService } from '../../services/course.service';
 import { SectionService } from '../../services/section.service';
 import { QuestionService } from '../../services/question.service';
+import { Question } from '../../interfaces/question';
 
 @Component({
   selector: 'app-question-create-page',
@@ -16,8 +17,8 @@ import { QuestionService } from '../../services/question.service';
   styleUrl: './question-create-page.component.css'
 })
 export class QuestionCreatePageComponent {
-
   addQuestionForm: FormGroup;
+  sectionId: number = -1;
 
   constructor (
     private route: ActivatedRoute,
@@ -28,7 +29,8 @@ export class QuestionCreatePageComponent {
     private location: Location,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-  ) {
+  ) 
+  {
     this.addQuestionForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
@@ -40,9 +42,19 @@ export class QuestionCreatePageComponent {
     });
   }
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('sectionId');
+    console.log(id)
+    if (id !== null){
+      this.sectionId = +id;
+    }
+    else 
+      console.error('Sem ID');
+  }
+
   confirmCreateQuestion(): void {
     if (this.addQuestionForm.valid) {
-      const newQuestion = { ...this.addQuestionForm.value };
+      const newQuestion: Question = { section: this.sectionId, ...this.addQuestionForm.value };
       console.log(newQuestion.url)
       this.questionService.postQuestion(newQuestion).subscribe({
         next: () => {

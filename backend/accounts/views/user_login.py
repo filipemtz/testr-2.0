@@ -24,6 +24,9 @@ class UserLoginAPIView(APIView):
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed('Invalid credentials')
         
+        # Cria-se um token de acesso e um refresh_token, o token de refresh será o token
+        # que o sistema resgatará sempre que quiser fazer um acesso, visto que, o token
+        # de acesso irá expirar em 30 segundos.
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
 
@@ -33,7 +36,7 @@ class UserLoginAPIView(APIView):
             expired_at=datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
         )
 
-
+        
         response = Response()
         response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
         response.data = {
