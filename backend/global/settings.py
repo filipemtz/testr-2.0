@@ -158,8 +158,8 @@ REST_FRAMEWORK = {
 # CORS Settings
 ALLOWED_HOSTS = ['*']
 
-# CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
-# CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']
+CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
+CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']
 
 # CSRF_COOKIE_SECURE = config_data['backend']['csrf_cookie_secure']
 # SESSION_COOKIE_SECURE = config_data['backend']['session_cookie_secure']
@@ -169,7 +169,4 @@ ALLOWED_HOSTS = ['*']
 # CSRF_TRUSTED_ORIGINS = config_data['backend']['csrf_trusted_origins']
 
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 

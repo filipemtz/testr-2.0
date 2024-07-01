@@ -1,0 +1,15 @@
+{
+  "teacher": 
+  {
+      "course": "all",
+      "question": "all",
+      "section": "all"
+
+  },
+  "student": 
+  {
+      "course": ["view"],
+      "question": ["view"],
+      "section": ["view"]
+  }
+}
