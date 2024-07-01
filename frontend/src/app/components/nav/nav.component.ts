@@ -50,10 +50,10 @@ export class NavComponent implements OnInit {
       link: '/student'
     },
     {
-      id: 'professor',
-      label: 'Professor',
+      id: 'teacher',
+      label: 'Teacher',
       icon: 'fas fa-user-tie',
-      link: '/professor'
+      link: '/teacher'
     }
   ];
   ngOnInit(): void {

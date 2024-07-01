@@ -10,7 +10,9 @@ import { IndexPageComponent } from './pages/index-page/index-page.component';
 import { CoursesDetailPageComponent } from './pages/courses-detail-page/courses-detail-page.component';
 import { QuestionDetailPageComponent } from './pages/question-detail-page/question-detail-page.component';
 import { QuestionEditPageComponent } from './pages/question-edit-page/question-edit-page.component';
-
+import { CanActivateAdmin } from './guards/admin.guard'; // Importa o guardião que verifica se o usuário é um administrador
+import { CanActivateStudent } from './guards/student.guard';
+import { CanActivateTeacher } from './guards/teacher.guard';
 
 export const routes: Routes = [
   // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
@@ -36,15 +38,18 @@ export const routes: Routes = [
       },
       {
         path: 'admin',
-        component: AdminPageComponent
+        component: AdminPageComponent,
+        canActivate: [CanActivateAdmin] 
       },
       {
         path: 'student',
-        component: StudentPageComponent
+        component: StudentPageComponent,
+        canActivate: [CanActivateStudent]
       },
       {
         path: 'teacher',
-        component: ProfessorPageComponent
+        component: ProfessorPageComponent,
+        canActivate: [CanActivateTeacher]
       }
     ]
   },
