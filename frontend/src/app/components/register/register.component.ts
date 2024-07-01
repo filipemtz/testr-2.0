@@ -9,13 +9,13 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { group } from '@angular/animations';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatIconModule, MatInputModule, MatButtonModule, MatCardModule, MatRadioModule],
+  imports: [ReactiveFormsModule, CommonModule, MatIconModule, MatInputModule, MatButtonModule, MatCardModule, MatRadioModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       password_confirm: ['', Validators.required],
-      group: ['Student', Validators.required]
+      group: ['student', Validators.required]
     });    
   }
 

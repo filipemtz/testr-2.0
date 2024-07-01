@@ -7,7 +7,7 @@
       
       <!-- Campo de e-mail -->
       <mat-form-field appearance="outline">
-        <mat-label>Username</mat-label>
+        <mat-label>Nome de Usuário</mat-label>
         <input matInput formControlName="username" required>
         <mat-icon matSuffix>person</mat-icon> <!-- Ícone de pessoa -->
         <!-- Exibir mensagem de erro se o campo de username for inválido -->
@@ -32,6 +32,9 @@
         <mat-icon>login</mat-icon> <!-- Ícone de login -->
         Logar
       </button>
+
+      <!-- Link para a página de cadastro -->
+      <a routerLink="/accounts/register">Não tem uma conta? Cadastre-se</a>
     </form>
   </mat-card-content>
 </mat-card>

@@ -75,8 +75,8 @@
 
       <!-- Opção para selecionar se é professor ou aluno -->
       <mat-radio-group formControlName="group">
-        <mat-radio-button value="Professor">Professor</mat-radio-button>
-        <mat-radio-button value="Student">Aluno</mat-radio-button>
+        <mat-radio-button value="teacher">Professor</mat-radio-button>
+        <mat-radio-button value="student">Aluno</mat-radio-button>
       </mat-radio-group>
 
       <!-- Botão de registro com ícone -->
@@ -91,6 +91,9 @@
         <!-- Ícone de adicionar usuário -->
         Registrar
       </button>
+
+      <!-- Link para a página de login -->
+      <a routerLink="/accounts/login">Já tem uma conta? Faça login</a>
     </form>
   </mat-card-content>
 </mat-card>

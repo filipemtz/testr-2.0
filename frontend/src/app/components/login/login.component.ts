@@ -41,14 +41,14 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
         // this.router.navigate(['/']);
-        
-        const groups = res.user.groups;
-        this.getUserGroups(groups).subscribe(groups_ => {
-          this.redirectTo(groups_);
-        });
-
-        
       
+        if (res.user.is_superuser) {
+          this.router.navigate(['/admin']);
+        }else{
+          this.getUserGroups(res.user.groups).subscribe(groups => {
+            this.redirectTo(groups);
+          });
+        }
       }
     });
   }
@@ -77,12 +77,10 @@ export class LoginComponent implements OnInit {
   }
 
   redirectTo(groups: any[]) {
-    if (groups.includes('Admin')) {
-      this.router.navigate(['/admin']);
-    } else if (groups.includes('Student')) {
+    if (groups.includes('student')) {
       this.router.navigate(['/student']);
-    } else if (groups.includes('Professor')) {
-      this.router.navigate(['/professor']);
+    } else if (groups.includes('teacher')) {
+      this.router.navigate(['/teacher']);
     } else{
       this.router.navigate(['/']);
     }

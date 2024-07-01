@@ -76,6 +76,7 @@ export class NavComponent implements OnInit {
       next: () => {
         localStorage.removeItem('token');
         localStorage.removeItem('authenticated');
+        localStorage.removeItem('user');
         this.authenticated = false;
         // AuthService.authEmitter.emit(false);
         this.router.navigate(['/accounts/login']);
