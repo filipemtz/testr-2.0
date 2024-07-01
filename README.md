@@ -6,6 +6,32 @@ Refactor of Testr with modern technologies, software architecture, and developme
 
 The installation process was tested on Ubuntu 22.
 
+For using docker when running the auto judge system, install docker by following the instructions in the respective section below in this documentation.
+
+Setup postgresql. Instructions are based on this [tutorial](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04).
+
+To install postgre in ubuntu, use:
+
+```
+sudo apt update
+sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib
+```
+
+To configure postgresql to be used with django, use (UPDATE 'password'):
+
+```
+>> sudo -u postgres psql
+CREATE DATABASE testr;
+CREATE USER testr_user WITH PASSWORD 'password';
+ALTER ROLE testr_user SET client_encoding TO 'utf8';
+ALTER ROLE testr_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE testr_user SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE testr TO testr_user;
+\q
+```
+
+Add the database connection information in config.json.
+
 Install node version manager (nvm):
 
 ```
@@ -35,6 +61,7 @@ npm i
 Install the backend dependencies (it is recommended to [create a python virtual environment](https://docs.python.org/3/library/venv.html)):
 
 ```
+cd ../backend
 python -m pip install -r requirements.txt
 ```
 
