@@ -25,6 +25,13 @@ Install angular:
 npm install -g @angular/cli
 ```
 
+Install the frontend dependencies:
+
+```
+cd frontend
+npm i
+```
+
 Install the backend dependencies (it is recommended to [create a python virtual environment](https://docs.python.org/3/library/venv.html)):
 
 ```
@@ -48,6 +55,12 @@ Create a admin superuser:
 python manage.py createsuperuser
 ```
 
+Set permissions:
+
+```
+python manage.py setperms permissions.json
+```
+
 ## Running the Application
 
 ### Front-end
@@ -56,7 +69,7 @@ To serve the front-end application in a local network:
 
 ```
 cd frontend
-ng serve 0.0.0.0:8080
+ng serve --port 4200
 ```
 
 To serve the front-end application for external access, replace the IP for the server public IP.
