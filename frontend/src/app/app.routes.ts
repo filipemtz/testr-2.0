@@ -13,6 +13,7 @@ import { QuestionEditPageComponent } from './pages/question-edit-page/question-e
 import { CanActivateAdmin } from './guards/admin.guard'; // Importa o guardião que verifica se o usuário é um administrador
 import { CanActivateStudent } from './guards/student.guard';
 import { CanActivateTeacher } from './guards/teacher.guard';
+import { QuestionCreatePageComponent } from './pages/question-create-page/question-create-page.component';
 
 export const routes: Routes = [
   // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
@@ -35,6 +36,10 @@ export const routes: Routes = [
       { 
         path: 'question/edit/:id', 
         component: QuestionEditPageComponent
+      },
+      {
+        path: 'question/create/:sectionId',
+        component: QuestionCreatePageComponent
       },
       {
         path: 'admin',
