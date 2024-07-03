@@ -22,33 +22,33 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: IndexPageComponent
+        loadComponent: () => import('./pages/index-page/index-page.component').then(m => m.IndexPageComponent)
       },
       { 
         path: 'course/:id', 
-        component: CoursesDetailPageComponent 
+        loadComponent: () => import('./pages/courses-detail-page/courses-detail-page.component').then(m => m.CoursesDetailPageComponent)
       },
       { 
         path: 'question/:id', 
-        component: QuestionDetailPageComponent
+        loadComponent: () => import('./pages/question-detail-page/question-detail-page.component').then(m => m.QuestionDetailPageComponent)
       },
       { 
         path: 'question/edit/:id', 
-        component: QuestionEditPageComponent
+        loadComponent: () => import('./pages/question-edit-page/question-edit-page.component').then(m => m.QuestionEditPageComponent)
       },
       {
         path: 'admin',
-        component: AdminPageComponent,
+        loadComponent: () => import('./pages/admin-page/admin-page.component').then(m => m.AdminPageComponent),
         canActivate: [CanActivateAdmin] 
       },
       {
         path: 'student',
-        component: StudentPageComponent,
+        loadComponent: () => import('./pages/student-page/student-page.component').then(m => m.StudentPageComponent),
         canActivate: [CanActivateStudent]
       },
       {
         path: 'teacher',
-        component: ProfessorPageComponent,
+        loadComponent: () => import('./pages/professor-page/professor-page.component').then(m => m.ProfessorPageComponent),
         canActivate: [CanActivateTeacher]
       }
     ]
@@ -59,11 +59,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginPageComponent
+        loadComponent: () => import('./pages/login-page/login-page.component').then(m => m.LoginPageComponent)
       },
       {
         path: 'register',
-        component: RegisterPageComponent
+        loadComponent: () => import('./pages/register-page/register-page.component').then(m => m.RegisterPageComponent)
       }
     ]
   }

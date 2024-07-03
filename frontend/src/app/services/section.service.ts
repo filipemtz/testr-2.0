@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Section } from '../interfaces/section';
 import { Question } from '../interfaces/question';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SectionService {
-  private apiUrl = 'http://localhost:8000/sections'; // URL base da API para seções
+  private apiUrl = `${environment.apiUrl}/sections`; // URL base da API para seções
 
   constructor(private http: HttpClient) { }
 
