@@ -56,7 +56,6 @@ export class IndexPageComponent implements OnInit {
     private router: Router,
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private elementRef: ElementRef,
   ) {
     this.editForm = this.fb.group({
       name: ['', Validators.required],
@@ -123,24 +122,6 @@ export class IndexPageComponent implements OnInit {
     }
   }
 
-  confirmSave(): void {
-    if (this.editForm.valid && this.selectedCourse && this.selectedCourse.url) {
-      const updatedCourse = { ...this.selectedCourse, ...this.editForm.value };
-
-      this.courseService.updateCourse(this.selectedCourse!.url, updatedCourse).subscribe({
-        next: () => {
-          this.resetForm();
-          this.courses = this.courses.map((course) =>
-            course.url === updatedCourse.url ? updatedCourse : course,
-          );
-        },
-        error: (err) => {
-          console.error(err);
-        },
-      });
-    }
-  }
-
   confirmDelete(): void {
     if (this.courseToDelete && this.courseToDelete.url) {
       this.courseService.deleteCourse(this.courseToDelete.url).subscribe({
@@ -165,10 +146,9 @@ export class IndexPageComponent implements OnInit {
     });
   }
 
-  confirmEdit(course: Course) {
+  confirmEditInline(course: Course) {
     if (this.selectedCourse && this.selectedCourse.url) {
       const updatedCourse = { ...this.selectedCourse, name: course.name };
-
       this.courseService.updateCourse(this.selectedCourse.url, updatedCourse).subscribe({
         next: () => {
           course.isEditing = false;
@@ -183,6 +163,7 @@ export class IndexPageComponent implements OnInit {
 
   cancelEdit(course: Course) {
     course.isEditing = false;
+
     this.loadCourses();
   }
 
@@ -214,10 +195,8 @@ export class IndexPageComponent implements OnInit {
     this.loadCourses();
   }
 
-
-  resetForm(): void {
-    this.selectedCourse = null;
-    this.editForm.reset();
-    this.modalService.dismissAll();
+  resetAddForm(): void{
+    this.addForm.reset();
   }
+
 }

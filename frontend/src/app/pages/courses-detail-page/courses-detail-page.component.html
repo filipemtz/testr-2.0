@@ -66,7 +66,12 @@
 			</li>
 		</ol>
 		<!--Botão de adicionar questão-->
-		<button class="btn text-primary " (click)="openAddQuestionModal(section, addQuestionModal)">
+		<!--(click)="openAddQuestionModal(section, addQuestionModal)"-->
+		<!--<button class="btn text-primary" [routerLink]="['/question/create', section.id]" >
+			<i class="fa-regular fa-plus"></i>
+			Nova Questão
+		</button>-->
+		<button class="btn text-primary" [routerLink]="['/question/create', section.id]">
 			<i class="fa-regular fa-plus"></i>
 			Nova Questão
 		</button>
@@ -104,8 +109,6 @@
 		<button type="button" class="btn btn-primary" (click)="confirmAddSection()">Criar</button>
 	</div>
 </ng-template>
-
-
 
 <!--Modal de deleção de Seção-->
 <ng-template #deleteSectionModal let-modal>

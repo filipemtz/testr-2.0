@@ -5,9 +5,9 @@
 		<div class="card shadow-sm h-100">
 			<div class="card-body h-100">
 				<div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
-					<input #courseInput class="form-control input-inline h5 w-50" [(ngModel)]="course.name" />
+					<input #courseInput class="form-control input-inline h5 w-50" [(ngModel)]="course.name"/>
 					<div class="d-flex justify-content-between align-items-center">
-						<a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEdit(course)"></a>
+						<a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline(course)"></a>
 						<a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
 					</div>
 				</div>
@@ -39,7 +39,7 @@
 
 
 <ng-template #noCourses>
-	<div class="card h-100 new-question border-0 " (click)="openAddModal(addModal)">
+	<div class="card h-100 new-question border-0 w-10" (click)="openAddModal(addModal)">
 		<div class="card-body d-flex align-items-center justify-content-center">
 			<i class="fa-regular fa-plus fa-xl me-1"></i>
 			<div class="">Novo Curso</div>
@@ -48,6 +48,7 @@
 	<p class="no-course-message">Não existem cursos disponíveis.</p>
 </ng-template>
 
+<!--
 <ng-template #editModal let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Editar curso</h4>
@@ -70,6 +71,7 @@
 		<button type="button" class="btn btn-primary" (click)="confirmSave()">Salvar</button>
 	</div>
 </ng-template>
+-->
 
 <ng-template #deleteModal let-modal>
 	<div class="modal-header">
@@ -88,7 +90,7 @@
 <ng-template #addModal let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Criar novo curso</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')" (click)="resetAddForm()"></button>
 	</div>
 	<div class="modal-body">
 		<form [formGroup]="addForm">
@@ -103,7 +105,7 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()" (click)="resetAddForm()">Cancelar</button>
 		<button type="button" class="btn btn-primary" (click)="confirmAdd()">Criar</button>
 	</div>
 </ng-template>
