@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  api = 'http://localhost:8000/accounts';
+  api = `${environment.apiUrl}/accounts`;
  
   // static authEmitter = new EventEmitter<boolean>();
 
@@ -17,7 +18,7 @@ export class AuthService {
   }
 
   login(body: any){
-    return this.http.post(`${this.api}/login/`, body, {withCredentials: true});
+    return this.http.post(`${this.api}/login/`, body);
   }
 
   profile(){

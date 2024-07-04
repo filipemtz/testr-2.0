@@ -29,7 +29,7 @@ export const routes: Routes = [
       },
       { 
         path: 'course/:id', 
-        component: CoursesDetailPageComponent 
+        component: CoursesDetailPageComponent
       },
       { 
         path: 'question/:id', 
