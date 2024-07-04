@@ -13,12 +13,13 @@ import { QuestionEditPageComponent } from './pages/question-edit-page/question-e
 import { CanActivateAdmin } from './guards/admin.guard'; // Importa o guardião que verifica se o usuário é um administrador
 import { CanActivateStudent } from './guards/student.guard';
 import { CanActivateTeacher } from './guards/teacher.guard';
-
+import { authenticatedGuard } from './guards/authenticated.guard';
 export const routes: Routes = [
   // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [authenticatedGuard],
     children: [
       {
         path: '',
