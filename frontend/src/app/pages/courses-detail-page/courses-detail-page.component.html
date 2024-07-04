@@ -40,29 +40,17 @@
 		<ol *ngIf="section.questions?.length ?? -1 > 0; else noQuestions"
 			class="list-group list-group-numbered list-group-flush ">
 			<li *ngFor="let question of section.questions"  class="list-group-item list-group-item-action d-flex justify-content-start align-items-center">
-				<!--Modo de edição da questão-->
-				<div *ngIf="question.isEditing; else viewQuestion" class="ms-1 d-flex flex-wrap justify-content-start w-100" >
-					<input class="form-control form-control fw-semibold w-50" [(ngModel)]="question.name" />
-					<div class="d-flex align-items-center">
-						<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
-							(click)="confirmEditQuestion(question)"></button>
-						<button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1"
-							(click)="question.isEditing=false"></button>
-					</div>
+				<div class="ms-1 d-flex justify-content-start align-items-center">
+					<a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  [routerLink]="['/question', question.id]">{{ question.name }}</a>
+					<button type="button" class="btn btn-sm rounded-circle text-primary ms-1" [routerLink]="['/question',question.id,'edit']">
+						<i class="fa-solid fa-pencil fa-sm"></i>
+					</button>
+					<button type="button" class="btn btn-sm rounded-circle text-danger ms-1"
+						(click)="openDeleteQuestionModal(question, deleteQuestionModal)">	
+						<i class="fa-solid fa-trash fa-sm"></i>
+					</button>
 				</div>
-				<!--Modo de visualização da questão-->
-				<ng-template #viewQuestion>
-					<div class="ms-1 d-flex justify-content-start align-items-center">
-						<a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  [routerLink]="['/question', question.id]">{{ question.name }}</a>
-						<button type="button" class="btn btn-sm rounded-circle text-primary ms-1" (click)="question.isEditing=true">
-							<i class="fa-solid fa-pencil fa-sm"></i>
-						</button>
-						<button type="button" class="btn btn-sm rounded-circle text-danger ms-1"
-							(click)="openDeleteQuestionModal(question, deleteQuestionModal)">
-							<i class="fa-solid fa-trash fa-sm"></i>
-						</button>
-					</div>
-				</ng-template>
+
 			</li>
 		</ol>
 		<!--Botão de adicionar questão-->
@@ -137,85 +125,5 @@
 	<div class="modal-footer"><!--Rodapé-->
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
 		<button type="button" class="btn btn-danger" (click)="confirmDeleteQuestion()">Deletar</button>
-	</div>
-</ng-template>
-
-<!--Modal de adição de Question-->
-<ng-template #addQuestionModal let-modal>
-	<div class="modal-header"><!--Cabeçalho-->
-		<h4 class="modal-title" id="modal-basic-title">Criar nova questão</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body"><!--Corpo-->
-		<form [formGroup]="addQuestionForm">
-			<!--Nome da questão-->
-			<div>
-				<label for="name">Name:</label>
-				<input id="name" type="text" class="form-control" formControlName="name">
-				<div
-					*ngIf="addQuestionForm.get('name')?.invalid && (addQuestionForm.get('name')?.dirty || addQuestionForm.get('name')?.touched)"
-					class="text-danger">
-					Nome da questão é obrigatório.
-				</div>
-			</div>
-			<!--Descrição da questão-->
-			<div>
-				<label for="description">Description:</label>
-				<input id="description" type="text" class="form-control" formControlName="description">
-			</div>
-			<!--Linguagem da questão-->
-			<div>
-				<label for="language">Language:</label>
-				<select class="form-control" id="language" formControlName="language">
-					<option value="" disabled>Select language</option>
-					<option value="PT">Python</option>
-					<option value="CC">C/C++</option>
-				</select>
-			</div>
-			<!--Código da questão-->
-			<div>
-				<label for="time_limit_seconds">Time limit seconds:</label>
-				<input id="time_limit_seconds" type="number" class="form-control" formControlName="time_limit_seconds">
-				<div
-					*ngIf="addQuestionForm.get('time_limit_seconds')?.invalid && (addQuestionForm.get('time_limit_seconds')?.dirty || addQuestionForm.get('time_limit_seconds')?.touched)"
-					class="text-danger">
-					Tempo limite de execução em segundos obrigatório.
-				</div>
-			</div>
-			<!--Memória limite-->
-			<div>
-				<label for="memory_limit">Memory limit:</label>
-				<input id="memory_limit" type="number" class="form-control" formControlName="memory_limit">
-				<div
-					*ngIf="addQuestionForm.get('memory_limit')?.invalid && (addQuestionForm.get('memory_limit')?.dirty || addQuestionForm.get('memory_limit')?.touched)"
-					class="text-danger">
-					Limite de memória obrigatório.
-				</div>
-			</div>
-			<!--Limite de CPU-->
-			<div>
-				<label for="cpu_limit">CPU limit:</label>
-				<input id="cpu_limit" type="number" class="form-control" formControlName="cpu_limit">
-				<div
-					*ngIf="addQuestionForm.get('cpu_limit')?.invalid && (addQuestionForm.get('cpu_limit')?.dirty || addQuestionForm.get('cpu_limit')?.touched)"
-					class="text-danger">
-					Limite da CPU obrigatório.
-				</div>
-			</div>
-			<!--Data limite de submissão-->
-			<div>
-				<label for="submission_deadline">Submission deadline:</label>
-				<input id="submission_deadline" type="text" class="form-control" formControlName="submission_deadline">
-				<div
-					*ngIf="addQuestionForm.get('submission_deadline')?.invalid && (addQuestionForm.get('submission_deadline')?.dirty || addQuestionForm.get('submission_deadline')?.touched)"
-					class="text-danger">
-					Data limite obrigatória.
-				</div>
-			</div>
-		</form>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-		<button type="button" class="btn btn-danger" (click)="confirmAddQuestion()">Criar</button>
 	</div>
 </ng-template>
