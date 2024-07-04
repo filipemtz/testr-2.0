@@ -15,11 +15,13 @@ import { CanActivateStudent } from './guards/student.guard';
 import { CanActivateTeacher } from './guards/teacher.guard';
 import { QuestionCreatePageComponent } from './pages/question-create-page/question-create-page.component';
 
+import { authenticatedGuard } from './guards/authenticated.guard';
 export const routes: Routes = [
   // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [authenticatedGuard],
     children: [
       {
         path: '',
