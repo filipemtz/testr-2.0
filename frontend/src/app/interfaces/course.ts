@@ -5,4 +5,5 @@ export interface Course {
     visible: boolean;
     teachers: string[];
     isEditing: boolean;
+    originalName: string;
 }

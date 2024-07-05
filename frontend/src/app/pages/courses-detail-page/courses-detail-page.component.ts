@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
@@ -10,7 +10,6 @@ import { CourseService } from '../../services/course.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-courses-detail-page',
@@ -40,7 +39,6 @@ export class CoursesDetailPageComponent implements OnInit {
     private courseService: CourseService,
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
   ) {
 
 
@@ -117,15 +115,6 @@ export class CoursesDetailPageComponent implements OnInit {
     }
   }
 
-  confirmEditSection(section: Section) {
-    const updatedSection = { ...section, name: section.name };
-    this.sectionService.editSection(section.url, updatedSection).subscribe({
-      next: () => {
-        section.isEditing = false;
-      },
-    });
-  }
-
   openDeleteSectionModal(section: Section, content: TemplateRef<any>) {
     this.sectionToDelete = section;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
@@ -136,15 +125,16 @@ export class CoursesDetailPageComponent implements OnInit {
       next: () => {
         this.sections = this.sections.filter(section => section.url !== this.sectionToDelete!.url);
         this.modalService.dismissAll();
-        this.cdr.detectChanges();
       },
     });
   }
 
-  // Questions
-  openAddQuestionModal(section: Section, content: TemplateRef<any>) {
-    this.selectedSection = section;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  confirmEditQuestion(question: Question) {
+    this.questionService.editQuestion(question.url, question).subscribe({
+      next: () => {
+        question.isEditing = false;
+      },
+    });
   }
 
   confirmAddQuestion(): void {
@@ -163,17 +153,34 @@ export class CoursesDetailPageComponent implements OnInit {
     }
   }
 
-  confirmEditQuestion(question: Question) {
-    this.questionService.editQuestion(question.url, question).subscribe({
+  openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
+    this.questionToDelete = question;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  enableEditSection(section: Section) {
+    section.isEditing = true;
+    section.originalName = section.name;
+    setTimeout(() => {
+      this.sectionInput.nativeElement.focus();
+    });
+  }
+
+  confirmEditSection(section: Section) {
+    const updatedSection = { ...section, name: section.name };
+    this.sectionService.editSection(section.url, updatedSection).subscribe({
       next: () => {
-        question.isEditing = false;
+        section.isEditing = false;
+      },
+      error: (err) => {
+        console.error(err);
       },
     });
   }
 
-  openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
-    this.questionToDelete = question;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  cancelEditSection(section: Section) {
+    section.isEditing = false;
+    section.name = section.originalName;
   }
 
   confirmDeleteQuestion(): void {
@@ -186,5 +193,9 @@ export class CoursesDetailPageComponent implements OnInit {
         this.modalService.dismissAll();
       },
     });
+  }
+
+  resetAddSectionForm(): void {
+    this.addSectionForm.reset();
   }
 }

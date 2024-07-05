@@ -35,7 +35,6 @@ export class IndexPageComponent implements OnInit {
 
   courses: Course[] = [];
   courseToDelete: Course | null = null;
-  selectedCourse: Course | null = null;
   user: any;
 
   newCourseName: string = '';
@@ -47,7 +46,8 @@ export class IndexPageComponent implements OnInit {
     teachers: [],
     isEditing: false,
     id: -1,
-    url: ''
+    url: '',
+    originalName: "",
   };
 
   constructor(
@@ -95,12 +95,6 @@ export class IndexPageComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  openEditModal(course: Course, content: TemplateRef<any>) {
-    this.selectedCourse = course;
-    this.editForm.patchValue(course);
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
   confirmAdd(): void {
     if (this.addForm.valid) {
       this.baseCourse.teachers.push(this.user.id);
@@ -139,32 +133,28 @@ export class IndexPageComponent implements OnInit {
   }
 
   enableEdit(course: Course) {
-    this.selectedCourse = course;
     course.isEditing = true;
+    course.originalName = course.name;
     setTimeout(() => {
       this.courseInput.nativeElement.focus();
     });
   }
 
   confirmEditInline(course: Course) {
-    if (this.selectedCourse && this.selectedCourse.url) {
-      const updatedCourse = { ...this.selectedCourse, name: course.name };
-      this.courseService.updateCourse(this.selectedCourse.url, updatedCourse).subscribe({
+      const updatedCourse = { ...course };
+      this.courseService.updateCourse(course.url, updatedCourse).subscribe({
         next: () => {
           course.isEditing = false;
-          this.loadCourses();
         },
         error: (err) => {
           console.error(err);
         },
       });
     }
-  }
 
   cancelEdit(course: Course) {
     course.isEditing = false;
-
-    this.loadCourses();
+    course.name = course.originalName;
   }
 
   enableAdd(){

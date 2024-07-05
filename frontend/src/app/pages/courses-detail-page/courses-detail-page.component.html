@@ -18,12 +18,12 @@
 	<li *ngFor="let section of sections; let i = index" class="list-group-item">
 		<!--Modo de edição da seção-->
 		<div *ngIf="section.isEditing; else viewSection" class="d-flex flex-wrap justify-content-start">
-			<input class="form-control form-control-lg fw-semibold w-50 me-2" [(ngModel)]="section.name" />
+			<input #sectionInput class="form-control form-control-lg fw-semibold w-50 me-2" [(ngModel)]="section.name" />
 			<div class="d-flex align-items-center">
 				<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
 					(click)="confirmEditSection(section)"></button>
 				<button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1"
-					(click)="section.isEditing=false"></button>
+					(click)="cancelEditSection(section)"></button>
 			</div>
 		</div>
 		<!--Modo de visualização da seção-->
@@ -31,7 +31,7 @@
 			<div class="d-flex justify-content-start align-items-center">
 				<h4>{{i + 1}}. {{ section.name }}</h4>
 				<button type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1"
-					(click)="section.isEditing=true"></button>
+					(click)="enableEditSection(section)"></button>
 				<button type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1"
 					(click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
 			</div>
@@ -50,7 +50,6 @@
 						<i class="fa-solid fa-trash fa-sm"></i>
 					</button>
 				</div>
-
 			</li>
 		</ol>
 		<!--Botão de adicionar questão-->
@@ -77,7 +76,7 @@
 <ng-template #addSectionModal let-modal>
 	<div class="modal-header"><!--Cabeçalho-->
 		<h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')" (click)="resetAddSectionForm()"></button>
 	</div>
 	<div class="modal-body"><!--Corpo-->
 		<form [formGroup]="addSectionForm">
@@ -93,7 +92,7 @@
 		</form>
 	</div>
 	<div class="modal-footer"><!--Rodapé-->
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="modal.dismiss()" (click)="resetAddSectionForm()">Cancelar</button>
 		<button type="button" class="btn btn-primary" (click)="confirmAddSection()">Criar</button>
 	</div>
 </ng-template>

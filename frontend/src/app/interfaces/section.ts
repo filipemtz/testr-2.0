@@ -7,4 +7,5 @@ export interface Section {
     course: number;
     isEditing?: boolean;
     questions? : Question[];
+    originalName: string;
 }
