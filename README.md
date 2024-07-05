@@ -96,7 +96,7 @@ To serve the front-end application in a local network:
 
 ```
 cd frontend
-ng serve --port 4200
+ng serve  --configuration=production --host 0.0.0.0 --port 8080
 ```
 
 To serve the front-end application for external access, replace the IP for the server public IP.
@@ -107,7 +107,7 @@ To serve the back-end application locally:
 
 ```
 cd backend
-python manage.py runserver 127.0.0.1:8000
+python manage.py runserver 0.0.0.0:8000
 ```
 
 To expose the API for external access, replace the IP by a public IP. In most cases, this is not necessary or recommended.
