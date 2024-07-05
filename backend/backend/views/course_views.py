@@ -17,7 +17,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def sections(self, request, pk=None):
-        print(request)
         course = self.get_object()
         sections = course.section_set.all()
         serializer = SectionSerializer(sections, many=True, context={'request': request})
