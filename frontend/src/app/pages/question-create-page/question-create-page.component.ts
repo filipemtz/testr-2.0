@@ -1,18 +1,16 @@
 import { CommonModule, Location } from '@angular/common';
-import { OnInit, ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CourseService } from '../../services/course.service';
-import { SectionService } from '../../services/section.service';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../interfaces/question';
+import { InputOutputComponent } from '../../components/input-output/input-output.component';
 
 @Component({
   selector: 'app-question-create-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, MatIconModule, FormsModule, ReactiveFormsModule, InputOutputComponent],
   templateUrl: './question-create-page.component.html',
   styleUrl: './question-create-page.component.css'
 })
@@ -23,12 +21,8 @@ export class QuestionCreatePageComponent {
   constructor (
     private route: ActivatedRoute,
     private questionService: QuestionService,
-    private sectionService: SectionService,
-    private courseService: CourseService,
-    private modalService: NgbModal,
     private location: Location,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
   ) 
   {
     this.addQuestionForm = this.fb.group({
@@ -44,7 +38,6 @@ export class QuestionCreatePageComponent {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('sectionId');
-    console.log(id)
     if (id !== null){
       this.sectionId = +id;
     }
@@ -55,7 +48,6 @@ export class QuestionCreatePageComponent {
   confirmCreateQuestion(): void {
     if (this.addQuestionForm.valid) {
       const newQuestion: Question = { section: this.sectionId, ...this.addQuestionForm.value };
-      console.log(newQuestion.url)
       this.questionService.postQuestion(newQuestion).subscribe({
         next: () => {
           this.addQuestionForm.reset();

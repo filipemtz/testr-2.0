@@ -3,15 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
 import {MatIconModule} from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
-import { Question } from '../../interfaces/question';
+import { InputOutputComponent } from '../../components/input-output/input-output.component';
 
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
-  imports: [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatIconModule],
+  imports: [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatIconModule, InputOutputComponent],
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })

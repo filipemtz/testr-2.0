@@ -4,5 +4,5 @@ export interface InputOutput {
     input: string;
     output: string;
     visible: boolean;
-    created_at: string;
+    question: number;
 }
