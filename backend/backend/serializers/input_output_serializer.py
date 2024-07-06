@@ -4,4 +4,4 @@ from ..models import InputOutput
 class InputOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InputOutput
-        fields = ['id', 'url', 'question', 'input', 'output', 'visible', 'created_at']
+        fields = ['id', 'url', 'question', 'input', 'output', 'visible']

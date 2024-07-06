@@ -9,10 +9,6 @@ class InputOutput(models.Model):
     input = models.TextField(blank=True)
     output = models.TextField(blank=True)
     visible = models.BooleanField(default=True)
-    created_at = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.input} -> {self.output}"
