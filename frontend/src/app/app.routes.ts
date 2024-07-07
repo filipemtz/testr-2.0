@@ -40,7 +40,7 @@ export const routes: Routes = [
         component: QuestionEditPageComponent
       },
       {
-        path: 'question/create/:sectionId',
+        path: 'section/:sectionId/question-create',
         component: QuestionCreatePageComponent
       },
       {

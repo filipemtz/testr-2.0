@@ -77,7 +77,6 @@ export class IndexPageComponent implements OnInit {
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: (response) => {
-        console.log(response);
         this.courses = response.results;
       },
       error: (err) => {
@@ -99,7 +98,7 @@ export class IndexPageComponent implements OnInit {
     if (this.addForm.valid) {
       this.baseCourse.teachers.push(this.user.id);
       const newCourse = { ...this.baseCourse, ...this.addForm.value };
-
+      console.log(newCourse);
       this.courseService.createCourse(newCourse).subscribe({
         next: (course) => {
           this.addForm.reset();

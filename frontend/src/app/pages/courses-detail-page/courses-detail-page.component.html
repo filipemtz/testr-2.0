@@ -52,13 +52,7 @@
 				</div>
 			</li>
 		</ol>
-		<!--Botão de adicionar questão-->
-		<!--(click)="openAddQuestionModal(section, addQuestionModal)"-->
-		<!--<button class="btn text-primary" [routerLink]="['/question/create', section.id]" >
-			<i class="fa-regular fa-plus"></i>
-			Nova Questão
-		</button>-->
-		<button class="btn text-primary" [routerLink]="['/question/create', section.id]">
+		<button class="btn text-primary" [routerLink]="['/section', section.id, 'question-create']">
 			<i class="fa-regular fa-plus"></i>
 			Nova Questão
 		</button>

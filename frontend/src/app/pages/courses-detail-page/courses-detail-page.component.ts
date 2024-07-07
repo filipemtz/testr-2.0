@@ -66,14 +66,12 @@ export class CoursesDetailPageComponent implements OnInit {
   loadSections(courseId : number){
     this.courseService.getSections(courseId).subscribe({
       next: (response : any) => {
-        console.log(response);
         this.sections = response;
         this.sections.forEach((element: Section) => {
           // Recupera um array de questões de uma determinada seção
           this.sectionService.getQuestions(element.id).subscribe({
             next: (response : any) => {
               element.questions = response;
-              console.log(element.questions);
             }
           });
         });

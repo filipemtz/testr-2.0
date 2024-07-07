@@ -36,12 +36,35 @@ export class QuestionCreatePageComponent {
     });
   }
 
+  defaultQuestion: Question = {
+    id: -1,
+    url: '',
+    name: "def",
+    description: '',
+    language: "PT",
+    submission_deadline: new Date().toISOString(),
+    memory_limit: 200,
+    time_limit_seconds: 30,
+    cpu_limit: 0.25,
+    section: -1,
+  };
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('sectionId');
     if (id !== null){
       this.sectionId = +id;
+      const defQuestion: Question = { ...this.defaultQuestion, section: this.sectionId };
+      console.log(defQuestion);
+      this.questionService.postQuestion(defQuestion).subscribe({
+        next: question => {
+          console.log(question);
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
     }
-    else 
+    else
       console.error('Sem ID');
   }
 
@@ -49,7 +72,8 @@ export class QuestionCreatePageComponent {
     if (this.addQuestionForm.valid) {
       const newQuestion: Question = { section: this.sectionId, ...this.addQuestionForm.value };
       this.questionService.postQuestion(newQuestion).subscribe({
-        next: () => {
+        next: question => {
+          console.log(question);
           this.addQuestionForm.reset();
           this.goBack();
         },

@@ -1,4 +1,3 @@
-
 db:
   # which database should be used and their credentials
   type: <sqlite | postgres>
@@ -18,8 +17,7 @@ backend:
   # Whether or not the backend should run in debug mode
   debug: false
   # CORS Settings
-  cors_allowed_origins: ["http://localhost:4200", "http://127.0.0.1:4200", "http://127.0.0.1"]
-  csrf_trusted_origins: ["http://localhost:4200", "http://127.0.0.1:4200", "http://127.0.0.1"]
+  cors_allowed_origins: ["http://my-machine-ip-address:port", "http://localhost:port"]
 
   cors_allow_credentials: true
 
@@ -39,4 +37,3 @@ judge:
 
     # C/C++ Compiler
     cc: "gcc"
-
