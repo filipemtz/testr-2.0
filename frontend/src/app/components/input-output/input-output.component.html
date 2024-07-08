@@ -1,14 +1,16 @@
 <main>
     <h3 class="fw-bold text-center mb-3">Inputs/Outputs</h3>
     <div class="text-center mt-3">
-        <button class="btn new-io text-center">
+        <button class="btn new-io text-center" (click)="createInputOutput()">
             <i class="fa-regular fa-plus"></i>
             Nova Entrada/Saída
         </button>
     </div>
     
     <div *ngFor="let io of inputs_outputs">
-        {{ io.input }}
-        {{ io.output }}
+        <li>
+            I: {{ io.input }}
+            O: {{ io.output }}
+        </li>
     </div>
 </main>
