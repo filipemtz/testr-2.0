@@ -8,6 +8,7 @@ from datetime import timezone
 
 class UserRefreshAPIView(APIView):
     def post(self, request):
+        print('kasskjalksdjalkj')
         refresh_token = request.COOKIES.get('refresh_token')
         id = decode_refresh_token(refresh_token)
 

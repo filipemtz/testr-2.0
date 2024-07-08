@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   login(body: any){
-    return this.http.post(`${this.api}/login/`, body);
+    return this.http.post(`${this.api}/login/`, body, {withCredentials: true});
   }
 
   profile(){

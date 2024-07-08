@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../interfaces/question';
 import { environment } from '../../environments/environment';
+import { QuestionFile } from '../interfaces/question-file';
 @Injectable({
   providedIn: 'root'
 })
@@ -29,5 +30,9 @@ export class QuestionService {
 
   deleteQuestion(url: string): Observable<void> {
     return this.http.delete<void>(url, { withCredentials: true });
+  }
+
+  getQuestionFiles(id: number): Observable<QuestionFile[]> {
+    return this.http.get<QuestionFile[]>(`${this.apiUrl}/${id}/files/`);
   }
 }
