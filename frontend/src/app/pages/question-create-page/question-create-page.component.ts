@@ -66,7 +66,7 @@ export class QuestionCreatePageComponent {
 
   confirmCreateQuestion(): void {
     if (this.addQuestionForm.valid) {
-      const newQuestion: Question = { ...this.addQuestionForm.value };
+      const newQuestion: Question = { ...this.addQuestionForm.value, section: this.currentQuestion.section };
       this.questionService.editQuestion(this.currentQuestion.url, newQuestion).subscribe({
         next: () => {
           this.addQuestionForm.reset();
