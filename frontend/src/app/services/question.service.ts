@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../interfaces/question';
+import { InputOutput } from '../interfaces/input-output';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class QuestionService {
 
   getQuestion(id: number): Observable<Question> {
     return this.http.get<Question>(`${this.apiUrl}/${id}/`, { withCredentials: true });
+  }
+
+  getInputsOutputs(id: number): Observable<{ results: InputOutput[] }> {
+    return this.http.get<{ results: InputOutput[] }>(`${this.apiUrl}/${id}/inputs_outputs/`, { withCredentials: true });
   }
 
   postQuestion(data: Question): Observable<Question> {

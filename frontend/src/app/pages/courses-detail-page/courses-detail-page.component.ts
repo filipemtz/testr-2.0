@@ -18,6 +18,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   templateUrl: './courses-detail-page.component.html',
   styleUrls: ['./courses-detail-page.component.css']
 })
+
 export class CoursesDetailPageComponent implements OnInit {
   @ViewChild('sectionInput') sectionInput!: ElementRef;
   course: Course = {} as Course;

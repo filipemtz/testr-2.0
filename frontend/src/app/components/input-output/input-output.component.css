@@ -1,0 +1,9 @@
+.new-io {
+    cursor: pointer;
+    color: blue;
+}
+  
+.new-io:hover {
+    color: white;
+    background-color: blue;
+}

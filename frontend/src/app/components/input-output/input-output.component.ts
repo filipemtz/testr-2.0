@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Question } from '../../interfaces/question';
 import { QuestionService } from '../../services/question.service';
+import { InputOutput } from '../../interfaces/input-output';
 
 @Component({
   selector: 'app-input-output',
@@ -16,6 +17,8 @@ import { QuestionService } from '../../services/question.service';
 export class InputOutputComponent {
   questionId: number = -1;
   currentQuestion: Question = {} as Question;
+  inputs_outputs: InputOutput[] = [];
+
   constructor (
     private route: ActivatedRoute,
     private questionService: QuestionService,
@@ -26,11 +29,9 @@ export class InputOutputComponent {
     const id = this.route.snapshot.paramMap.get('questionId');
     if (id !== null){
       this.questionId = +id;
-      console.log(this.questionId);
-      this.questionService.getQuestion(this.questionId).subscribe({
-        next: question => {
-          this.currentQuestion = question;
-          console.log(question);
+      this.questionService.getInputsOutputs(this.questionId).subscribe({
+        next: ios => {
+          this.inputs_outputs = ios.results;
         }
       })
     }
