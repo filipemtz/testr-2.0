@@ -4,7 +4,7 @@ export interface Question {
 	name: string;
 	description: string;
 	language: string;
-	submission_deadline: string;
+	submission_deadline: Date;
 	memory_limit: number;
 	time_limit_seconds: number;
 	cpu_limit: number;

@@ -37,9 +37,9 @@ export class QuestionEditPageComponent implements OnInit {
 
    ngOnInit(): void {
     this.authService.profile().subscribe({
-      next: response => {
+      next: () => {
         this.route.params.subscribe(params => {
-          const id = params['id'];
+          const id = params['questionId'];
           this.questionService.getQuestion(id).subscribe( {next: response => {
             this.selectedQuestion = response;
             this.editForm.patchValue(response);

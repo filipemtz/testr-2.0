@@ -35,10 +35,10 @@ export class CoursesDetailPageComponent implements OnInit {
   defaultQuestion: Question = {
     id: -1,
     url: '',
-    name: "default",
+    name: "Nova Questão",
     description: '',
     language: "PT",
-    submission_deadline: new Date().toISOString(),
+    submission_deadline: new Date(),
     memory_limit: 200,
     time_limit_seconds: 30,
     cpu_limit: 0.25,
@@ -209,7 +209,8 @@ export class CoursesDetailPageComponent implements OnInit {
     const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
     this.questionService.postQuestion(defQuestion).subscribe({
       next: question => {
-        this.router.navigate([`/question-create/${question.id}`]); 
+        console.log(question.submission_deadline);
+        this.router.navigate([`/question/${question.id}/edit`]); 
       },
       error: err => {
         console.error(err);

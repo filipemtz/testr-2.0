@@ -13,7 +13,6 @@ import { QuestionEditPageComponent } from './pages/question-edit-page/question-e
 import { CanActivateAdmin } from './guards/admin.guard'; // Importa o guardião que verifica se o usuário é um administrador
 import { CanActivateStudent } from './guards/student.guard';
 import { CanActivateTeacher } from './guards/teacher.guard';
-import { QuestionCreatePageComponent } from './pages/question-create-page/question-create-page.component';
 
 import { authenticatedGuard } from './guards/authenticated.guard';
 export const routes: Routes = [
@@ -38,10 +37,6 @@ export const routes: Routes = [
       { 
         path: 'question/:questionId/edit', 
         component: QuestionEditPageComponent
-      },
-      { 
-        path: 'question-create/:questionId', 
-        component: QuestionCreatePageComponent
       },
       {
         path: 'admin',

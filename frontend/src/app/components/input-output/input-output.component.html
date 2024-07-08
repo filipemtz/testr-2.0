@@ -7,17 +7,17 @@
         </button>
     </div>
         <div *ngFor="let io of inputs_outputs" class="d-flex mb-3 mt-2 justify-content-center">
-            <textarea class="io me-3" required [(ngModel)]="io.input"></textarea>
-            <textarea class="io ms-3" required [(ngModel)]="io.output"></textarea>
+            <textarea class="input-output-textarea me-3" required [(ngModel)]="io.input"></textarea>
+            <textarea class="input-output-textarea ms-3" required [(ngModel)]="io.output"></textarea>
 
-            <div class="d-flex flex-column" *ngIf="io.visible; else visibleOff">
+            <div class="d-flex flex-column justify-content-between" *ngIf="io.visible; else visibleOff" >
                 <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
                 <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="visibleChange(io)"></a>
                 <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="deleteInputOutput(io.url, io)"></a>
             </div>
 
             <ng-template #visibleOff >
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column justify-content-between">
                     <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
                     <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="visibleChange(io)"></a>
                     <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="deleteInputOutput(io.url, io)"></a>

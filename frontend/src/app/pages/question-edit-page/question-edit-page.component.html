@@ -1,14 +1,14 @@
-<h1 class="display-2 text-center mb-4">Question Editor</h1>
+<h1 class="display-2 text-center mb-4">Editor de Questão</h1>
 <a class="icon-link icon-link-hover mb-2" style="cursor:pointer" (click)="goBack()">
   <i class="bi fa-solid fa-arrow-left"></i>
-  Back
+  Voltar
 </a>
 <br>
 
 <div>
   <form [formGroup]="editForm">
     <div>
-      <label for="name" class="base-form">Name:</label>
+      <label for="name" class="base-form">Nome:</label>
       <input id="name" type="text" class="form-control base-bar" formControlName="name">
       <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
         class="text-danger">
@@ -17,12 +17,12 @@
     </div>
 
     <div>
-      <label for="description" class="base-form">Description:</label>
+      <label for="description" class="base-form">Descrição:</label>
       <input id="description" type="text" class="form-control base-bar" formControlName="description">
     </div>
 
     <div>
-      <label for="language" class="base-form">Language:</label>
+      <label for="language" class="base-form">Linguagem:</label>
       <select class="form-control" id="language" formControlName="language">
         <option value="" disabled>Select language</option>
         <option value="PT">Python</option>
@@ -31,7 +31,7 @@
     </div>
 
     <div>
-      <label for="time_limit_seconds" class="base-form">Time limit seconds:</label>
+      <label for="time_limit_seconds" class="base-form">Tempo Limite (segundos):</label>
       <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
       <div
         *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
@@ -41,7 +41,7 @@
     </div>
 
     <div>
-      <label for="memory_limit" class="base-form">Memory limit:</label>
+      <label for="memory_limit" class="base-form">Limite de Memória:</label>
       <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
       <div
         *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
@@ -51,7 +51,7 @@
     </div>
 
     <div>
-      <label for="cpu_limit" class="base-form">CPU limit:</label>
+      <label for="cpu_limit" class="base-form">Limite de Uso:</label>
       <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
       <div
         *ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)"
@@ -61,7 +61,7 @@
     </div>
 
     <div>
-      <label for="submission_deadline" class="base-form">Submission deadline:</label>
+      <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
       <input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
       <div
         *ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)"
