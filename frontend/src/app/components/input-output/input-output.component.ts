@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Question } from '../../interfaces/question';
@@ -20,6 +20,8 @@ export class InputOutputComponent {
   currentQuestion: Question = {} as Question;
   inputs_outputs: InputOutput[] = [];
 
+  ioForm: FormGroup;
+
   defaultIO: InputOutput = {
     id: -1,
     url: '',
@@ -32,8 +34,15 @@ export class InputOutputComponent {
   constructor (
     private route: ActivatedRoute,
     private questionService: QuestionService,
-    private ioService: InputOutputService
-  ) {}
+    private ioService: InputOutputService,
+    private fb: FormBuilder
+  ) {
+    this.ioForm = this.fb.group({
+      input: [''],
+      output: [''],
+      visible: true
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('questionId');
@@ -54,6 +63,30 @@ export class InputOutputComponent {
     this.ioService.postInputOutput(this.defaultIO).subscribe({
       next: io => {
         this.inputs_outputs.push(io);
+      }
+    })
+  }
+
+  updateInputOutput(io: InputOutput): void{
+      const updatedIO: InputOutput = { ...io}
+
+      this.ioService.editInputOutput(io.url,updatedIO).subscribe({
+        next: newIO => {
+          console.log(newIO);
+        }
+      })
+  }
+
+  visibleChange(io: InputOutput): void {
+    io.visible = !io.visible;
+    this.updateInputOutput(io);
+  }
+
+  deleteInputOutput(url: string, io: InputOutput): void {
+    this.ioService.deleteInputOutput(url).subscribe({
+      next: () => {
+        this.inputs_outputs = this.inputs_outputs.filter(input_output => input_output !== io)
+        console.log("deleted");
       }
     })
   }

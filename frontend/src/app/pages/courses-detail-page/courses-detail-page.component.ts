@@ -54,8 +54,6 @@ export class CoursesDetailPageComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router
   ) {
-
-
     this.addSectionForm = this.fb.group({
       name: ['', Validators.required]
     });
