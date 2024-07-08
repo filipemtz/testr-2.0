@@ -1,0 +1,76 @@
+<h1 class="display-2 text-center mb-4">
+	Configurações de Usuário
+</h1>
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link" [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">Perfil</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [class.active]="activeTab === 'changePassword'" (click)="activeTab = 'changePassword'">Alterar Senha</a>
+  </li>
+</ul>
+
+<div *ngIf="activeTab === 'profile'" id="profileTab">
+  <div *ngIf="!editMode">
+    <h2>Perfil de Usuário</h2>
+    <p><strong>Nome de Usuário:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <button class="btn btn-primary" (click)="editMode = true">Editar</button>
+  </div>
+
+  <div *ngIf="editMode">
+    <h2>Editar Perfil</h2>
+    <form [formGroup]="editForm" (ngSubmit)="editProfile()">
+      <div class="mb-3">
+        <label for="username">Nome de Usuário</label>
+        <input type="text" id="username" class="form-control" formControlName="username">
+        <div *ngIf="editForm.get('username')?.invalid && editForm.get('username')?.touched" class="text-danger">
+          Este campo é obrigatório
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" formControlName="email">
+        <div *ngIf="editForm.get('email')?.invalid && (editForm.get('email')?.dirty || editForm.get('email')?.touched)" class="text-danger">
+          <small *ngIf="editForm.get('email')?.errors?.['required']">Este campo é obrigatório	</small>
+          <small *ngIf="editForm.get('email')?.errors?.['email']">Formato de email inválido</small>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Salvar Alterações</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false" (click)="resetForm()">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="activeTab === 'changePassword'" id="changePasswordTab">
+  <div>
+    <h2>Alterar Senha</h2>
+    <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+      <div class="mb-3">
+        <label for="currentPassword" class="form-label">Senha Atual</label>
+        <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword">
+        <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.dirty || changePasswordForm.get('currentPassword')?.touched)">
+          <small class="text-danger" *ngIf="changePasswordForm.get('currentPassword')?.errors?.['required']">Este campo é obrigatório</small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="newPassword" class="form-label">Nova Senha</label>
+        <input type="password" class="form-control" id="newPassword" formControlName="newPassword">
+        <div *ngIf="changePasswordForm.get('newPassword')?.invalid && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched)">
+          <small class="text-danger" *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Este campo é obrigatório</small>
+          <small class="text-danger" *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">A nova senha deve conter pelo menos 6 dígitos</small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar Nova Senha</label>
+        <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+        <div *ngIf="changePasswordForm.get('confirmPassword')?.invalid && (changePasswordForm.get('confirmPassword')?.dirty || changePasswordForm.get('confirmPassword')?.touched)">
+          <small class="text-danger" *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['required']">Este campo é obrigatório</small>
+          <small class="text-danger" *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['passwordMismatch']">As Senhas não conferem</small>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="changePasswordForm.invalid">Salvar</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Cancelar</button>
+    </form>
+  </div>
+</div>
