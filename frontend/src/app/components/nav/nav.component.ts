@@ -1,23 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule, NgbDropdownModule],
+  imports: [RouterModule, CommonModule, NgbDropdownModule, NgbDropdown, ReactiveFormsModule],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
 })
 export class NavComponent implements OnInit {
   authenticated = false;
+  changePasswordForm: FormGroup;
   user : any = {
     username: '',
   }
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private modalService: NgbModal,  private fb: FormBuilder) {
+    this.changePasswordForm = this.fb.group({
+      currentPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: this.passwordMatchValidator
+    });
 
+  }
   sidebarItems = [
     {
       id: 'multi',
@@ -82,5 +92,40 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/accounts/login']);
       },
     });
+  }
+
+  openChangePasswordModal(content: TemplateRef<any>): void {
+    this.modalService.open(content, { ariaLabelledBy: 'changePasswordModalLabel' });
+  }
+  
+  changePassword(): void {
+    if (this.changePasswordForm.valid) {
+      const currentPassword = this.changePasswordForm.get('currentPassword')!.value;
+      const newPassword = this.changePasswordForm.get('newPassword')!.value;
+
+      this.authService.changePassword(currentPassword, newPassword).subscribe({
+        next: () => {
+          console.log('Senha alterada com sucesso');
+          this.modalService.dismissAll(); 
+        }
+      });
+    } else {
+      this.changePasswordForm.markAllAsTouched();
+    }
+  }
+
+  private passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword')!.value;
+    const confirmPassword = form.get('confirmPassword')!.value;
+
+    if (newPassword !== confirmPassword) {
+      form.get('confirmPassword')!.setErrors({ passwordMismatch: true });
+    } else {
+      form.get('confirmPassword')!.setErrors(null);
+    }
+  }
+
+  resetForm(): void {
+    this.changePasswordForm.reset();
   }
 }

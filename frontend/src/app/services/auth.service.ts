@@ -40,4 +40,8 @@ export class AuthService {
   getGroup(id: number){
     return this.http.get<any>(`${this.api}/groups/${id}/`, {withCredentials: true});
   }
+
+  changePassword(currentPassword: string, newPassword: string){
+    return this.http.post(`${this.api}/change-password/`, { currentPassword, newPassword }, { withCredentials: true });
+  }
 }

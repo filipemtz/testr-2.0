@@ -31,11 +31,20 @@
         </ul>
         
         <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="authenticated">
-          <li class="nav-item mx-2 my-1">
-            <a type="button" class="btn " disabled href="#"><i class="fa-regular fa-user"></i>&nbsp; {{ user.username }}</a>
+          <!-- Dropdown com opção de alterar senha -->
+          
+          <li class="nav-item dropdown" ngbDropdown class="d-inline-block">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" ngbDropdownToggle aria-expanded="false">
+              <i class="fa-regular fa-user"></i>&nbsp; {{ user.username }}
+            </a>
+            <ul ngbDropdownMenu aria-labelledby="navbarDropdown">
+              <li>
+                <a ngbDropdownItem (click)="openChangePasswordModal(changePasswordModal)">Alterar Senha</a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item ms-1 my-1">
-            <a class="btn btn-primary"  (click)="logout()">Logout</a>
+            <a class="btn btn-primary" (click)="logout()">Logout</a>
           </li>
         </ul>
         
@@ -52,3 +61,48 @@
     </div>
   </div>
 </nav>
+
+
+<!-- Modal para alterar senha -->
+<ng-template #changePasswordModal let-modal>
+
+  <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">Alterar Senha</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')" (click)="resetForm()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="changePasswordForm" >
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">Senha Atual</label>
+            <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword">
+            <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.dirty || changePasswordForm.get('currentPassword')?.touched)">
+              <small class="text-danger" *ngIf="changePasswordForm.get('currentPassword')?.errors?.['required']
+              ">Senha atual é obrigatória</small>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">Nova Senha</label>
+            <input type="password" class="form-control" id="newPassword" formControlName="newPassword">
+            <div *ngIf="changePasswordForm.get('newPassword')?.invalid && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched)">
+              <small class="text-danger" *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Nova senha é obrigatória</small>
+              <small class="text-danger" *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">Nova senha deve ter no mínimo 6 caracteres</small>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar Nova Senha</label>
+            <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+            <div *ngIf="changePasswordForm.get('confirmPassword')?.invalid && (changePasswordForm.get('confirmPassword')?.dirty || changePasswordForm.get('confirmPassword')?.touched)">
+              <small class="text-danger" *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['required']">Confirmação de senha é obrigatória</small>
+              <small class="text-danger" *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['passwordMismatch']">Senhas não coincidem</small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.dismiss()" (click)="resetForm()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="changePasswordForm.invalid" (click)="changePassword()">Salvar</button>
+      </div>
+</ng-template>
+
+
+      
