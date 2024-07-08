@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
 import { Question } from '../../interfaces/question';
@@ -27,10 +27,22 @@ export class CoursesDetailPageComponent implements OnInit {
   addQuestionForm: FormGroup;
 
   questionToDelete: Question | null = null;
-  selectedQuestion: Question | null = null;
-
   sectionToDelete: Section | null = null;
+
   selectedSection: Section | null = null;
+
+  defaultQuestion: Question = {
+    id: -1,
+    url: '',
+    name: "default",
+    description: '',
+    language: "PT",
+    submission_deadline: new Date().toISOString(),
+    memory_limit: 200,
+    time_limit_seconds: 30,
+    cpu_limit: 0.25,
+    section: -1,
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -39,6 +51,7 @@ export class CoursesDetailPageComponent implements OnInit {
     private courseService: CourseService,
     private modalService: NgbModal,
     private fb: FormBuilder,
+    private router: Router
   ) {
 
 
@@ -190,6 +203,18 @@ export class CoursesDetailPageComponent implements OnInit {
         });
         this.modalService.dismissAll();
       },
+    });
+  }
+
+  createDefaultQuestion(sectionId: number){
+    const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
+    this.questionService.postQuestion(defQuestion).subscribe({
+      next: question => {
+        this.router.navigate([`/question-create/${question.id}`]); 
+      },
+      error: err => {
+        console.error(err);
+      }
     });
   }
 

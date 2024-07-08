@@ -36,11 +36,11 @@ export const routes: Routes = [
         component: QuestionDetailPageComponent
       },
       { 
-        path: 'question/:id/edit', 
+        path: 'question/:questionId/edit', 
         component: QuestionEditPageComponent
       },
-      {
-        path: 'section/:sectionId/question-create',
+      { 
+        path: 'question-create/:questionId', 
         component: QuestionCreatePageComponent
       },
       {

@@ -16,7 +16,8 @@ import { InputOutputComponent } from '../../components/input-output/input-output
 })
 export class QuestionCreatePageComponent {
   addQuestionForm: FormGroup;
-  sectionId: number = -1;
+  currentQuestion: Question = {} as Question;
+  questionId: number = -1;
 
   constructor (
     private route: ActivatedRoute,
@@ -50,30 +51,24 @@ export class QuestionCreatePageComponent {
   };
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('sectionId');
+    const id = this.route.snapshot.paramMap.get('questionId');
     if (id !== null){
-      this.sectionId = +id;
-      const defQuestion: Question = { ...this.defaultQuestion, section: this.sectionId };
-      console.log(defQuestion);
-      this.questionService.postQuestion(defQuestion).subscribe({
+      this.questionId = +id;
+      this.questionService.getQuestion(this.questionId).subscribe({
         next: question => {
-          console.log(question);
-        },
-        error: err => {
-          console.error(err);
+          this.currentQuestion = question;
         }
-      });
+      })
     }
     else
-      console.error('Sem ID');
+      console.error('Questão sem ID; ERRO!');
   }
 
   confirmCreateQuestion(): void {
     if (this.addQuestionForm.valid) {
-      const newQuestion: Question = { section: this.sectionId, ...this.addQuestionForm.value };
-      this.questionService.postQuestion(newQuestion).subscribe({
-        next: question => {
-          console.log(question);
+      const newQuestion: Question = { ...this.addQuestionForm.value };
+      this.questionService.editQuestion(this.currentQuestion.url, newQuestion).subscribe({
+        next: () => {
           this.addQuestionForm.reset();
           this.goBack();
         },
@@ -85,6 +80,14 @@ export class QuestionCreatePageComponent {
     else{
       console.log("invalid form");
     }
+  }
+
+  deleteDefaultQuestion(): void {
+    this.questionService.deleteQuestion(this.currentQuestion.url).subscribe({
+      next: () => {
+        this.goBack();
+      }
+    })
   }
 
   goBack(): void {

@@ -69,13 +69,10 @@
         </div>
         <div class="mt-3 mb-3" style="justify-content: space-between;">
             <button type="button" class="btn btn-primary col-2" (click)="confirmCreateQuestion()" style="margin-right: 66.66%;">Salvar</button>
-            <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="goBack()">Cancelar</button>
+            <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="deleteDefaultQuestion()">Cancelar</button>
         </div>
     </form>
     <div class="mt-4 mb-4">
-        <h3 class="fw-bold text-center">Inputs/Outputs</h3>
-        <div>
-            <p>input-output works!</p>
-        </div>
+        <app-input-output></app-input-output>
     </div>
 </div>

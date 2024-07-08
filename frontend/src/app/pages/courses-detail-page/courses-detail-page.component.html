@@ -52,7 +52,7 @@
 				</div>
 			</li>
 		</ol>
-		<button class="btn text-primary" [routerLink]="['/section', section.id, 'question-create']">
+		<button class="btn text-primary" (click)="createDefaultQuestion(section.id)">
 			<i class="fa-regular fa-plus"></i>
 			Nova Questão
 		</button>
