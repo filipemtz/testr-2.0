@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  api = 'http://localhost:8000/accounts';
+  api = `${environment.apiUrl}/accounts`;
  
   // static authEmitter = new EventEmitter<boolean>();
 
@@ -38,5 +39,9 @@ export class AuthService {
 
   getGroup(id: number){
     return this.http.get<any>(`${this.api}/groups/${id}/`, {withCredentials: true});
+  }
+
+  changePassword(currentPassword: string, newPassword: string){
+    return this.http.post(`${this.api}/change-password/`, { currentPassword, newPassword }, { withCredentials: true });
   }
 }

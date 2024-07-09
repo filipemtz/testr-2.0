@@ -10,6 +10,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import Notify from 'simple-notify'
+import 'simple-notify/dist/simple-notify.css'
 
 @Component({
   selector: 'app-login',
@@ -20,7 +22,7 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  
+  myNotify: any;
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -40,7 +42,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
-        // this.router.navigate(['/']);
+        this.pushNotify('Success', 'Login efetuado com sucesso', 'success');
       
         if (res.user.is_superuser) {
           this.router.navigate(['/admin']);
@@ -49,6 +51,10 @@ export class LoginComponent implements OnInit {
             this.redirectTo(groups);
           });
         }
+      },
+      error: (error) => {
+        console.log(error);
+        this.pushNotify('Error', 'Usuario ou senha incorretos', 'error');
       }
     });
   }
@@ -84,5 +90,19 @@ export class LoginComponent implements OnInit {
     } else{
       this.router.navigate(['/']);
     }
+  }
+
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled'
+    })
+  }
+  
+  close() {
+    this.myNotify.close()
   }
 }

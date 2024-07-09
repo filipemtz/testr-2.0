@@ -152,11 +152,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-    'EXCEPTION_HANDLER': 'accounts.exceptions.status_code_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 # CORS Settings
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config_data['backend']['allowed_hosts']
 
 CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
 CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']

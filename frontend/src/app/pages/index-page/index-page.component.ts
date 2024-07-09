@@ -4,6 +4,8 @@ import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
+import Notify from 'simple-notify'
+import 'simple-notify/dist/simple-notify.css'
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -39,6 +41,7 @@ export class IndexPageComponent implements OnInit {
 
   newCourseName: string = '';
   addingCourse = false;
+  myNotify: any;
   
   baseCourse: Course = {
     name: "",
@@ -84,6 +87,7 @@ export class IndexPageComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
+        this.pushNotify('Error', 'Failed to load courses', 'error');
       },
     });
   }
@@ -108,9 +112,11 @@ export class IndexPageComponent implements OnInit {
           this.baseCourse.teachers = [];
           this.courses.push(course);
           this.modalService.dismissAll();
+          this.pushNotify('Success', 'Course added successfully', 'success');
         },
         error: (err) => {
           console.error(err);
+          this.pushNotify('Error', 'Failed to add course', 'error');
         },
       });
     } else {
@@ -126,9 +132,11 @@ export class IndexPageComponent implements OnInit {
             (course) => course.url !== this.courseToDelete!.url,
           );
           this.modalService.dismissAll();
+          this.pushNotify('Success', 'Course deleted successfully', 'success');
         },
         error: (err) => {
           console.error(err);
+          this.pushNotify('Error', 'Failed to delete course', 'error');
         },
       });
     }
@@ -147,9 +155,11 @@ export class IndexPageComponent implements OnInit {
       this.courseService.updateCourse(course.url, updatedCourse).subscribe({
         next: () => {
           course.isEditing = false;
+          this.pushNotify('Success', 'Course updated successfully', 'success');
         },
         error: (err) => {
           console.error(err);
+          this.pushNotify('Error', 'Failed to update course', 'error');
         },
       });
     }
@@ -171,9 +181,11 @@ export class IndexPageComponent implements OnInit {
           this.courses.push(course);
           this.newCourseName = '';
           this.addingCourse = false;
+          this.pushNotify('Success', 'Course added successfully', 'success');
         },
         error: err => {
           console.error(err);
+          this.pushNotify('Error', 'Failed to add course', 'error');
         }
       });
     } 
@@ -191,4 +203,17 @@ export class IndexPageComponent implements OnInit {
     this.addForm.reset();
   }
 
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled'
+    })
+  }
+  
+  close() {
+    this.myNotify.close()
+  }
 }

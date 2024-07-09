@@ -4,13 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import exceptions
 
-from datetime import timezone
-import datetime
-
-from ..authentication import create_access_token, create_refresh_token
-from ..models import UserToken
 from ..serializers import UserSerializer
-    
+from rest_framework.authtoken.models import Token
+  
 class UserLoginAPIView(APIView):
     def post(self, request):
         username = request.data['username']
@@ -23,21 +19,11 @@ class UserLoginAPIView(APIView):
         
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed('Invalid credentials')
-        
-        access_token = create_access_token(user.id)
-        refresh_token = create_refresh_token(user.id)
 
-        UserToken.objects.create(
-            user_id=user.id, 
-            token=refresh_token, 
-            expired_at=datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
-        )
+        token, created = Token.objects.get_or_create(user=user)
 
-
-        response = Response()
-        response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
-        response.data = {
-            'token': access_token,
+        return Response({
+            'token': token.key,
             'user': UserSerializer(user).data
-        }
-        return response
+        })
+       
