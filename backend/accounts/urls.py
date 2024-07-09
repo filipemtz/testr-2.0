@@ -14,7 +14,8 @@ urlpatterns = [
     path('logout/', UserLogoutAPIView.as_view(), name='logout'),
     path('register/', UserRegisterAPIView.as_view(), name='register'),
     path('profile/', UserProfileAPIView.as_view(), name='profile'),
-    path('refresh/', UserRefreshAPIView.as_view(), name='refresh'),
+    # path('refresh/', UserRefreshAPIView.as_view(), name='refresh'),
+    path('change-password/', ChagePasswordAPIView.as_view(), name='change-password'),
     path('', include(router.urls)),
 ]
 

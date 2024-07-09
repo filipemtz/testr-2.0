@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
 import { Section } from '../../interfaces/section';
@@ -9,14 +15,27 @@ import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import Notify from 'simple-notify';
+import 'simple-notify/dist/simple-notify.css';
 @Component({
   selector: 'app-courses-detail-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './courses-detail-page.component.html',
-  styleUrls: ['./courses-detail-page.component.css']
+  styleUrls: ['./courses-detail-page.component.css'],
 })
 
 export class CoursesDetailPageComponent implements OnInit {
@@ -44,7 +63,7 @@ export class CoursesDetailPageComponent implements OnInit {
     cpu_limit: 0.25,
     section: -1,
   };
-
+  myNotify: any;
   constructor(
     private route: ActivatedRoute,
     private questionService: QuestionService,
@@ -56,7 +75,7 @@ export class CoursesDetailPageComponent implements OnInit {
     config: NgbModalConfig,
   ) {
     this.addSectionForm = this.fb.group({
-      name: ['', Validators.required]
+      name: ['', Validators.required],
     });
 
     this.addQuestionForm = this.fb.group({
@@ -66,7 +85,7 @@ export class CoursesDetailPageComponent implements OnInit {
       time_limit_seconds: ['', Validators.required],
       memory_limit: ['', Validators.required],
       cpu_limit: ['', Validators.required],
-      submission_deadline: ['', Validators.required]
+      submission_deadline: ['', Validators.required],
     });
   
     config.backdrop = 'static';
@@ -77,32 +96,38 @@ export class CoursesDetailPageComponent implements OnInit {
     this.loadCourse();
   }
 
-
   // Recupera um array de seções de um determinado curso
-  loadSections(courseId : number){
+  loadSections(courseId: number) {
     this.courseService.getSections(courseId).subscribe({
-      next: (response : any) => {
+      next: (response: any) => {
         this.sections = response;
         this.sections.forEach((element: Section) => {
           // Recupera um array de questões de uma determinada seção
           this.sectionService.getQuestions(element.id).subscribe({
-            next: (response : any) => {
+            next: (response: any) => {
               element.questions = response;
+            },
+            error: (err) => {
+              console.log(err);
+              this.pushNotify('Error', 'Failed to load questions', 'error');
             }
           });
         });
-      }
-    })
+      },
+    
+    });
   }
 
   loadCourse() {
     const id = this.route.snapshot.paramMap.get('id');
-    id && this.courseService.getCourse(+id).subscribe({ // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
-      next: response => {
-        this.course = response;
-        this.loadSections(this.course.id);
-      },
-    });
+    id &&
+      this.courseService.getCourse(+id).subscribe({
+        // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
+        next: (response) => {
+          this.course = response;
+          this.loadSections(this.course.id);
+        },
+      });
   }
 
   // Sections
@@ -112,20 +137,25 @@ export class CoursesDetailPageComponent implements OnInit {
 
   confirmAddSection(): void {
     if (this.addSectionForm.valid) {
-      const newSection: Section =  { course: this.course.id, ...this.addSectionForm.value }
+      const newSection: Section = {
+        course: this.course.id,
+        ...this.addSectionForm.value,
+      };
 
       this.sectionService.postSection(newSection).subscribe({
-        next: section => {
+        next: (section) => {
           this.addSectionForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
+          this.pushNotify('Success', 'Section added successfully', 'success');
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
-        }
+          this.pushNotify('Error', 'Failed to add section', 'error');
+        },
       });
     } else {
-      console.log("invalid form");
+      console.log('invalid form');
     }
   }
 
@@ -135,35 +165,56 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   confirmDeleteSection(): void {
-    this.sectionService.deleteSection(this.sectionToDelete?.url ?? '').subscribe({
-      next: () => {
-        this.sections = this.sections.filter(section => section.url !== this.sectionToDelete!.url);
-        this.modalService.dismissAll();
-      },
-    });
+    this.sectionService
+      .deleteSection(this.sectionToDelete?.url ?? '')
+      .subscribe({
+        next: () => {
+          this.sections = this.sections.filter(
+            (section) => section.url !== this.sectionToDelete!.url,
+          );
+          this.modalService.dismissAll();
+          this.pushNotify('Success', 'Section deleted successfully', 'success');
+        },
+        error: (err) => {
+          console.error(err);
+          this.pushNotify('Error', 'Failed to delete section', 'error');
+        }
+      });
   }
 
   confirmEditQuestion(question: Question) {
     this.questionService.editQuestion(question.url, question).subscribe({
       next: () => {
         question.isEditing = false;
+        this.pushNotify('Success', 'Question edited successfully', 'success');
       },
+      error: (err) => {
+        this.pushNotify('Error', 'Failed to edit question', 'error');
+      }
     });
   }
 
   confirmAddQuestion(): void {
     if (this.addQuestionForm.valid && this.selectedSection) {
-      const newQuestion: Question = { section: this.selectedSection.id, ...this.addQuestionForm.value };
+      const newQuestion: Question = {
+        section: this.selectedSection.id,
+        ...this.addQuestionForm.value,
+      };
 
       this.questionService.postQuestion(newQuestion).subscribe({
-        next: question => {
+        next: (question) => {
           this.addQuestionForm.reset();
           this.selectedSection!.questions?.push(question);
           this.modalService.dismissAll();
+          this.pushNotify('Success', 'Question added successfully', 'success');
         },
+        error: (err) => {
+          console.error(err);
+          this.pushNotify('Error', 'Failed to add question', 'error');
+        }
       });
     } else {
-      console.log("invalid form");
+      console.log('invalid form');
     }
   }
 
@@ -185,9 +236,11 @@ export class CoursesDetailPageComponent implements OnInit {
     this.sectionService.editSection(section.url, updatedSection).subscribe({
       next: () => {
         section.isEditing = false;
+        this.pushNotify('Success', 'Section edited successfully', 'success');
       },
       error: (err) => {
         console.error(err);
+        this.pushNotify('Error', 'Failed to edit section', 'error');
       },
     });
   }
@@ -198,15 +251,24 @@ export class CoursesDetailPageComponent implements OnInit {
   }
 
   confirmDeleteQuestion(): void {
-    this.questionService.deleteQuestion(this.questionToDelete?.url ?? '').subscribe({
-      next: () => {
-        this.sections = this.sections.map(section => {
-          section.questions = section.questions?.filter(question => question.url !== this.questionToDelete!.url);
-          return section;
-        });
-        this.modalService.dismissAll();
-      },
-    });
+    this.questionService
+      .deleteQuestion(this.questionToDelete?.url ?? '')
+      .subscribe({
+        next: () => {
+          this.sections = this.sections.map((section) => {
+            section.questions = section.questions?.filter(
+              (question) => question.url !== this.questionToDelete!.url,
+            );
+            return section;
+          });
+          this.modalService.dismissAll();
+          this.pushNotify('Success', 'Question deleted successfully', 'success');
+        },
+        error: (err) => {
+          console.error(err);
+          this.pushNotify('Error', 'Failed to delete question', 'error');
+        }
+      });
   }
 
   createDefaultQuestion(sectionId: number){
@@ -221,7 +283,18 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
+
   resetAddSectionForm(): void {
     this.addSectionForm.reset();
+  }
+
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled',
+    });
   }
 }

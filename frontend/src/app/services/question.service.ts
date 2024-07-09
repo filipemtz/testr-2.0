@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../interfaces/question';
 import { InputOutput } from '../interfaces/input-output';
-
+import { environment } from '../../environments/environment';
+import { QuestionFile } from '../interfaces/question-file';
 @Injectable({
   providedIn: 'root'
 })
 export class QuestionService {
-  private apiUrl = 'http://localhost:8000/questions'; // URL base da API para questões
+  private apiUrl = `${environment.apiUrl}/questions`; // URL base da API para questões
 
   constructor(private http: HttpClient) { }
 
@@ -34,5 +35,9 @@ export class QuestionService {
 
   deleteQuestion(url: string): Observable<void> {
     return this.http.delete<void>(url, { withCredentials: true });
+  }
+
+  getQuestionFiles(id: number): Observable<QuestionFile[]> {
+    return this.http.get<QuestionFile[]>(`${this.apiUrl}/${id}/files/`);
   }
 }

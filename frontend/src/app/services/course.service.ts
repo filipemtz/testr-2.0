@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course } from '../interfaces/course';
 import { Section } from '../interfaces/section';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:8000/courses'; // URL base da API para cursos
+  private apiUrl = `${environment.apiUrl}/courses`; // URL base da API para cursos
 
   constructor(private http: HttpClient) { }
 

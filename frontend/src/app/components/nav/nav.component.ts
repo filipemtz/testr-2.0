@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterModule, CommonModule, NgbDropdownModule],
+  imports: [RouterModule, CommonModule, NgbDropdownModule, NgbDropdown],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
 })
@@ -16,8 +15,10 @@ export class NavComponent implements OnInit {
   user : any = {
     username: '',
   }
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    
 
+  }
   sidebarItems = [
     {
       id: 'multi',
@@ -83,4 +84,9 @@ export class NavComponent implements OnInit {
       },
     });
   }
+
+  
+
+
+
 }

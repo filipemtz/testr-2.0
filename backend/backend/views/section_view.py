@@ -4,7 +4,8 @@ from ..serializers.question_serializer import QuestionSerializer
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from accounts.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class SectionViewSet(viewsets.ModelViewSet):
     """
@@ -12,11 +13,14 @@ class SectionViewSet(viewsets.ModelViewSet):
     """
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=['get'])
     def questions(self, request, pk=None):
+        """
+        Retrieve all questions associated with a specific section.
+        """
         section = self.get_object()
         questions = section.question_set.all()
         serializer = QuestionSerializer(questions, many=True, context={'request': request})

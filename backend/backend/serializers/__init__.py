@@ -2,3 +2,4 @@ from .course_serializer import CourseSerializer
 from .question_serializer import QuestionSerializer
 from .section_serializer import SectionSerializer
 from .input_output_serializer import InputOutputSerializer
+from .question_file_serializer import QuestionFileSerializer
