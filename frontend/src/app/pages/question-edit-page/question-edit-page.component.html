@@ -97,24 +97,3 @@
     <p>No files yet.</p>
   </ng-template>
 </div>
-
-<div class="mb-5">
-  <h2>Manage Files</h2>
-  <input type="file" class="form-control" (change)="onFileSelected($event)">
-  <button type="button" class="btn btn-success my-3" (click)="uploadFile()">Upload File</button>
-
-
-  <div *ngIf="files?.length ?? -1 > 0; else noFilesTemplate">
-    <h3>Files</h3>
-    <ul class="list-group list-group-flush">
-      <li *ngFor="let file of files" class="list-group-item d-flex justify-content-start align-items-center">
-        <i class="fa-regular fa-folder me-2"></i>
-        <div class="fw-bold">{{ file.file_name }}</div>
-        <button type="button" class="btn btn-sm fa-solid fa-trash text-danger ms-2" (click)="deleteFile(file.id)"></button>
-      </li>
-    </ul>
-  </div>
-  <ng-template #noFilesTemplate>
-    <p>No files yet.</p>
-  </ng-template>
-</div>

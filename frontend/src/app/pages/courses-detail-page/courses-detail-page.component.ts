@@ -283,17 +283,6 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
-  createDefaultQuestion(sectionId: number){
-    const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
-    this.questionService.postQuestion(defQuestion).subscribe({
-      next: question => {
-        this.router.navigate([`/question/${question.id}/edit`]); 
-      },
-      error: err => {
-        console.error(err);
-      }
-    });
-  }
 
   resetAddSectionForm(): void {
     this.addSectionForm.reset();
