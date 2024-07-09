@@ -53,11 +53,9 @@
     <div>
       <label for="cpu_limit" class="base-form">Limite de Uso:</label>
       <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
-      <div
-        *ngIf="editForm.get('cpu_limit')?.invalid && (editForm.get('cpu_limit')?.dirty || editForm.get('cpu_limit')?.touched)"
-        class="text-danger">
-        Limite da CPU obrigatório.
-      </div>
+
+      <div *ngIf="editForm.get('cpu_limit')?.errors?.['required']" class="text-danger">Limite da CPU obrigatório.</div>
+      <div *ngIf="editForm.get('cpu_limit')?.errors?.['cpuLimit']" class="text-danger">Limite da CPU deve estar entre 0 e 1.</div>
     </div>
 
     <div>
@@ -70,8 +68,8 @@
       </div>
     </div>
     <div>
-      <button type="button" class="btn btn-success col-2" (click)="confirmSave()">Salvar</button>
-      <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="goBack()">Cancelar</button>
+      <button type="button" class="btn btn-success col-2" (click)="confirmEditQuestion()">Salvar</button>
+      <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="deleteQuestion()">Cancelar</button>
     </div>
   </form>
   <div class="mt-4 mb-4">

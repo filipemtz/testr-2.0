@@ -1,11 +1,12 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import {MatIconModule} from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
 import { InputOutputComponent } from '../../components/input-output/input-output.component';
+import {  map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-question-edit-page',
@@ -14,6 +15,7 @@ import { InputOutputComponent } from '../../components/input-output/input-output
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
+
 export class QuestionEditPageComponent implements OnInit {
   editForm: FormGroup;
   selectedQuestion: any;
@@ -30,7 +32,7 @@ export class QuestionEditPageComponent implements OnInit {
         language: ['', Validators.required],
         time_limit_seconds: ['', Validators.required],
         memory_limit: ['', Validators.required],
-        cpu_limit: ['', Validators.required],
+        cpu_limit: ['', Validators.required, [this.cpuLimitValidator] ],
         submission_deadline: ['', Validators.required]
       });
    }
@@ -48,17 +50,13 @@ export class QuestionEditPageComponent implements OnInit {
             console.log(err);
           }});
         });
-      },
-      error: err => {
-        this.router.navigate(['/accounts/login']);
       }
     });
   }
 
-  confirmSave(): void {
+  confirmEditQuestion(): void {
     if (this.editForm.valid) {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
-      console.log(updatedQuestion.url)
       this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();
@@ -72,6 +70,22 @@ export class QuestionEditPageComponent implements OnInit {
     else{
       console.log("invalid form");
     }
+  }
+
+  deleteQuestion(): void {
+    this.questionService.deleteQuestion(this.selectedQuestion.url).subscribe({
+      next: () => {
+        this.goBack();
+      }
+    })
+  }
+
+  cpuLimitValidator(control: AbstractControl): Observable<ValidationErrors | null> {
+    return of(control.value).pipe(
+      map(value => {
+        return (value >= 0 && value <= 1) ? null : { cpuLimit: { value: value } };
+      })
+    );
   }
 
   goBack(): void {

@@ -11,7 +11,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -53,7 +53,7 @@ export class IndexPageComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private courseService: CourseService,
-    private router: Router,
+    config: NgbModalConfig,
     private modalService: NgbModal,
     private fb: FormBuilder,
   ) {
@@ -63,6 +63,9 @@ export class IndexPageComponent implements OnInit {
     this.addForm = this.fb.group({
       name: ['', Validators.required],
     });
+
+    config.backdrop = 'static';
+		config.keyboard = false;
   }
 
   ngOnInit(): void {

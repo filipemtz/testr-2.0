@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -52,7 +52,8 @@ export class CoursesDetailPageComponent implements OnInit {
     private courseService: CourseService,
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    config: NgbModalConfig,
   ) {
     this.addSectionForm = this.fb.group({
       name: ['', Validators.required]
@@ -67,6 +68,9 @@ export class CoursesDetailPageComponent implements OnInit {
       cpu_limit: ['', Validators.required],
       submission_deadline: ['', Validators.required]
     });
+  
+    config.backdrop = 'static';
+		config.keyboard = false;
   }
 
   ngOnInit(): void {
@@ -209,7 +213,6 @@ export class CoursesDetailPageComponent implements OnInit {
     const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
     this.questionService.postQuestion(defQuestion).subscribe({
       next: question => {
-        console.log(question.submission_deadline);
         this.router.navigate([`/question/${question.id}/edit`]); 
       },
       error: err => {
