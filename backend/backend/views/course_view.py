@@ -15,7 +15,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication, TokenAuthentication ]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
     
     @action(detail=True, methods=['get'])
     def sections(self, request, pk=None):

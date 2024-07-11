@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import {MatIconModule} from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
@@ -9,16 +9,35 @@ import { InputOutputComponent } from '../../components/input-output/input-output
 import {  map, Observable, of } from 'rxjs';
 import { QuestionFile } from '../../interfaces/question-file';
 import { QuestionFileService } from '../../services/question-file.service';
+import { CalendarComponent } from "../../components/calendar/calendar.component";
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
-  imports: [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule, MatIconModule, InputOutputComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    InputOutputComponent,
+    CalendarComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule
+  ],
+  providers: [provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
 
 export class QuestionEditPageComponent implements OnInit {
+
   editForm: FormGroup;
   selectedQuestion: any;
   files: QuestionFile[] = [] as QuestionFile[];
@@ -26,7 +45,6 @@ export class QuestionEditPageComponent implements OnInit {
 
   constructor(private authService: AuthService, 
     private questionService: QuestionService,
-    private router: Router,
     private route: ActivatedRoute,
     private location: Location,
     private questionFileService: QuestionFileService,

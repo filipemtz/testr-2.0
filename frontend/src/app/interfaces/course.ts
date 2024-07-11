@@ -3,7 +3,7 @@ export interface Course {
     url: string;
     name: string;
     visible: boolean;
-    teachers: string[];
+    teachers: string[]; 
     isEditing: boolean;
     originalName: string;
 }

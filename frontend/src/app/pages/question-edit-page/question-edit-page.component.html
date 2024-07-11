@@ -59,14 +59,22 @@
     </div>
 
     <div>
-      <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
-      <input id="submission_deadline" type="text" class="form-control base-bar" formControlName="submission_deadline">
-      <div
-        *ngIf="editForm.get('submission_deadline')?.invalid && (editForm.get('submission_deadline')?.dirty || editForm.get('submission_deadline')?.touched)"
-        class="text-danger">
-        Data limite obrigatória.
+      <div class="base-form">
+        Prazo de Entrega:
+      </div>    
+      <div>
+        <mat-form-field class="example-full-width">
+          <mat-label>Prazo de Entrega</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="submission_deadline">
+          <mat-datepicker-toggle matIconSuffix [for]="picker">
+            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
       </div>
     </div>
+    
+
     <div>
       <button type="button" class="btn btn-success col-2" (click)="confirmEditQuestion()">Salvar</button>
       <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="deleteQuestion()">Cancelar</button>
