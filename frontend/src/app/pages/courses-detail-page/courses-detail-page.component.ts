@@ -51,6 +51,14 @@ export class CoursesDetailPageComponent implements OnInit {
 
   selectedSection: Section | null = null;
 
+  defaultSection: Section = {
+    id: -1,
+    url: '',
+    name: "Nova Seção",
+    course: -1,
+    originalName: "Nova Seção"
+  }
+
   defaultQuestion: Question = {
     id: -1,
     url: '',
@@ -63,6 +71,7 @@ export class CoursesDetailPageComponent implements OnInit {
     cpu_limit: 0.25,
     section: -1,
   };
+
   myNotify: any;
   constructor(
     private route: ActivatedRoute,
@@ -269,6 +278,15 @@ export class CoursesDetailPageComponent implements OnInit {
           this.pushNotify('Error', 'Failed to delete question', 'error');
         }
       });
+  }
+
+  createDefaultSection(courseId: number){
+    const defaultSection: Section = { ...this.defaultSection, course: courseId }
+    this.sectionService.postSection(defaultSection).subscribe({
+      next: section => {
+        this.sections.push(section);
+      }
+    })
   }
 
   createDefaultQuestion(sectionId: number){

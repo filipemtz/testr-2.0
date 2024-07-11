@@ -38,10 +38,16 @@ export class IndexPageComponent implements OnInit {
   courses: Course[] = [];
   courseToDelete: Course | null = null;
   user: any;
-
-  newCourseName: string = '';
-  addingCourse = false;
   myNotify: any;
+
+  defaultCourse: Course = {
+    id: -1,
+    url: "",
+    name: "Novo Curso",
+    visible: true,
+    teachers: [],
+    originalName: "Novo Curso"
+  }
   
   baseCourse: Course = {
     name: "",
@@ -94,10 +100,6 @@ export class IndexPageComponent implements OnInit {
 
   openDeleteModal(course: Course, content: TemplateRef<any>) {
     this.courseToDelete = course;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
-  openAddModal(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -169,36 +171,6 @@ export class IndexPageComponent implements OnInit {
     course.name = course.originalName;
   }
 
-  enableAdd(){
-    this.addingCourse = true;
-  }
-
-  addCourse() {
-    if(this.newCourseName.trim()) {
-      const newCourse = { ...this.baseCourse, name: this.newCourseName, teachers: [this.user.url] };
-      this.courseService.createCourse(newCourse).subscribe({
-        next: course => {
-          this.courses.push(course);
-          this.newCourseName = '';
-          this.addingCourse = false;
-          this.pushNotify('Success', 'Course added successfully', 'success');
-        },
-        error: err => {
-          console.error(err);
-          this.pushNotify('Error', 'Failed to add course', 'error');
-        }
-      });
-    } 
-    else {
-      console.log('Course name is required.');
-    }
-  }
-
-  cancelAdd() {
-    this.addingCourse = false;
-    this.loadCourses();
-  }
-
   resetAddForm(): void{
     this.addForm.reset();
   }
@@ -210,6 +182,16 @@ export class IndexPageComponent implements OnInit {
       text: text,
       effect: 'slide',
       type: 'filled'
+    })
+  }
+
+  createDefaultCourse(userId: string): void {
+    const defaultCourse: Course = { ...this.defaultCourse}
+    defaultCourse.teachers.push(userId);
+    this.courseService.createCourse(defaultCourse).subscribe({
+      next: course => {
+        this.courses.push(course);
+      }
     })
   }
   

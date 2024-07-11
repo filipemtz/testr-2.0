@@ -22,7 +22,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         """
         Retrieve all sections associated with a specific course.
         """
-        print(request)
         course = self.get_object()
         sections = course.section_set.all()
         serializer = SectionSerializer(sections, many=True, context={'request': request})

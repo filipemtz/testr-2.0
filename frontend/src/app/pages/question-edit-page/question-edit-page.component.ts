@@ -43,6 +43,8 @@ export class QuestionEditPageComponent implements OnInit {
   files: QuestionFile[] = [] as QuestionFile[];
   selectedFile: File | null = null;
 
+  erros: any[] = []
+
   constructor(private authService: AuthService, 
     private questionService: QuestionService,
     private route: ActivatedRoute,
@@ -97,8 +99,13 @@ export class QuestionEditPageComponent implements OnInit {
           this.resetForm();
           this.goBack();
         },
-        error: err => {
-          console.error(err);
+        error: (err:any) => {
+          this.erros = err.error;
+          
+          this.erros.forEach((element) => {
+            console.log(element);
+          });
+          
         }
       });
     }

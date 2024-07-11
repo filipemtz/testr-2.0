@@ -12,7 +12,7 @@
         <mat-icon matSuffix>person</mat-icon> <!-- Ícone de pessoa -->
         <!-- Exibir mensagem de erro se o campo de username for inválido -->
         <mat-error *ngIf="form.get('username')?.invalid && (form.get('username')?.dirty || form.get('username')?.touched)">
-          O username é obrigatório.
+          O nome de usuário é obrigatório.
         </mat-error>
       </mat-form-field>
       

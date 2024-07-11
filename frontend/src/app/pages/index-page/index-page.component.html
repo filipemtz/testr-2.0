@@ -26,7 +26,7 @@
 	</div>
 
 	<div class="col" style="height: 138px;">
-		<div class="card h-100 new-question border-0" (click)="openAddModal(addModal)">
+		<div class="card h-100 new-question border-0" (click)="createDefaultCourse(user.id)">
 			<div class="card-body d-flex align-items-center justify-content-center">
 				<i class="fa-regular fa-plus fa-xl me-1"></i>
 				<div>
@@ -39,7 +39,7 @@
 
 
 <ng-template #noCourses>
-	<div class="card h-100 new-question border-0 w-10" (click)="openAddModal(addModal)">
+	<div class="card h-100 new-question border-0 w-10" (click)="createDefaultCourse(user.id)">
 		<div class="card-body d-flex align-items-center justify-content-center">
 			<i class="fa-regular fa-plus fa-xl me-1"></i>
 			<div class="">Novo Curso</div>
@@ -84,28 +84,5 @@
 	<div class="modal-footer">
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
 		<button type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
-	</div>
-</ng-template>
-
-<ng-template #addModal let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Criar novo curso</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')" (click)="resetAddForm()"></button>
-	</div>
-	<div class="modal-body">
-		<form [formGroup]="addForm">
-			<div class="mb-3">
-				<label for="name">Nome</label>
-				<input id="name" type="text" class="form-control" formControlName="name">
-				<div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
-					class="text-danger">
-					Nome do curso é obrigatório.
-				</div>
-			</div>
-		</form>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-danger" (click)="modal.dismiss()" (click)="resetAddForm()">Cancelar</button>
-		<button type="button" class="btn btn-primary" (click)="confirmAdd()">Criar</button>
 	</div>
 </ng-template>

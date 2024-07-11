@@ -19,6 +19,8 @@ export class NavComponent implements OnInit {
     
 
   }
+
+  /*
   sidebarItems = [
     {
       id: 'multi',
@@ -56,7 +58,10 @@ export class NavComponent implements OnInit {
       icon: 'fas fa-user-tie',
       link: '/teacher'
     }
-  ];
+  ];*/
+
+  
+
   ngOnInit(): void {
     this.authenticated = localStorage.getItem('authenticated') === 'true';
     if (this.authenticated){

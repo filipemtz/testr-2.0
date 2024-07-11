@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.log(error);
+        console.log(error.results);
         this.pushNotify('Error', 'Usuario ou senha incorretos', 'error');
       }
     });

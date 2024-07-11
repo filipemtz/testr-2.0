@@ -15,8 +15,11 @@
         <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
 
-      <div class="offcanvas-body">
+      <!--
+      -->
+      <div class="offcanvas-body justify-content-center">
         <ul class="navbar-nav justify-content-center flex-grow-1">
+          <!--
           <li *ngFor="let item of sidebarItems" class="nav-item mx-1 mt-2">  
             <a *ngIf="!item.dropdown"  class="nav-link" [routerLink]="[item.link]">{{ item.label }}</a>
             <div *ngIf="item.dropdown" ngbDropdown>
@@ -28,24 +31,26 @@
               </ul>
             </div>
           </li>
+          -->
         </ul>
         
+
         <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="authenticated">
           <li class="nav-item mx-2 my-1">
             <a type="button" class="btn " disabled routerLink="/profile"><i class="fa-regular fa-user"></i>&nbsp; {{ user.username }}</a>
           </li>
           <li class="nav-item ms-1 my-1">
-            <a class="btn btn-primary"  (click)="logout()">Logout</a>
+            <a class="btn btn-primary"  (click)="logout()">Sair</a>
           </li>
         </ul>
         
 
         <ul class="navbar-nav d-flex flex-row justify-content-center fs-5" *ngIf="!authenticated">
           <li class="nav-item mx-1 my-1">
-            <a class="btn btn-outline-light" routerLink="/accounts/login">Login</a>
+            <a class="btn btn-outline-light" routerLink="/accounts/login">Entrar</a>
           </li>
           <li class="nav-item ms-1 my-1">
-            <a class="btn btn-primary"  routerLink="/accounts/register">Sign Up</a>
+            <a class="btn btn-primary"  routerLink="/accounts/register">Cadastrar</a>
           </li>
         </ul>
       </div>
