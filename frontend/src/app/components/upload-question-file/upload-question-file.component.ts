@@ -68,11 +68,11 @@ export class UploadQuestionFileComponent implements OnInit {
 
       this.questionFileService.createFile(formData).subscribe({
         next: (event: any) => {
-          // if (event.type === HttpEventType.UploadProgress) {
-          //   console.log('entrou aqui');
-          //   console.log(event);
-          //   this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
-          // } else 
+          if (event.type === HttpEventType.UploadProgress) {
+            console.log('entrou aqui');
+            console.log(event);
+            this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
+          } else 
           if (event instanceof HttpResponse) {
             const msg = 'Upload com sucesso do arquivo: ' + file.name;
             this.message.push(msg);

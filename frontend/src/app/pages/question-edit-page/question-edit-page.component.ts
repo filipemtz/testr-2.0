@@ -30,7 +30,7 @@ import { UploadQuestionFileComponent } from '../../components/upload-question-fi
     UploadQuestionFileComponent
   ],
   providers: [provideNativeDateAdapter()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
