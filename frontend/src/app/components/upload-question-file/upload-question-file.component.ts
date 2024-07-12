@@ -6,11 +6,11 @@ import { CommonModule } from '@angular/common';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-
+import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-upload-question-file',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbProgressbarModule],
   templateUrl: './upload-question-file.component.html',
   styleUrls: ['./upload-question-file.component.css'],
 })
@@ -34,8 +34,6 @@ export class UploadQuestionFileComponent implements OnInit {
       this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
     });
   }
-
-  
 
   deleteFile(fileId: number): void {
     this.questionFileService.deleteFile(fileId).subscribe({
@@ -70,9 +68,12 @@ export class UploadQuestionFileComponent implements OnInit {
 
       this.questionFileService.createFile(formData).subscribe({
         next: (event: any) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
-          } else if (event instanceof HttpResponse) {
+          // if (event.type === HttpEventType.UploadProgress) {
+          //   console.log('entrou aqui');
+          //   console.log(event);
+          //   this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
+          // } else 
+          if (event instanceof HttpResponse) {
             const msg = 'Upload com sucesso do arquivo: ' + file.name;
             this.message.push(msg);
             this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
