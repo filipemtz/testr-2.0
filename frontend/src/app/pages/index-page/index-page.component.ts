@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, TemplateRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, TemplateRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
@@ -193,6 +193,19 @@ export class IndexPageComponent implements OnInit {
         this.courses.push(course);
       }
     })
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  keyEventListener(event: KeyboardEvent): void {
+    const editingCourse = this.courses.find(course => course.isEditing);
+    if (editingCourse){
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        this.cancelEdit(editingCourse);
+      }
+      else if(event.key === 'Enter'){
+        this.confirmEditInline(editingCourse);
+      }
+    }
   }
   
   close() {

@@ -115,18 +115,16 @@
     </div>
 
     <div>
-      <div class="base-form">Prazo de Entrega:</div>
+      <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
       <div>
-        <mat-form-field class="example-full-width">
+        <mat-form-field class="base-bar w-100">
           <mat-label>Prazo de Entrega</mat-label>
           <input
             matInput
             [matDatepicker]="picker"
             formControlName="submission_deadline"
           />
-          <mat-datepicker-toggle matIconSuffix [for]="picker">
-            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-          </mat-datepicker-toggle>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
@@ -145,7 +143,7 @@
         class="btn btn-danger col-2 go-back-btn"
         (click)="deleteQuestion()"
       >
-        Cancelar
+        Deletar
       </button>
     </div>
   </form>

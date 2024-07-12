@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
+import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
@@ -27,7 +28,8 @@ import { UploadQuestionFileComponent } from '../../components/upload-question-fi
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    UploadQuestionFileComponent
+    UploadQuestionFileComponent,
+    NgbDatepickerModule, NgbAlertModule
   ],
   providers: [provideNativeDateAdapter()],
   // changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +67,6 @@ export class QuestionEditPageComponent implements OnInit {
           this.questionService.getQuestion(id).subscribe( {next: response => {
             this.selectedQuestion = response;
             this.editForm.patchValue(response);
-          
           },
           error: err => {
             console.log(err);
@@ -79,6 +80,7 @@ export class QuestionEditPageComponent implements OnInit {
   confirmEditQuestion(): void {
     if (this.editForm.valid) {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
+      console.log(updatedQuestion.submission_deadline);
       this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();
@@ -106,6 +108,8 @@ export class QuestionEditPageComponent implements OnInit {
       }
     })
   }
+
+  
 
   cpuLimitValidator(control: AbstractControl): Observable<ValidationErrors | null> {
     return of(control.value).pipe(

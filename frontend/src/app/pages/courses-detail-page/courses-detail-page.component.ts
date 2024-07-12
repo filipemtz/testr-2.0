@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
+  HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../interfaces/course';
@@ -49,7 +50,7 @@ export class CoursesDetailPageComponent implements OnInit {
   questionToDelete: Question | null = null;
   sectionToDelete: Section | null = null;
 
-  selectedSection: Section | null = null;
+  sectionToEdit: Section | null = null;
 
   defaultSection: Section = {
     id: -1,
@@ -139,11 +140,6 @@ export class CoursesDetailPageComponent implements OnInit {
       });
   }
 
-  // Sections
-  openAddSectionModal(content: TemplateRef<any>) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
   confirmAddSection(): void {
     if (this.addSectionForm.valid) {
       const newSection: Section = {
@@ -201,30 +197,6 @@ export class CoursesDetailPageComponent implements OnInit {
         this.pushNotify('Error', 'Failed to edit question', 'error');
       }
     });
-  }
-
-  confirmAddQuestion(): void {
-    if (this.addQuestionForm.valid && this.selectedSection) {
-      const newQuestion: Question = {
-        section: this.selectedSection.id,
-        ...this.addQuestionForm.value,
-      };
-
-      this.questionService.postQuestion(newQuestion).subscribe({
-        next: (question) => {
-          this.addQuestionForm.reset();
-          this.selectedSection!.questions?.push(question);
-          this.modalService.dismissAll();
-          this.pushNotify('Success', 'Question added successfully', 'success');
-        },
-        error: (err) => {
-          console.error(err);
-          this.pushNotify('Error', 'Failed to add question', 'error');
-        }
-      });
-    } else {
-      console.log('invalid form');
-    }
   }
 
   openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
@@ -301,6 +273,18 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
+  @HostListener('window:keydown', ['$event'])
+  keyEventListener(event: KeyboardEvent): void {
+    const editingSection = this.sections.find(section => section.isEditing);
+    if (editingSection){
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        this.cancelEditSection(editingSection);
+      }
+      else if(event.key === 'Enter'){
+        this.confirmEditSection(editingSection);
+      }
+    }
+  }
 
   resetAddSectionForm(): void {
     this.addSectionForm.reset();
