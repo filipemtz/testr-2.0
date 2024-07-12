@@ -37,7 +37,7 @@ export class QuestionService {
     return this.http.delete<void>(url, { withCredentials: true });
   }
 
-  getQuestionFiles(id: number): Observable<QuestionFile[]> {
-    return this.http.get<QuestionFile[]>(`${this.apiUrl}/${id}/files/`);
+  getQuestionFiles(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}/files/`);
   }
 }

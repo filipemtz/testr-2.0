@@ -1,24 +1,43 @@
 <h1 class="display-2 text-center mb-4">Editor de Questão</h1>
-<a class="icon-link icon-link-hover mb-2" style="cursor:pointer" (click)="goBack()">
+<a
+  class="icon-link icon-link-hover mb-2"
+  style="cursor: pointer"
+  (click)="goBack()"
+>
   <i class="bi fa-solid fa-arrow-left"></i>
   Voltar
 </a>
-<br>
+<br />
 
 <div>
   <form [formGroup]="editForm">
     <div>
       <label for="name" class="base-form">Nome:</label>
-      <input id="name" type="text" class="form-control base-bar" formControlName="name">
-      <div *ngIf="editForm.get('name')?.invalid && (editForm.get('name')?.dirty || editForm.get('name')?.touched)"
-        class="text-danger">
+      <input
+        id="name"
+        type="text"
+        class="form-control base-bar"
+        formControlName="name"
+      />
+      <div
+        *ngIf="
+          editForm.get('name')?.invalid &&
+          (editForm.get('name')?.dirty || editForm.get('name')?.touched)
+        "
+        class="text-danger"
+      >
         Nome da questão é obrigatório.
       </div>
     </div>
 
     <div>
       <label for="description" class="base-form">Descrição:</label>
-      <input id="description" type="text" class="form-control base-bar" formControlName="description">
+      <input
+        id="description"
+        type="text"
+        class="form-control base-bar"
+        formControlName="description"
+      />
     </div>
 
     <div>
@@ -31,41 +50,80 @@
     </div>
 
     <div>
-      <label for="time_limit_seconds" class="base-form">Tempo Limite (segundos):</label>
-      <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds">
+      <label for="time_limit_seconds" class="base-form"
+        >Tempo Limite (segundos):</label
+      >
+      <input
+        id="time_limit_seconds"
+        type="number"
+        class="form-control base-bar"
+        formControlName="time_limit_seconds"
+      />
       <div
-        *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
-        class="text-danger">
+        *ngIf="
+          editForm.get('time_limit_seconds')?.invalid &&
+          (editForm.get('time_limit_seconds')?.dirty ||
+            editForm.get('time_limit_seconds')?.touched)
+        "
+        class="text-danger"
+      >
         Tempo limite de execução em segundos obrigatório.
       </div>
     </div>
 
     <div>
       <label for="memory_limit" class="base-form">Limite de Memória:</label>
-      <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit">
+      <input
+        id="memory_limit"
+        type="number"
+        class="form-control base-bar"
+        formControlName="memory_limit"
+      />
       <div
-        *ngIf="editForm.get('memory_limit')?.invalid && (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
-        class="text-danger">
+        *ngIf="
+          editForm.get('memory_limit')?.invalid &&
+          (editForm.get('memory_limit')?.dirty ||
+            editForm.get('memory_limit')?.touched)
+        "
+        class="text-danger"
+      >
         Limite de memória obrigatório.
       </div>
     </div>
 
     <div>
       <label for="cpu_limit" class="base-form">Limite de Uso:</label>
-      <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit">
+      <input
+        id="cpu_limit"
+        type="number"
+        class="form-control base-bar"
+        formControlName="cpu_limit"
+      />
 
-      <div *ngIf="editForm.get('cpu_limit')?.errors?.['required']" class="text-danger">Limite da CPU obrigatório.</div>
-      <div *ngIf="editForm.get('cpu_limit')?.errors?.['cpuLimit']" class="text-danger">Limite da CPU deve estar entre 0 e 1.</div>
+      <div
+        *ngIf="editForm.get('cpu_limit')?.errors?.['required']"
+        class="text-danger"
+      >
+        Limite da CPU obrigatório.
+      </div>
+      <div
+        *ngIf="editForm.get('cpu_limit')?.errors?.['cpuLimit']"
+        class="text-danger"
+      >
+        Limite da CPU deve estar entre 0 e 1.
+      </div>
     </div>
 
     <div>
-      <div class="base-form">
-        Prazo de Entrega:
-      </div>    
+      <div class="base-form">Prazo de Entrega:</div>
       <div>
         <mat-form-field class="example-full-width">
           <mat-label>Prazo de Entrega</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="submission_deadline">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="submission_deadline"
+          />
           <mat-datepicker-toggle matIconSuffix [for]="picker">
             <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
           </mat-datepicker-toggle>
@@ -73,11 +131,22 @@
         </mat-form-field>
       </div>
     </div>
-    
 
     <div>
-      <button type="button" class="btn btn-success col-2" (click)="confirmEditQuestion()">Salvar</button>
-      <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="deleteQuestion()">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-success col-2"
+        (click)="confirmEditQuestion()"
+      >
+        Salvar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger col-2 go-back-btn"
+        (click)="deleteQuestion()"
+      >
+        Cancelar
+      </button>
     </div>
   </form>
   <div class="mt-4 mb-4">
@@ -86,22 +155,5 @@
 </div>
 
 <div class="mb-5">
-  <h2>Manage Files</h2>
-  <input type="file" class="form-control" (change)="onFileSelected($event)">
-  <button type="button" class="btn btn-success my-3" (click)="uploadFile()">Upload File</button>
-
-
-  <div *ngIf="files?.length ?? -1 > 0; else noFilesTemplate">
-    <h3>Files</h3>
-    <ul class="list-group list-group-flush">
-      <li *ngFor="let file of files" class="list-group-item d-flex justify-content-start align-items-center">
-        <i class="fa-regular fa-folder me-2"></i>
-        <div class="fw-bold">{{ file.file_name }}</div>
-        <button type="button" class="btn btn-sm fa-solid fa-trash text-danger ms-2" (click)="deleteFile(file.id)"></button>
-      </li>
-    </ul>
-  </div>
-  <ng-template #noFilesTemplate>
-    <p>No files yet.</p>
-  </ng-template>
+  <app-upload-question-file></app-upload-question-file>
 </div>
