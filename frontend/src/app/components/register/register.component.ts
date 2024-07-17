@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { group } from '@angular/animations';
+import { catchError, forkJoin, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -42,10 +43,52 @@ export class RegisterComponent implements OnInit {
   submit() {
     console.log(this.form.getRawValue());
     this.authService.register(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.router.navigate(['accounts/login']);
+      next: (res: any) => {
+        localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('authenticated', 'true');
+  
+        if (res.user.is_superuser) {
+          this.router.navigate(['/admin']);
+        }else{
+          this.getUserGroups(res.user.groups).subscribe(groups => {
+            this.redirectTo(groups);
+          });
+        }
       }
     });
+  }
+  getUserGroups(groups: any[]) {
+    if (!groups.length) {
+      return of([]); // Return an observable of an empty array if no groups
+    }
+  
+    const groupObservables = groups.map(groupId => 
+      this.authService.getGroup(groupId).pipe(
+        catchError(error => {
+          console.error('Error fetching group', groupId, error);
+          return of(null); // In case of error, return null or a default value
+        })
+      )
+    );
+  
+    return forkJoin(groupObservables).pipe(
+      map(results => 
+        results
+          .filter(group => group !== null) // Filter out any null results due to errors
+          .map(group => group.name) // Assuming the group object has a 'name' property
+      )
+    );
+  }
+
+  redirectTo(groups: any[]) {
+    if (groups.includes('student')) {
+      this.router.navigate(['/student']);
+    } else if (groups.includes('teacher')) {
+      this.router.navigate(['/teacher']);
+    } else{
+      this.router.navigate(['/']);
+    }
   }
 
 }
