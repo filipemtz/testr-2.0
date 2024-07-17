@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #343a40; /* Dark background */
+}
+
+.container {
+  max-width: 600px;
+}

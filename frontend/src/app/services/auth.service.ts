@@ -44,4 +44,8 @@ export class AuthService {
   changePassword(currentPassword: string, newPassword: string){
     return this.http.post(`${this.api}/change-password/`, { currentPassword, newPassword }, { withCredentials: true });
   }
+
+  userInfo(){
+    return this.http.get(`${this.api}/user-info/`, { withCredentials: true });
+  }
 }

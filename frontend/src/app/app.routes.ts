@@ -16,6 +16,7 @@ import { CanActivateTeacher } from './guards/teacher.guard';
 
 import { authenticatedGuard } from './guards/authenticated.guard';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { ForbiddenPageComponent } from './pages/forbidden/forbidden.component';
 export const routes: Routes = [
   // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
   {
@@ -73,7 +74,14 @@ export const routes: Routes = [
         component: RegisterPageComponent
       },
     ]
+  },
+  {
+    path: 'forbidden',
+    component: ForbiddenPageComponent
+  },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
-  
-
 ];
