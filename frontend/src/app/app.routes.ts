@@ -17,8 +17,8 @@ import { CanActivateTeacher } from './guards/teacher.guard';
 import { authenticatedGuard } from './guards/authenticated.guard';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { ForbiddenPageComponent } from './pages/forbidden/forbidden.component';
+import { CanActivateTeacherOrStudent } from './guards/teacher-or-student.guard';
 export const routes: Routes = [
-  // adicionar como filho de MainLayoutComponent todos as páginas que seguem o layout principal
   {
     path: '',
     component: MainLayoutComponent,
@@ -26,7 +26,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: IndexPageComponent
+        component: IndexPageComponent,
+        canActivate: [CanActivateTeacherOrStudent]
       },
       { 
         path: 'course/:id', 

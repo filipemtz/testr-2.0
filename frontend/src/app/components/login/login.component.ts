@@ -83,13 +83,16 @@ export class LoginComponent implements OnInit {
   }
 
   redirectTo(groups: any[]) {
-    if (groups.includes('student')) {
-      this.router.navigate(['/student']);
-    } else if (groups.includes('teacher')) {
-      this.router.navigate(['/teacher']);
-    } else{
-      this.router.navigate(['/']);
-    }
+    // if (groups.includes('student')) {
+    //   //this.router.navigate(['/student']);
+    
+    // } else if (groups.includes('teacher')) {
+    //   // this.router.navigate(['/teacher']);
+   
+    // } else{
+    //   this.router.navigate(['/']);
+    // }
+    this.router.navigate(['/']);
   }
 
   pushNotify(title: string, text: string | undefined, status: any) {
