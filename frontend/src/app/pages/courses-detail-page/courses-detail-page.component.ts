@@ -25,6 +25,7 @@ import {
 } from '@angular/forms';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-courses-detail-page',
   standalone: true,
@@ -83,6 +84,7 @@ export class CoursesDetailPageComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     config: NgbModalConfig,
+    private authService: AuthService,
   ) {
     this.addSectionForm = this.fb.group({
       name: ['', Validators.required],
@@ -101,9 +103,15 @@ export class CoursesDetailPageComponent implements OnInit {
     config.backdrop = 'static';
 		config.keyboard = false;
   }
-
+  isProfessor: boolean = false;
   ngOnInit(): void {
     this.loadCourse();
+    this.authService.userInfo().subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.isProfessor = response.groups.includes('teacher');
+      },
+    });
   }
 
   // Recupera um array de seções de um determinado curso

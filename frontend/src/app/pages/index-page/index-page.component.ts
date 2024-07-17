@@ -39,7 +39,7 @@ export class IndexPageComponent implements OnInit {
   courseToDelete: Course | null = null;
   user: any;
   myNotify: any;
-
+  isProfessor: boolean = false;
   defaultCourse: Course = {
     id: -1,
     url: "",
@@ -82,6 +82,12 @@ export class IndexPageComponent implements OnInit {
       next: (response) => {
         this.user = response;
         this.loadCourses();
+      },
+    });
+    this.authService.userInfo().subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.isProfessor = response.groups.includes('teacher');
       },
     });
   }

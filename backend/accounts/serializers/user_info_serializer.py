@@ -7,3 +7,6 @@ class UserInfoSerializer(serializers.Serializer):
         child=serializers.CharField(max_length=100)
     )
     is_superuser = serializers.BooleanField()
+    permissions = serializers.ListField(
+        child=serializers.CharField(max_length=100)
+    )

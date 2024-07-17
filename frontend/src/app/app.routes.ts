@@ -35,10 +35,12 @@ export const routes: Routes = [
       { 
         path: 'question/:id', 
         component: QuestionDetailPageComponent
+        
       },
       { 
         path: 'question/:questionId/edit', 
-        component: QuestionEditPageComponent
+        component: QuestionEditPageComponent,
+        canActivate: [CanActivateTeacher]
       },
       {
         path: 'admin',
