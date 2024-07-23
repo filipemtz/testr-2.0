@@ -32,12 +32,13 @@
 
     <div>
       <label for="description" class="base-form">Descrição:</label>
-      <input
-        id="description"
-        type="text"
-        class="form-control base-bar"
-        formControlName="description"
-      />
+      <textarea id="description"
+      type="text"
+      class="form-control base-bar"
+      formControlName="description">
+
+      </textarea>
+        
     </div>
 
     <div>
@@ -48,6 +49,8 @@
         <option value="CC">C/C++</option>
       </select>
     </div>
+
+    
 
     <div>
       <label for="time_limit_seconds" class="base-form"
@@ -90,6 +93,8 @@
         Limite de memória obrigatório.
       </div>
     </div>
+
+
 
     <div>
       <label for="cpu_limit" class="base-form">Limite de Uso:</label>
