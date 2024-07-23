@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
-        this.pushNotify('Success', 'Login efetuado com sucesso', 'success');
       
         if (res.user.is_superuser) {
           this.router.navigate(['/admin']);
