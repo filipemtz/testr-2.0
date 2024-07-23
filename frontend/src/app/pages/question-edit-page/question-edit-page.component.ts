@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
-import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
@@ -29,16 +30,16 @@ import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstra
     MatInputModule,
     MatDatepickerModule,
     UploadQuestionFileComponent,
-    NgbDatepickerModule, NgbAlertModule
+    NgbDatepickerModule, 
+    NgbAlertModule
   ],
   providers: [provideNativeDateAdapter()],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
 
 export class QuestionEditPageComponent implements OnInit {
-
+  model = inject(NgbCalendar).getToday();
   editForm: FormGroup;
   selectedQuestion: any;
   erros: any[] = []
@@ -57,6 +58,7 @@ export class QuestionEditPageComponent implements OnInit {
         cpu_limit: ['', Validators.required, [this.cpuLimitValidator] ],
         submission_deadline: ['', Validators.required]
       });
+
    }
 
    ngOnInit(): void {

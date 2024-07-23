@@ -45,7 +45,8 @@ export class LoginComponent implements OnInit {
       
         if (res.user.is_superuser) {
           this.router.navigate(['/admin']);
-        }else{
+        }
+        else{
           this.getUserGroups(res.user.groups).subscribe(groups => {
             this.redirectTo(groups);
           });
