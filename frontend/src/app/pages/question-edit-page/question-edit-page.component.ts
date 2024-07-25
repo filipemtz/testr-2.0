@@ -15,6 +15,21 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @Component({
   selector: 'app-question-edit-page',
   standalone: true,
@@ -32,7 +47,9 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     UploadQuestionFileComponent,
     NgbDropdownModule
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+  ],
   templateUrl: './question-edit-page.component.html',
   styleUrl: './question-edit-page.component.css'
 })
