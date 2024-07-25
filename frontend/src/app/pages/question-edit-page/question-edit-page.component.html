@@ -47,7 +47,7 @@
 
       <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
         <label for="language" class="base-form">Linguagem:</label>
-        <div class="custom-select-wrapper w-100 d-inline-block position-relative">
+        <div class="w-100 d-inline-block position-relative">
           <select class="form-control custom-select" id="language" formControlName="language">
             <option value="" disabled>Selecione a linguagem</option>
             <option value="PT">Python</option>
@@ -91,15 +91,15 @@
       </div>
       
       <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6 mt-2">
-        <label for="submission_deadline" class="fw-bold mb-1">Prazo de Entrega:</label>
-        <div class="input-group">
+        <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
+        <div class="w-100 d-inline-block position-relative">
             <input
               matInput
               [matDatepicker]="picker"
               formControlName="submission_deadline"
-              class="form-control"
+              class="form-control custom-select"
             />
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matIconSuffix [for]="picker" class="custom-datepicker-toggle"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </div>
       </div>

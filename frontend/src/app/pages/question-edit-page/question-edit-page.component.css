@@ -42,3 +42,13 @@ textarea {
     transform: translateY(-50%);
     pointer-events: none;
 }
+
+.custom-datepicker-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+}
