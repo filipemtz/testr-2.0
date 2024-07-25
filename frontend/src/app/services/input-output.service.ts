@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { InputOutput } from '../interfaces/input-output'
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InputOutputService {
-  private apiUrl = 'http://localhost:8000/inputs_outputs'; // URL base da API para questões
+  private apiUrl = `${environment.apiUrl}/inputs_outputs`; // URL base da API para questões
 
   constructor(private http: HttpClient) { }
 

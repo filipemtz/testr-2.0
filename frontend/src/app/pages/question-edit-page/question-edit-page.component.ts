@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject } from '@angular/core';
+import {  Component, HostListener, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
-import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-question-edit-page',
@@ -30,8 +29,6 @@ import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct, NgbCalendar } from 
     MatInputModule,
     MatDatepickerModule,
     UploadQuestionFileComponent,
-    NgbDatepickerModule, 
-    NgbAlertModule
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './question-edit-page.component.html',
@@ -39,7 +36,6 @@ import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct, NgbCalendar } from 
 })
 
 export class QuestionEditPageComponent implements OnInit {
-  model = inject(NgbCalendar).getToday();
   editForm: FormGroup;
   selectedQuestion: any;
   erros: any[] = []
