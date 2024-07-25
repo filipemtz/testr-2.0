@@ -14,11 +14,6 @@
     margin-top: 2%;
 }
 
-.base-bar {
-    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-bottom: 0.3%;
-}
-
 textarea {
     resize: none;
     height: 300px;
@@ -32,4 +27,18 @@ textarea {
 
 .margin-button{
     margin-bottom: 4%;
+}
+
+.custom-select {
+    appearance: none;
+    padding: 3%;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.custom-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
 }

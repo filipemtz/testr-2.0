@@ -16,7 +16,7 @@
       <input
         id="name"
         type="text"
-        class="form-control base-bar"
+        class="form-control"
         formControlName="name"
       />
       <div
@@ -34,7 +34,7 @@
       <label for="description" class="base-form">Descrição:</label>
       <textarea id="description"
       type="text"
-      class="form-control base-bar"
+      class="form-control"
       formControlName="description">
 
       </textarea>
@@ -43,19 +43,23 @@
 
     
 
-    <div class="d-flex justify-content-between">
-      <div class="mb-2">
+    <div class="row mb-2">
+
+      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
         <label for="language" class="base-form">Linguagem:</label>
-        <select class="form-control" id="language" formControlName="language">
-          <option value="" disabled>Select language</option>
-          <option value="PT">Python</option>
-          <option value="CC">C/C++</option>
-        </select>
+        <div class="custom-select-wrapper w-100 d-inline-block position-relative">
+          <select class="form-control custom-select" id="language" formControlName="language">
+            <option value="" disabled>Selecione a linguagem</option>
+            <option value="PT">Python</option>
+            <option value="CC">C/C++</option>
+          </select>
+          <i class="fas fa-chevron-down custom-arrow"></i>
+        </div>  
       </div>
 
-      <div>
+      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
         <label for="time_limit_seconds" class="base-form">Tempo Limite (segundos):</label>
-        <input id="time_limit_seconds" type="number" class="form-control base-bar" formControlName="time_limit_seconds"/>
+        <input id="time_limit_seconds" type="number" class="form-control custom-select" formControlName="time_limit_seconds"/>
         <div
           *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
           class="text-danger">
@@ -63,9 +67,9 @@
         </div>
       </div>
   
-      <div>
+      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
         <label for="memory_limit" class="base-form">Limite de Memória:</label>
-        <input id="memory_limit" type="number" class="form-control base-bar" formControlName="memory_limit"/>
+        <input id="memory_limit" type="number" class="form-control custom-select" formControlName="memory_limit"/>
         <div *ngIf="editForm.get('memory_limit')?.invalid &&
           (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
           class="text-danger">
@@ -73,9 +77,9 @@
         </div>
       </div>
       
-      <div>
+      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
         <label for="cpu_limit" class="base-form">Limite de Uso:</label>
-        <input id="cpu_limit" type="number" class="form-control base-bar" formControlName="cpu_limit"/>
+        <input id="cpu_limit" type="number" class="form-control custom-select" formControlName="cpu_limit"/>
         <div *ngIf="editForm.get('cpu_limit')?.errors?.['required']"
           class="text-danger">
           Limite da CPU obrigatório.
@@ -86,7 +90,23 @@
         </div>
       </div>
       
+      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6 mt-2">
+        <label for="submission_deadline" class="fw-bold mb-1">Prazo de Entrega:</label>
+        <div class="input-group">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="submission_deadline"
+              class="form-control"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </div>
+      </div>
+
     </div>
+
+
 
     
 
@@ -107,7 +127,7 @@
       <input
         id="time_limit_seconds"
         type="number"
-        class="form-control base-bar"
+        class="form-control"
         formControlName="time_limit_seconds"
       />
       <div
@@ -127,7 +147,7 @@
       <input
         id="memory_limit"
         type="number"
-        class="form-control base-bar"
+        class="form-control"
         formControlName="memory_limit"
       />
       <div
@@ -149,7 +169,7 @@
       <input
         id="cpu_limit"
         type="number"
-        class="form-control base-bar"
+        class="form-control"
         formControlName="cpu_limit"
       />
 
@@ -166,12 +186,11 @@
         Limite da CPU deve estar entre 0 e 1.
       </div>
     </div>
-    -->
 
     <div>
       <label for="submission_deadline" class="fw-bold mb-1">Prazo de Entrega:</label>
       <div>
-        <mat-form-field class="base-bar">
+        <mat-form-field class=">
           <input
             matInput
             [matDatepicker]="picker"
@@ -182,6 +201,7 @@
         </mat-form-field>
       </div>
     </div>
+    -->
 
     <div>
       <button

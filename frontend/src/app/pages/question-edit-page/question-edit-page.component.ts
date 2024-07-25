@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-question-edit-page',
@@ -29,6 +30,7 @@ import { UploadQuestionFileComponent } from '../../components/upload-question-fi
     MatInputModule,
     MatDatepickerModule,
     UploadQuestionFileComponent,
+    NgbDropdownModule
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './question-edit-page.component.html',
