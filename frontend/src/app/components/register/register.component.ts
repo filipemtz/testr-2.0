@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -7,37 +6,51 @@ import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { group } from '@angular/animations';
 import { catchError, forkJoin, map, of } from 'rxjs';
-
+import Notify from 'simple-notify';
+import 'simple-notify/dist/simple-notify.css';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatIconModule, MatInputModule, MatButtonModule, MatCardModule, MatRadioModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatRadioModule,
+    RouterLink,
+  ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
-
+  myNotify: any;
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
-  ) {
-  }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirm: ['', Validators.required],
-      group: ['student', Validators.required]
-    });    
+      group: ['student', Validators.required],
+    });
   }
 
   submit() {
@@ -47,37 +60,55 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
-  
+
         if (res.user.is_superuser) {
           this.router.navigate(['/admin']);
-        }else{
-          this.getUserGroups(res.user.groups).subscribe(groups => {
+        } else {
+          this.getUserGroups(res.user.groups).subscribe((groups) => {
             this.redirectTo(groups);
           });
         }
-      }
+      },
+      error: (error: any) => {
+        if (error.error && typeof error.error === 'object') {
+          Object.keys(error.error).forEach((key) => {
+            const errorMessages = error.error[key];
+            // Verifica se a propriedade é um array
+            if (Array.isArray(errorMessages)) {
+              errorMessages.forEach((message: any) => {
+                this.pushNotify('Error', message.toString(), 'error');
+              });
+            } else {
+              this.pushNotify('Error', errorMessages.toString(), 'error');
+            }
+          });
+        } else {
+          this.pushNotify('Error', 'Unknown error occurred', 'error');
+        }
+      },
     });
   }
   getUserGroups(groups: any[]) {
     if (!groups.length) {
       return of([]); // Return an observable of an empty array if no groups
     }
-  
-    const groupObservables = groups.map(groupId => 
+
+    const groupObservables = groups.map((groupId) =>
       this.authService.getGroup(groupId).pipe(
-        catchError(error => {
+        catchError((error) => {
           console.error('Error fetching group', groupId, error);
           return of(null); // In case of error, return null or a default value
-        })
-      )
+        }),
+      ),
     );
-  
+
     return forkJoin(groupObservables).pipe(
-      map(results => 
-        results
-          .filter(group => group !== null) // Filter out any null results due to errors
-          .map(group => group.name) // Assuming the group object has a 'name' property
-      )
+      map(
+        (results) =>
+          results
+            .filter((group) => group !== null) // Filter out any null results due to errors
+            .map((group) => group.name), // Assuming the group object has a 'name' property
+      ),
     );
   }
 
@@ -92,4 +123,13 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled',
+    });
+  }
 }

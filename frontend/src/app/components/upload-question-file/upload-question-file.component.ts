@@ -88,4 +88,12 @@ export class UploadQuestionFileComponent implements OnInit {
       });
     }
   }
+
+  clearMessages() {
+    this.message = [];
+  }
+
+  clearProgressInfos(){
+    this.progressInfos = [] as any;
+  }
 }

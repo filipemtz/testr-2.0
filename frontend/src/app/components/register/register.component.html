@@ -47,7 +47,12 @@
             (form.get('password')?.dirty || form.get('password')?.touched)
           "
         >
-          A senha é obrigatória.
+          <ng-container *ngIf="form.get('password')?.errors?.['required']">
+            A senha é obrigatória.
+          </ng-container>
+          <ng-container *ngIf="form.get('password')?.errors?.['minlength']">
+            A senha deve ter pelo menos 6 caracteres.
+          </ng-container>
         </mat-error>
       </mat-form-field>
 

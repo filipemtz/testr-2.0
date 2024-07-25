@@ -25,7 +25,7 @@
 		</div>
 	</div>
 
-	<div class="col" style="height: 138px;">
+	<div class="col" style="height: 138px;" *ngIf="isProfessor">
 		<div class="card h-100 new-question border-0" (click)="createDefaultCourse(user.id)">
 			<div class="card-body d-flex align-items-center justify-content-center">
 				<i class="fa-regular fa-plus fa-xl me-1"></i>

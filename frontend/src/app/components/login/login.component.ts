@@ -52,9 +52,22 @@ export class LoginComponent implements OnInit {
           });
         }
       },
-      error: (error) => {
-        console.log(error.results);
-        this.pushNotify('Error', 'Usuario ou senha incorretos', 'error');
+      error: (error: any) => {
+        if (error.error && typeof error.error === 'object') {
+          Object.keys(error.error).forEach(key => {
+              const errorMessages = error.error[key];
+              // Verifica se a propriedade é um array
+              if (Array.isArray(errorMessages)) {
+                  errorMessages.forEach((message: any) => {
+                      this.pushNotify('Error', message.toString(), 'error');
+                  });
+              }else{
+                this.pushNotify('Error', errorMessages.toString(), 'error');
+              }
+          });
+      } else {
+          this.pushNotify('Error', 'Unknown error occurred', 'error');
+      }
       }
     });
   }
