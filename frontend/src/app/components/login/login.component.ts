@@ -10,8 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import Notify from 'simple-notify'
-import 'simple-notify/dist/simple-notify.css'
+import { handleError } from '../../utils/handleError';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +21,6 @@ import 'simple-notify/dist/simple-notify.css'
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  myNotify: any;
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -53,21 +51,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        if (error.error && typeof error.error === 'object') {
-          Object.keys(error.error).forEach(key => {
-              const errorMessages = error.error[key];
-              // Verifica se a propriedade é um array
-              if (Array.isArray(errorMessages)) {
-                  errorMessages.forEach((message: any) => {
-                      this.pushNotify('Error', message.toString(), 'error');
-                  });
-              }else{
-                this.pushNotify('Error', errorMessages.toString(), 'error');
-              }
-          });
-      } else {
-          this.pushNotify('Error', 'Unknown error occurred', 'error');
-      }
+        handleError(error);
       }
     });
   }
@@ -108,17 +92,5 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  pushNotify(title: string, text: string | undefined, status: any) {
-    this.myNotify = new Notify({
-      status: status,
-      title: title,
-      text: text,
-      effect: 'slide',
-      type: 'filled'
-    })
-  }
   
-  close() {
-    this.myNotify.close()
-  }
 }
