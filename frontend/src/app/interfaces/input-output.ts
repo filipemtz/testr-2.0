@@ -5,4 +5,8 @@ export interface InputOutput {
     output: string;
     visible: boolean;
     question: number;
+    isEditing?: boolean;
+    initialInput?: string;
+    initialOutput?: string;
+    initialVisible?: boolean;
 }

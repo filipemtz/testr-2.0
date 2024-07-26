@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, output } from '@angular/core';
+import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Question } from '../../interfaces/question';
 import { QuestionService } from '../../services/question.service';
 import { InputOutput } from '../../interfaces/input-output';
 import { InputOutputService } from '../../services/input-output.service';
 
-@Component({
+@Component({ 
   selector: 'app-input-output',
   standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule, FormsModule, ReactiveFormsModule],
   templateUrl: './input-output.component.html',
   styleUrl: './input-output.component.css'
 })
+
 export class InputOutputComponent {
   questionId: number = -1;
   currentQuestion: Question = {} as Question;
@@ -74,19 +75,29 @@ export class InputOutputComponent {
         next: newIO => {
           console.log(newIO);
         }
-      })
+      });
+      io.isEditing = false;
   }
 
-  visibleChange(io: InputOutput): void {
-    io.visible = !io.visible;
-    this.updateInputOutput(io);
+  editIO(io: InputOutput): void {
+    io.isEditing = true;
+    io.initialInput = io.input;
+    io.initialOutput = io.output;
+    io.initialVisible = io.visible;
+  }
+
+  cancelEditIO(io : InputOutput): void {
+    io.isEditing = false;
+    
+    io.input = io.initialInput ?? '';
+    io.output = io.initialOutput ?? '';
+    io.visible = io.initialVisible ?? false;
   }
 
   deleteInputOutput(url: string, io: InputOutput): void {
     this.ioService.deleteInputOutput(url).subscribe({
       next: () => {
         this.inputs_outputs = this.inputs_outputs.filter(input_output => input_output !== io)
-        console.log("deleted");
       }
     })
   }
