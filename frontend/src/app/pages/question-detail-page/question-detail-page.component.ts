@@ -8,6 +8,7 @@ import { DateFormatPipe } from '../../utils/date-format.pipe';
 import { QuestionFile } from '../../interfaces/question-file';
 import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../interfaces/input-output';
+
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
@@ -15,6 +16,7 @@ import { InputOutput } from '../../interfaces/input-output';
   templateUrl: './question-detail-page.component.html',
   styleUrl: './question-detail-page.component.css',
 })
+
 export class QuestionDetailPageComponent {
   question: Question = {} as Question;
   questionFiles: QuestionFile[] = [] as QuestionFile[];
