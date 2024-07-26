@@ -1,13 +1,12 @@
 import { CommonModule, Location } from '@angular/common';
-import {  Component, HostListener, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
 import { InputOutputComponent } from '../../components/input-output/input-output.component';
 import {  map, Observable, of } from 'rxjs';
-import { CalendarComponent } from "../../components/calendar/calendar.component";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +15,6 @@ import { UploadQuestionFileComponent } from '../../components/upload-question-fi
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -40,7 +38,6 @@ export const MY_DATE_FORMATS = {
     ReactiveFormsModule,
     MatIconModule,
     InputOutputComponent,
-    CalendarComponent,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
