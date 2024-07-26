@@ -1,1 +1,34 @@
-<p>question-detail-page works!</p>
+<h1 class="display-2 text-center mb-4">{{ question.name }}</h1>
+<a
+  class="icon-link icon-link-hover mb-2"
+  style="cursor: pointer"
+  (click)="goBack()"
+>
+  <i class="bi fa-solid fa-arrow-left"></i>
+  Voltar
+</a>
+<br />
+<!--Informações-->
+<p>
+  <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
+</p>
+<p><strong>Linguagem de Programação:</strong> {{ question.language }}</p>
+<p><strong>Descrição:</strong> {{ question.description }}</p>
+
+<!--Arquivos-->
+<div *ngIf="questionFiles.length">
+  <h6><strong>Arquivos:</strong></h6>
+  <ul class="list-group list-group-flush">
+    <li *ngFor="let file of questionFiles" class="list-group-item">
+      <a [href]="file.file_url" download>{{ file.file_name }}</a>
+    </li>
+  </ul>
+</div>
+
+
+<!--Entradas e Saídas-->
+
+
+<!--Arquivo a ser submetido-->
+
+<!--Submissão-->

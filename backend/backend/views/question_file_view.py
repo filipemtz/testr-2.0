@@ -3,7 +3,8 @@ from ..models import QuestionFile
 from ..serializers import QuestionFileSerializer
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.decorators import action
+from rest_framework.response import Response
 class QuestionFileViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows question files to be viewed, created, or deleted.
@@ -12,3 +13,5 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionFileSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    
+

@@ -3,4 +3,5 @@ export interface QuestionFile {
   question: number;
   file_name: string;
   file_url: string;
+  downloadUrl: string;
 }

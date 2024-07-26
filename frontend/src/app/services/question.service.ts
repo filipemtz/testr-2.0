@@ -5,6 +5,7 @@ import { Question } from '../interfaces/question';
 import { InputOutput } from '../interfaces/input-output';
 import { environment } from '../../environments/environment';
 import { QuestionFile } from '../interfaces/question-file';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +38,13 @@ export class QuestionService {
     return this.http.delete<void>(url, { withCredentials: true });
   }
 
-  getQuestionFiles(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}/files/`);
+  getQuestionFiles(id: number): Observable<QuestionFile[]> {
+    return this.http.get(`${this.apiUrl}/${id}/files/`).pipe(
+      map((files: any) =>
+        files.map((file: any) => ({
+          ...file,
+          downloadUrl: `${environment.apiUrl}/question-files/${file.id}/download/`,
+        }))
+      ));
   }
 }
