@@ -1,8 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, input } from "@angular/core";
 import { AuthService } from '../../services/auth.service';
 import { Question } from '../../interfaces/question';
 import { QuestionService } from '../../services/question.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { DateFormatPipe } from '../../utils/date-format.pipe';
 import { QuestionFile } from '../../interfaces/question-file';
@@ -67,5 +67,15 @@ export class QuestionDetailPageComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  getLanguageName(value: string): string {
+    if(value == "PT"){
+      return "Python";
+    }
+    else if(value == "CC"){
+      return "C/C++";
+    }
+    return "";
   }
 }

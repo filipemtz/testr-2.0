@@ -12,7 +12,7 @@
 <p>
   <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
 </p>
-<p><strong>Linguagem de Programação:</strong> {{ question.language }}</p>
+<p><strong>Linguagem de Programação:</strong> {{ getLanguageName(question.language) }}</p>
 <p><strong>Descrição:</strong> {{ question.description }}</p>
 
 <!--Arquivos-->
@@ -39,7 +39,7 @@
   <div class="col">
     <label class="form-label"
       ><strong>Saída {{ i + 1 }}</strong></label
-    >
+    > 
     <textarea class="form-control-plaintext border p-2" readonly>{{
       io.output
     }}</textarea>
