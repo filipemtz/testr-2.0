@@ -1,36 +1,42 @@
-<h2 class="mb-3">Inputs/Outputs</h2>
-<div class="mt-3 mb-4">
+<div class="d-flex justify-content-between mb-3">
+    <h2>Inputs/Outputs</h2>
     <button class="btn btn-primary" (click)="createInputOutput()">
         <i class="fa-regular fa-plus"></i>
         Nova Entrada/Saída
     </button>
 </div>
 
-<div *ngFor="let io of inputs_outputs" class="d-flex mb-3 mt-2 justify-content-center">
-    <div class="d-flex" *ngIf="io.isEditing; else readMode">
-        <textarea class="input-output-textarea me-3" required [(ngModel)]="io.input"></textarea>
-        <textarea class="input-output-textarea ms-3" required [(ngModel)]="io.output"></textarea>
-                
-        <div class="d-flex flex-column justify-content-between">
-            <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
-                <div *ngIf="io.visible; else visibleOff">
-                    <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="io.visible = !io.visible;"></a>
-                </div>
-            <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEditIO(io)"></a>
-        </div>
-    </div>  
+<div *ngIf="inputs_outputs.length > 0; else noIO">
+    <div *ngFor="let io of inputs_outputs" class="d-flex mb-3 mt-2 justify-content-center">
+        <div class="d-flex" *ngIf="io.isEditing; else readMode">
+            <textarea class="input-output-textarea me-3" required [(ngModel)]="io.input"></textarea>
+            <textarea class="input-output-textarea ms-3" required [(ngModel)]="io.output"></textarea>
+                    
+            <div class="d-flex flex-column justify-content-between">
+                <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
+                    <div *ngIf="io.visible; else visibleOff">
+                        <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="io.visible = !io.visible;"></a>
+                    </div>
+                <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEditIO(io)"></a>
+            </div>
+        </div>  
 
-    <ng-template #readMode>
-        <textarea readonly class="input-output-textarea me-3" required [(ngModel)]="io.input"></textarea>
-        <textarea readonly class="input-output-textarea ms-3" required [(ngModel)]="io.output"></textarea>
+        <ng-template #readMode>
+            <textarea readonly class="input-output-textarea me-3" required [(ngModel)]="io.input"></textarea>
+            <textarea readonly class="input-output-textarea ms-3" required [(ngModel)]="io.output"></textarea>
 
-        <div class="d-flex flex-column justify-content-between">
-            <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="editIO(io)"></a>
-            <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="deleteInputOutput(io.url, io)"></a>
-        </div>
-    </ng-template>
+            <div class="d-flex flex-column justify-content-between">
+                <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="editIO(io)"></a>
+                <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="deleteInputOutput(io.url, io)"></a>
+            </div>
+        </ng-template>
 
-    <ng-template #visibleOff >
-        <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="io.visible = !io.visible;"></a>
-    </ng-template>
+        <ng-template #visibleOff >
+            <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="io.visible = !io.visible;"></a>
+        </ng-template>
+    </div>
 </div>
+
+<ng-template #noIO>
+    <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
+</ng-template>

@@ -94,7 +94,6 @@ export class QuestionEditPageComponent implements OnInit {
   confirmEditQuestion(): void {
     if (this.editForm.valid) {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
-      console.log(updatedQuestion.submission_deadline);
       this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
           this.resetForm();

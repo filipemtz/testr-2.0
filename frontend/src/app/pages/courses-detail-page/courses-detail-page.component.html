@@ -18,7 +18,7 @@
 	<li *ngFor="let section of sections; let i = index" class="list-group-item">
 		<!-- Modo de edição da seção -->
 		<div *ngIf="section.isEditing; else viewSection" class="d-flex flex-wrap justify-content-start">
-			<input #sectionInput class="form-control form-control-lg fw-semibold w-50 me-2" [(ngModel)]="section.name" />
+			<input #sectionInput class="form-control form-control-lg fw-semibold w-50 me-2 mb-1" [(ngModel)]="section.name" />
 			<div class="d-flex align-items-center">
 				<button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
 					(click)="confirmEditSection(section)"></button>
