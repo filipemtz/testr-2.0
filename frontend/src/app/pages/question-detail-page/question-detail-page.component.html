@@ -17,7 +17,7 @@
 
 <!--Arquivos-->
 <div *ngIf="questionFiles.length">
-  <h6><strong>Arquivos:</strong></h6>
+  <h3 class="fw-bold mb-3">Arquivos</h3>
   <ul class="list-group list-group-flush">
     <li *ngFor="let file of questionFiles" class="list-group-item">
       <a [href]="file.file_url" download>{{ file.file_name }}</a>
@@ -25,10 +25,33 @@
   </ul>
 </div>
 
-
 <!--Entradas e Saídas-->
-
+<h3 class="fw-bold mb-3">Entradas e Saídas</h3>
+<div *ngFor="let io of ios; let i = index" class="row my-3">
+  <div class="col">
+    <label class="form-label"
+      ><strong>Entrada {{ i + 1 }}</strong></label
+    >
+    <textarea class="form-control-plaintext border p-2" readonly>{{
+      io.input
+    }}</textarea>
+  </div>
+  <div class="col">
+    <label class="form-label"
+      ><strong>Saída {{ i + 1 }}</strong></label
+    >
+    <textarea class="form-control-plaintext border p-2" readonly>{{
+      io.output
+    }}</textarea>
+  </div>
+</div>
 
 <!--Arquivo a ser submetido-->
+<h3 class="fw-bold mb-3">Submissão</h3>
+<div class="d-flex flex-wrap mb-3">
+  <input class="form-control me-2 my-1" type="file" style="max-width: 700px" />
+  <button class="btn btn-success my-1">Upload</button>
+</div>
 
 <!--Submissão-->
+<h3 class="fw-bold mb-3">Última Submissão</h3>
