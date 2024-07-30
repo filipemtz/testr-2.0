@@ -21,8 +21,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def inputs_outputs(self, request, pk=None):
+        user = request.user
+        
         question = self.get_object()
         inputs_outputs = question.inputoutput_set.all()
+        
+        # se o usuario nao for um professor exibir apenas aqueles visiveis
+        if not user.groups.filter(name='teacher').exists():
+            inputs_outputs = inputs_outputs.filter(visible=True)
+        
         serializer = InputOutputSerializer(inputs_outputs, many=True, context={'request': request})
         return Response(serializer.data)
     
