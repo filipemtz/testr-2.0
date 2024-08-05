@@ -6,6 +6,10 @@ import 'simple-notify/dist/simple-notify.css';
 export function handleError(error: any) {
   // Função de notificação para lidar com erros
   const notifyFunction = (title: string, text: string | undefined, status: any) => {
+    if (text === undefined || text === null || text === 'true' || text === 'false') {
+      text = 'Unknown error occurred';
+    }
+
     new Notify({
       status: status,
       title: title,
