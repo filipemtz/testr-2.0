@@ -20,8 +20,6 @@ SECRET_KEY = config_data['backend']['secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config_data['backend']['debug']
 
-ALLOWED_HOSTS = config_data['backend']['allowed_hosts']
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -140,6 +138,12 @@ REST_FRAMEWORK = {
 }
 
 # CORS Settings
-ALLOWED_HOSTS = config_data['backend']['allowed_hosts']
-CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
-CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']
+CORS_ALLOW_CREDENTIALS = True
+
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
+if config_data['frontend']['host']:
+    ALLOWED_HOSTS.append(config_data['frontend']['host'])
+
+CORS_ALLOWED_ORIGINS = []
+for host in ALLOWED_HOSTS:
+    CORS_ALLOWED_ORIGINS.append(f"http://{host}:{config_data['frontend']['port']}")
