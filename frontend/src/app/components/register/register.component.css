@@ -1,13 +1,15 @@
-mat-card {
-  max-width: 90%;
-  margin: 2em auto;
-  text-align: center;
+
+.form-title {
+  color: var(--primary);
+  font-size: 48pt;
+  font-weight: bold;
+  margin-bottom: 1em;
 }
 
-@media (min-width: 600px) {
-  mat-card {
-    max-width: 400px;
-  }
+.form {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 mat-form-field {
@@ -24,12 +26,8 @@ mat-error {
   height: 48px;
 }
 
-h2{
-  color: var(--primary);
-  padding: 0.5rem;
-}
 mat-card-content {
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 mat-card-content * {

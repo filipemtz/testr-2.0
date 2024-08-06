@@ -17,6 +17,8 @@
 
 <!--Arquivos-->
 <div *ngIf="questionFiles.length">
+<br>
+<br>
   <h3 class="fw-bold mb-3">Arquivos</h3>
   <ul class="list-group list-group-flush">
     <li *ngFor="let file of questionFiles" class="list-group-item">
@@ -26,6 +28,8 @@
 </div>
 
 <!--Entradas e Saídas-->
+<br>
+<br>
 <h3 class="fw-bold mb-3">Entradas e Saídas</h3>
 <div *ngFor="let io of ios; let i = index" class="row my-3">
   <div class="col">
@@ -39,22 +43,26 @@
   <div class="col">
     <label class="form-label"
       ><strong>Saída {{ i + 1 }}</strong></label
-    > 
+    >
     <textarea class="form-control-plaintext border p-2" readonly>{{
       io.output
     }}</textarea>
   </div>
 </div>
 
+<br>
+<br>
 <!--Arquivo a ser submetido-->
-<h3 class="fw-bold mb-3">Submissão</h3>
+<h3 class="fw-bold mb-3">Enviar Resposta</h3>
 <div class="d-flex flex-wrap mb-3">
   <input class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)" style="max-width: 700px" />
   <button class="btn btn-success my-1" (click)="onSubmitFile()">Upload</button>
 </div>
 
 <div *ngIf="submission">
-  <h3 class="fw-bold mb-3">Submissão Anterior</h3>
+<br>
+<br>
+  <h3 class="fw-bold mb-3">Relatório</h3>
   <table class="table table-bordered table-striped">
     <tbody>
       <tr>
@@ -75,4 +83,5 @@
       </tr>
     </tbody>
   </table>
+  <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">Reavaliar</button>
 </div>

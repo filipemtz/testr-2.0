@@ -1,7 +1,41 @@
-
-.login-layout {
-  background: #224385;
-  height: 100vh; /* Define a altura como 100% da altura da tela */
+.vertical-align-middle {
+  height: 90vh;
+  /* Define a altura como 100% da altura da tela */
   display: flex;
-  align-items: center; /* Centraliza verticalmente */
+  align-items: center;
+  /* Centraliza verticalmente */
+}
+
+.title {
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  font-weight: bold;
+  color: black;
+  font-size: 32px;
+}
+
+.title-icon {
+  width: 32px;
+}
+
+.subtitle {
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  font-weight: lighter;
+  color: white;
+  font-size: 20px;
+  padding-left: 5em;
+  padding-right: 5em;
+}
+
+.left-panel {
+  /* top right bottom left */
+  padding: 25px 50px 25px 50px;
+}
+
+.right-panel {
+  height: 100vh;
+  background: repeating-linear-gradient(45deg,
+      #1071ba,
+      #1071ba 100px,
+      #ffffff 100px,
+      #ffffff 150px);
 }

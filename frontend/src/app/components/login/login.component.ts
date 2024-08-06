@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.user));
         localStorage.setItem('token', res.token);
         localStorage.setItem('authenticated', 'true');
-      
+
         if (res.user.is_superuser) {
           this.router.navigate(['/admin']);
         }
@@ -60,8 +60,8 @@ export class LoginComponent implements OnInit {
     if (!groups.length) {
       return of([]); // Return an observable of an empty array if no groups
     }
-  
-    const groupObservables = groups.map(groupId => 
+
+    const groupObservables = groups.map(groupId =>
       this.authService.getGroup(groupId).pipe(
         catchError(error => {
           console.error('Error fetching group', groupId, error);
@@ -69,9 +69,9 @@ export class LoginComponent implements OnInit {
         })
       )
     );
-  
+
     return forkJoin(groupObservables).pipe(
-      map(results => 
+      map(results =>
         results
           .filter(group => group !== null) // Filter out any null results due to errors
           .map(group => group.name) // Assuming the group object has a 'name' property
@@ -82,15 +82,15 @@ export class LoginComponent implements OnInit {
   redirectTo(groups: any[]) {
     // if (groups.includes('student')) {
     //   //this.router.navigate(['/student']);
-    
+
     // } else if (groups.includes('teacher')) {
     //   // this.router.navigate(['/teacher']);
-   
+
     // } else{
     //   this.router.navigate(['/']);
     // }
     this.router.navigate(['/']);
   }
 
-  
+
 }

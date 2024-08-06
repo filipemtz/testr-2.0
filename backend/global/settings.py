@@ -2,20 +2,14 @@ import sys
 from pathlib import Path
 import yaml
 
+from backend.utils.io import safe_load_yaml
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Path to the config file
 CONFIG_FILE = BASE_DIR.parent.joinpath("config.yaml")
-
-# Load the configurations from the config file
-try:
-    with CONFIG_FILE.open("r") as f:
-        config_data = yaml.load(f, Loader=yaml.SafeLoader)
-except FileNotFoundError:
-    print("File 'config.yaml' not found. This is expected in the first use."
-          "Copy config-sample.yaml into config.yaml and edit the required fields.")
-    sys.exit(0)
+config_data = safe_load_yaml(CONFIG_FILE)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -41,7 +35,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'backend.apps.BackendConfig',
     'accounts.apps.AccountsConfig',
-    'corsheaders',  
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -147,10 +141,5 @@ REST_FRAMEWORK = {
 
 # CORS Settings
 ALLOWED_HOSTS = config_data['backend']['allowed_hosts']
-
 CORS_ALLOWED_ORIGINS = config_data['backend']['cors_allowed_origins']
 CORS_ALLOW_CREDENTIALS = config_data['backend']['cors_allow_credentials']
-
-
-
-

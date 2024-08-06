@@ -74,6 +74,10 @@ export class QuestionDetailPageComponent implements OnInit {
     }
   }
 
+  resetSubmissionStatus(): void {
+    // TODO:
+  }
+
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
   }

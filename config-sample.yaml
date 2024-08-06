@@ -31,7 +31,7 @@ judge:
 
   cpp:
     # Flags for compiling c/c++ submissions (used only if the makefile is not submitted)
-    cflags: "-Wall"
+    cflags: "-g -Wall"
     lflags: "-L ./ -lm"
     iflags: "-I ./"
 

@@ -5,10 +5,12 @@ from django.utils import timezone
 
 from .question import Question
 
+
 class SubmissionStatus(models.TextChoices):
     WAITING_EVALUATION = 'WE', _('Waiting Evaluation')
     FAIL = 'FL', _('Fail')
     SUCCESS = 'SC', _('Success')
+
 
 class Submission(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
