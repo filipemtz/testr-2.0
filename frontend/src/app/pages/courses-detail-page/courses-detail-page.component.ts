@@ -160,7 +160,6 @@ export class CoursesDetailPageComponent implements OnInit {
           this.addSectionForm.reset();
           this.sections.push(section);
           this.modalService.dismissAll();
-          this.pushNotify('Success', 'Section added successfully', 'success');
         },
         error: (err) => {
           console.error(err);
@@ -186,25 +185,12 @@ export class CoursesDetailPageComponent implements OnInit {
             (section) => section.url !== this.sectionToDelete!.url,
           );
           this.modalService.dismissAll();
-          this.pushNotify('Success', 'Section deleted successfully', 'success');
         },
         error: (err) => {
           console.error(err);
           this.pushNotify('Error', 'Failed to delete section', 'error');
         }
       });
-  }
-
-  confirmEditQuestion(question: Question) {
-    this.questionService.editQuestion(question.url, question).subscribe({
-      next: () => {
-        question.isEditing = false;
-        this.pushNotify('Success', 'Question edited successfully', 'success');
-      },
-      error: (err) => {
-        this.pushNotify('Error', 'Failed to edit question', 'error');
-      }
-    });
   }
 
   openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
@@ -225,7 +211,6 @@ export class CoursesDetailPageComponent implements OnInit {
     this.sectionService.editSection(section.url, updatedSection).subscribe({
       next: () => {
         section.isEditing = false;
-        this.pushNotify('Success', 'Section edited successfully', 'success');
       },
       error: (err) => {
         console.error(err);

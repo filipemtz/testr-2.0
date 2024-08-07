@@ -1,0 +1,42 @@
+
+TODO: implementar a funcao resetSubmissionStatus definida em question-detail-page.component.ts e utilizada em question-detail-page.component.html. A função deve atualizar a submissão e definir o status como waiting evaluation.
+
+BUG: Na página de enviar submissão, o conteúdo do arquivo não está sendo submetido.
+
+TODO: Permitir baixar o arquivo da submissão na página de detalhe da questão.
+
+TODO: Em question-detail-page.component.html adicionei uns <br> para tornar o visual mais agradável. Substituir por css.
+
+TODO: Em question-detail-page.component.html, abaixo do relatório, criar uma seção para mostrar erros. A seção só deve ser exibida se a questão tiver sido avaliada e o status for fail. Ver formato do atributo report_json anexo.
+
+TODO: No editor de questões, ao clicar em salvar, apenas mostrar mensagem de sucesso de continuar na página. 
+
+TODO: Ao atualizar nome de seção e curso ou remover seção e curso, não é necessário exibir o balãozinho dizendo que deu certo. Só é necessário mostrar mensagem se der errado. 
+
+TODO: Como professor, ver só os meus cursos. 
+
+TODO: Criar um link na página de ver detalhes do curso que leve para uma página de relatório. Esta página deve permitir ver a lista de alunos e o número de questões resolvidas por cada um. Nesta página, permitir cadastrar alunos usando arquivo csv. O professor deve enviar um csv com o seguinte formato: 
+
+-----
+username;password;email;first name; last name
+filipe;123123;filipe@filipe.com;filipe;mutz
+jullie;456456;jullie@jullie.com;jullie;quadros
+nathan;789789;nathan@nathan.com;nathan;vascaino
+-----
+
+O programa deve matricular os alunos no curso. Alunos nao cadastrados devem ser cadastrados automaticamente.
+
+TODO: Na página de questão, ter um link para visualizar a lista de alunos (username, first name e last name), o status da submissão e um link para baixar a submissão (se existir). Adicionar um botão no topo para rerodar o autojudge. Este botão deve definir o status de todas as submissões da questão para waiting evaluation.
+
+BUG: Nem todos os models aparecem no admin (e.g., submission).
+
+BUG: Em algumas situações que não consegui identificar ainda, todos os inputs deixam de ser editáveis. Só voltam quando atualizo a página. 
+
+BUG: entradas e saídas devem ser criadas em modo de edição. Ao sair do modo de edição, elas devem aparecer como texto simples e não como caixas de texto. É frustrante para o usuário tentar editar o texto (por estar em uma caixa de texto, parece editável) e não conseguir. 
+
+BUG: quando a página está em formato de tela de celular, as caixas de texto das entradas e saídas saem da tela. Definir o tamanho das caixas para que fiquem totalmente vizíveis neste formato. Quando não está em modo de edição, fica normal.
+
+BUG: se apagar o local storage e cookies, a pessoa não desloga e o botão de sair não funciona 
+
+BUG: o sistema só aceita posts se o front for executado com "ng serve --host 0.0.0.0 --port 8080". Se o host for removido do comando, o sistema dá erro de CSRF dizendo que localhost não é uma trusted origin.
+

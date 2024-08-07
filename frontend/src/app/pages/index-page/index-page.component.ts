@@ -140,7 +140,6 @@ export class IndexPageComponent implements OnInit {
             (course) => course.url !== this.courseToDelete!.url,
           );
           this.modalService.dismissAll();
-          this.pushNotify('Success', 'Course deleted successfully', 'success');
         },
         error: (err) => {
           console.error(err);
@@ -163,7 +162,6 @@ export class IndexPageComponent implements OnInit {
       this.courseService.updateCourse(course.url, updatedCourse).subscribe({
         next: () => {
           course.isEditing = false;
-          this.pushNotify('Success', 'Course updated successfully', 'success');
         },
         error: (err) => {
           console.error(err);
