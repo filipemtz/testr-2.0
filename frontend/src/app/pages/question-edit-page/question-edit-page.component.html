@@ -117,7 +117,7 @@
       <button
         type="button"
         class="btn btn-danger col-2 go-back-btn"
-        (click)="deleteQuestion()"
+        (click)="openDeleteQuestionModal(deleteQuestionModal)"
       >
         Deletar
       </button>
@@ -132,3 +132,18 @@
     <app-input-output></app-input-output>
   </div>
 </div>
+
+<!-- Modal para deletar questão -->
+<ng-template #deleteQuestionModal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Deletar questão</h4>
+		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		Tem certeza que deseja deletar a questão?
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="deleteQuestion()">Deletar</button>
+	</div>
+</ng-template>

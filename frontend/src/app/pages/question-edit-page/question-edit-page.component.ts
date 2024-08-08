@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import {  Component, OnInit } from '@angular/core';
+import {  Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +12,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import Notify from 'simple-notify';
+import 'simple-notify/dist/simple-notify.css';
 
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
@@ -55,11 +58,13 @@ export class QuestionEditPageComponent implements OnInit {
   editForm: FormGroup;
   selectedQuestion: any;
   erros: any[] = []
+  myNotify: any;
   
   constructor(private authService: AuthService, 
     private questionService: QuestionService,
     private route: ActivatedRoute,
     private location: Location,
+    private modalService: NgbModal,
     private fb: FormBuilder) {
       this.editForm = this.fb.group({
         name: ['', Validators.required],
@@ -96,7 +101,7 @@ export class QuestionEditPageComponent implements OnInit {
       const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
       this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
         next: () => {
-          this.resetForm();
+          this.pushNotify('Sucesso!', 'Questão editada com sucesso', 'success');
         },
         error: (err:any) => {
           this.erros = err.error;
@@ -104,7 +109,6 @@ export class QuestionEditPageComponent implements OnInit {
           this.erros.forEach((element) => {
             console.log(element);
           });
-          
         }
       });
     }
@@ -113,15 +117,18 @@ export class QuestionEditPageComponent implements OnInit {
     }
   }
 
+  openDeleteQuestionModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
   deleteQuestion(): void {
     this.questionService.deleteQuestion(this.selectedQuestion.url).subscribe({
       next: () => {
+        this.modalService.dismissAll();
         this.goBack();
       }
     })
   }
-
-  
 
   cpuLimitValidator(control: AbstractControl): Observable<ValidationErrors | null> {
     return of(control.value).pipe(
@@ -138,5 +145,15 @@ export class QuestionEditPageComponent implements OnInit {
   resetForm(): void {
     this.selectedQuestion = null;
     this.editForm.reset();
+  }
+
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled',
+    });
   }
 }
