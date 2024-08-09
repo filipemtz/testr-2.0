@@ -63,6 +63,7 @@ export class InputOutputComponent {
   createInputOutput(): void {
     this.ioService.postInputOutput(this.defaultIO).subscribe({
       next: io => {
+        io.isEditing = true;
         this.inputs_outputs.push(io);
       }
     })

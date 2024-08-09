@@ -9,8 +9,10 @@ TODO: Em question-detail-page.component.html adicionei uns <br> para tornar o vi
 
 TODO: Em question-detail-page.component.html, abaixo do relatório, criar uma seção para mostrar erros. A seção só deve ser exibida se a questão tiver sido avaliada e o status for fail. Ver formato do atributo report_json anexo.
 
+--DONE--
 TODO: No editor de questões, ao clicar em salvar, apenas mostrar mensagem de sucesso de continuar na página. 
 
+--DONE--
 TODO: Ao atualizar nome de seção e curso ou remover seção e curso, não é necessário exibir o balãozinho dizendo que deu certo. Só é necessário mostrar mensagem se der errado. 
 
 TODO: Como professor, ver só os meus cursos. 
@@ -28,6 +30,7 @@ O programa deve matricular os alunos no curso. Alunos nao cadastrados devem ser 
 
 TODO: Na página de questão, ter um link para visualizar a lista de alunos (username, first name e last name), o status da submissão e um link para baixar a submissão (se existir). Adicionar um botão no topo para rerodar o autojudge. Este botão deve definir o status de todas as submissões da questão para waiting evaluation.
 
+--DONE--
 BUG: Nem todos os models aparecem no admin (e.g., submission).
 
 BUG: Em algumas situações que não consegui identificar ainda, todos os inputs deixam de ser editáveis. Só voltam quando atualizo a página. 
