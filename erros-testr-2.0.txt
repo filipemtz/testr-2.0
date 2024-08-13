@@ -35,6 +35,7 @@ BUG: Nem todos os models aparecem no admin (e.g., submission).
 
 BUG: Em algumas situações que não consegui identificar ainda, todos os inputs deixam de ser editáveis. Só voltam quando atualizo a página. 
 
+--DONE--
 BUG: entradas e saídas devem ser criadas em modo de edição. Ao sair do modo de edição, elas devem aparecer como texto simples e não como caixas de texto. É frustrante para o usuário tentar editar o texto (por estar em uma caixa de texto, parece editável) e não conseguir. 
 
 BUG: quando a página está em formato de tela de celular, as caixas de texto das entradas e saídas saem da tela. Definir o tamanho das caixas para que fiquem totalmente vizíveis neste formato. Quando não está em modo de edição, fica normal.
