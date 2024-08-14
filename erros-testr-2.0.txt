@@ -19,7 +19,9 @@ TODO: No editor de questões, ao clicar em salvar, apenas mostrar mensagem de su
 TODO: Ao atualizar nome de seção e curso ou remover seção e curso, não é necessário exibir o balãozinho dizendo que deu certo. Só é necessário mostrar mensagem se der errado. 
 --------
 
-TODO: Como professor, ver só os meus cursos. 
+--DONE--
+TODO: Como professor, ver só os meus cursos.
+--------
 
 TODO: Criar um link na página de ver detalhes do curso que leve para uma página de relatório. Esta página deve permitir ver a lista de alunos e o número de questões resolvidas por cada um. Nesta página, permitir cadastrar alunos usando arquivo csv. O professor deve enviar um csv com o seguinte formato: 
 
