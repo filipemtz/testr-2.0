@@ -48,5 +48,6 @@ BUG: quando a página está em formato de tela de celular, as caixas de texto da
 
 BUG: se apagar o local storage e cookies, a pessoa não desloga e o botão de sair não funciona 
 
+--DONE--
 BUG: o sistema só aceita posts se o front for executado com "ng serve --host 0.0.0.0 --port 8080". Se o host for removido do comando, o sistema dá erro de CSRF dizendo que localhost não é uma trusted origin.
-
+--------
