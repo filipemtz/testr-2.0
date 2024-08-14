@@ -36,6 +36,7 @@ export class IndexPageComponent implements OnInit {
   addForm: FormGroup;
 
   courses: Course[] = [];
+  allCourses: Course[] = [];
   courseToDelete: Course | null = null;
   user: any;
   myNotify: any;
@@ -73,27 +74,40 @@ export class IndexPageComponent implements OnInit {
     this.authService.profile().subscribe({
       next: (response) => {
         this.user = response;
+
+        this.authService.userInfo().subscribe({
+          next: (response: any) => {
+            this.isProfessor = response.groups.includes('teacher');
+          },
+        });
+
         this.loadCourses();
       },
     });
-    this.authService.userInfo().subscribe({
-      next: (response: any) => {
-        console.log(response);
-        this.isProfessor = response.groups.includes('teacher');
-      },
-    });
+
+    
   }
 
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: (response) => {
-        this.courses = response.results;
+        this.allCourses = response.results;
+        this.allCourses.forEach(c => {
+          this.teacherList = c.teachers;
+          this.teacherList.forEach(t => {
+            if(t == this.user.id){
+              this.courses.push(c);
+            }
+          });
+        });
       },
       error: (err) => {
         console.log(err);
         this.pushNotify('Error', 'Failed to load courses', 'error');
       },
     });
+    //console.log(this.teacherList);
+    this.teacherList = [];
   }
 
   openDeleteModal(course: Course, content: TemplateRef<any>) {
