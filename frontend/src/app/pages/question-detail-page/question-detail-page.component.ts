@@ -56,7 +56,11 @@ export class QuestionDetailPageComponent implements OnInit {
 
       this.questionService.getInputsOutputs(+id).subscribe({
         next: (ios: any) => {
-          this.ios = ios;
+          ios.forEach( (io : InputOutput) => {
+            if(io.visible != false){
+              this.ios.push(io);
+            }
+          })
         },
         error: (err) => {
           console.log(err);
@@ -66,6 +70,7 @@ export class QuestionDetailPageComponent implements OnInit {
       this.submissionService.getSubmission(+id).subscribe({
         next: (submission) => {
           this.submission = submission;
+          console.log(submission);
         },
         error: (err) => {
           console.log(err);

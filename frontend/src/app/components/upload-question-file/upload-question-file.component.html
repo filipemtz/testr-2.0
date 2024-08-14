@@ -17,8 +17,6 @@
   </button>
 </div>
 
-
-
 <div *ngIf="progressInfos.length">
   <button
   type="button"
@@ -46,10 +44,10 @@
 </div>
 
 <h3>Lista de arquivos</h3>
-<div *ngIf="fileInfos; else noFilesTemplate">
+<div *ngIf="fileInfos.length; else noFilesTemplate">
   <ul class="list-group list-group-flush">
     <li
-    *ngFor="let file of fileInfos | async"
+    *ngFor="let file of fileInfos"
       class="list-group-item d-flex justify-content-start align-items-center"
     >
       <i class="fa-regular fa-file me-2"></i>
@@ -62,6 +60,7 @@
     </li>
   </ul>
 </div>
+
 <ng-template #noFilesTemplate>
   <p>Não existem arquivos para serem exibidos.</p>
 </ng-template>

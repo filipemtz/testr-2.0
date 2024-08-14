@@ -20,7 +20,7 @@ export class UploadQuestionFileComponent implements OnInit {
   progressInfos: any[] = [];
   message: string[] = [];
   
-  fileInfos?: Observable<any>;
+  fileInfos: QuestionFile[] = [];
   
   constructor(
     private questionFileService: QuestionFileService,
@@ -31,14 +31,19 @@ export class UploadQuestionFileComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.questionId = params['questionId'];
-      this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
+      
+      console.log(this.fileInfos);
     });
   }
 
   deleteFile(fileId: number): void {
     this.questionFileService.deleteFile(fileId).subscribe({
       next: () => {
-        this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
+        this.questionService.getQuestionFiles(this.questionId).subscribe({
+          next: files => {
+            this.fileInfos = files;
+          }
+        })
       },
     });
   }
@@ -76,14 +81,22 @@ export class UploadQuestionFileComponent implements OnInit {
           if (event instanceof HttpResponse) {
             const msg = 'Upload com sucesso do arquivo: ' + file.name;
             this.message.push(msg);
-            this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
+            this.questionService.getQuestionFiles(this.questionId).subscribe({
+              next: files => {
+                this.fileInfos = files;
+              }
+            })
           }
         },
         error: (err: any) => {
           this.progressInfos[idx].value = 0;
           const msg = 'Não foi possível fazer o upload do arquivo: ' + file.name;
           this.message.push(msg);
-          this.fileInfos = this.questionService.getQuestionFiles(this.questionId);
+          this.questionService.getQuestionFiles(this.questionId).subscribe({
+            next: files => {
+              this.fileInfos = files;
+            }
+          })
         },
       });
     }

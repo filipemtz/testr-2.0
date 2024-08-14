@@ -108,7 +108,6 @@ export class CoursesDetailPageComponent implements OnInit {
     this.loadCourse();
     this.authService.userInfo().subscribe({
       next: (response: any) => {
-        console.log(response);
         this.isProfessor = response.groups.includes('teacher');
       },
     });
@@ -236,7 +235,6 @@ export class CoursesDetailPageComponent implements OnInit {
             return section;
           });
           this.modalService.dismissAll();
-          this.pushNotify('Success', 'Question deleted successfully', 'success');
         },
         error: (err) => {
           console.error(err);

@@ -9,7 +9,7 @@
 </a>
 
 <!--Informações-->
-<div class="mt-2" style="margin-bottom: 5%;">
+<div class="mt-2" >
   <p>
     <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
   </p>
@@ -18,7 +18,7 @@
 </div>
 
 <!--Entradas e Saídas-->
-<div class="mt-2">
+<div style="margin-top: 5%;">
   <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
   <div *ngIf="ios.length; else noIO">
     <div *ngFor="let io of ios; let i = index" class="row my-3">
@@ -44,7 +44,7 @@
 </ng-template>
 
 <!--Arquivos-->
-<div class="mt-2">
+<div style="margin-top: 2.5%;">
   <h3 class="fw-bold">Arquivos</h3>
   <div *ngIf="questionFiles.length; else noQuestionFile">
     <ul class="list-group list-group-flush">

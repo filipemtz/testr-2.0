@@ -39,7 +39,7 @@ export class QuestionService {
   }
 
   getQuestionFiles(id: number): Observable<QuestionFile[]> {
-    return this.http.get(`${this.apiUrl}/${id}/files/`).pipe(
+    return this.http.get<QuestionFile[]>(`${this.apiUrl}/${id}/files/`).pipe(
       map((files: any) =>
         files.map((file: any) => ({
           ...file,
