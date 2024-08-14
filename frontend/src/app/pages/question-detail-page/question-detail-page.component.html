@@ -7,61 +7,69 @@
   <i class="bi fa-solid fa-arrow-left"></i>
   Voltar
 </a>
-<br />
-<!--Informações-->
-<p>
-  <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
-</p>
-<p><strong>Linguagem de Programação:</strong> {{ getLanguageName(question.language) }}</p>
-<p><strong>Descrição:</strong> {{ question.description }}</p>
 
-<!--Arquivos-->
-<div *ngIf="questionFiles.length">
-<br>
-<br>
-  <h3 class="fw-bold mb-3">Arquivos</h3>
-  <ul class="list-group list-group-flush">
-    <li *ngFor="let file of questionFiles" class="list-group-item">
-      <a [href]="file.file_url" download>{{ file.file_name }}</a>
-    </li>
-  </ul>
+<!--Informações-->
+<div class="mt-2" style="margin-bottom: 5%;">
+  <p>
+    <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
+  </p>
+  <p><strong>Linguagem de Programação:</strong> {{ getLanguageName(question.language) }}</p>
+  <p><strong>Descrição:</strong> {{ question.description }}</p>
 </div>
 
 <!--Entradas e Saídas-->
-<br>
-<br>
-<h3 class="fw-bold mb-3">Entradas e Saídas</h3>
-<div *ngFor="let io of ios; let i = index" class="row my-3">
-  <div class="col">
-    <label class="form-label"
-      ><strong>Entrada {{ i + 1 }}</strong></label
-    >
-    <textarea class="form-control-plaintext border p-2" readonly>{{
-      io.input
-    }}</textarea>
+<div class="mt-2">
+  <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
+  <div *ngIf="ios.length; else noIO">
+    <div *ngFor="let io of ios; let i = index" class="row my-3">
+      <div class="col">
+        <label class="form-label"
+          ><strong>Entrada {{ i + 1 }}</strong></label
+        >
+        <textarea class="form-control-plaintext border p-2" readonly>{{
+          io.input
+        }}</textarea>
+      </div>
+      <div class="col">
+        <label class="form-label"><strong>Saída {{ i + 1 }}</strong></label>
+        <textarea class="form-control-plaintext border p-2" readonly>{{io.output }}</textarea>
+      </div>
+    </div>
   </div>
-  <div class="col">
-    <label class="form-label"
-      ><strong>Saída {{ i + 1 }}</strong></label
-    >
-    <textarea class="form-control-plaintext border p-2" readonly>{{
-      io.output
-    }}</textarea>
+  
+</div>
+
+<ng-template #noIO>
+  <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
+</ng-template>
+
+<!--Arquivos-->
+<div class="mt-2">
+  <h3 class="fw-bold">Arquivos</h3>
+  <div *ngIf="questionFiles.length; else noQuestionFile">
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let file of questionFiles" class="list-group-item">
+        <a [href]="file.file_url" download>{{ file.file_name }}</a>
+      </li>
+    </ul>
   </div>
 </div>
 
-<br>
-<br>
+<ng-template #noQuestionFile>
+  <p class="ms-3">Não existem arquivos</p>
+</ng-template>
+
 <!--Arquivo a ser submetido-->
-<h3 class="fw-bold mb-3">Enviar Resposta</h3>
-<div class="d-flex flex-wrap mb-3">
-  <input class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)" style="max-width: 700px" />
-  <button class="btn btn-success my-1" (click)="onSubmitFile()">Upload</button>
+<div style="margin-top: 2.5%;">
+  <h3 class="fw-bold mb-3">Enviar Resposta</h3>
+  <div class="d-flex flex-wrap mb-3">
+    <input class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)" style="max-width: 700px" />
+    <button class="btn btn-success my-1" (click)="onSubmitFile()">Upload</button>
+  </div>
 </div>
+
 
 <div *ngIf="submission">
-<br>
-<br>
   <h3 class="fw-bold mb-3">Relatório</h3>
   <table class="table table-bordered table-striped">
     <tbody>
