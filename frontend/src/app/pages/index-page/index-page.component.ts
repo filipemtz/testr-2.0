@@ -103,7 +103,7 @@ export class IndexPageComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.pushNotify('Error', 'Failed to load courses', 'error');
+        this.pushNotify('Erro!', 'Erro ao carregar os cursos', 'error');
       },
     });
     //console.log(this.teacherList);
@@ -113,29 +113,6 @@ export class IndexPageComponent implements OnInit {
   openDeleteModal(course: Course, content: TemplateRef<any>) {
     this.courseToDelete = course;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
-  confirmAdd(): void {
-    if (this.addForm.valid) {
-      this.teacherList.push(this.user.id);
-      const newCourse = { ...this.teacherList, ...this.addForm.value };
-      console.log(newCourse);
-      this.courseService.createCourse(newCourse).subscribe({
-        next: (course) => {
-          this.addForm.reset();
-          this.teacherList = [];
-          this.courses.push(course);
-          this.modalService.dismissAll();
-          this.pushNotify('Success', 'Course added successfully', 'success');
-        },
-        error: (err) => {
-          console.error(err);
-          this.pushNotify('Error', 'Failed to add course', 'error');
-        },
-      });
-    } else {
-      console.log('invalid form');
-    }
   }
 
   confirmDelete(): void {
@@ -149,7 +126,7 @@ export class IndexPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.pushNotify('Error', 'Failed to delete course', 'error');
+          this.pushNotify('Erro!', 'Falha ao deletar curso', 'error');
         },
       });
     }
@@ -171,7 +148,7 @@ export class IndexPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.pushNotify('Error', 'Failed to update course', 'error');
+          this.pushNotify('Erro!', 'Falha ao atualizar curso', 'error');
         },
       });
     }

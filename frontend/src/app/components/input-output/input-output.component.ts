@@ -73,11 +73,14 @@ export class InputOutputComponent {
       const updatedIO: InputOutput = { ...io}
 
       this.ioService.editInputOutput(io.url,updatedIO).subscribe({
-        next: newIO => {
-          console.log(newIO);
-        }
+        next: () => {
+          io.isEditing = false;
+        },
+        error: (err) => {
+          //this.pushNotify('Erro!', 'Falha ao atualizar entrada/saida', 'error');
+        }, 
       });
-      io.isEditing = false;
+      
   }
 
   editIO(io: InputOutput): void {

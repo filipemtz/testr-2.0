@@ -126,7 +126,7 @@ export class CoursesDetailPageComponent implements OnInit {
             },
             error: (err) => {
               console.log(err);
-              this.pushNotify('Error', 'Failed to load questions', 'error');
+              this.pushNotify('Erro!', 'Erro ao carregar as seções', 'error');
             }
           });
         });
@@ -162,7 +162,7 @@ export class CoursesDetailPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.pushNotify('Error', 'Failed to add section', 'error');
+          this.pushNotify('Erro!', 'Falha ao adicionar uma seção', 'error');
         },
       });
     } else {
@@ -187,7 +187,7 @@ export class CoursesDetailPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.pushNotify('Error', 'Failed to delete section', 'error');
+          this.pushNotify('Error!', 'Falha ao deletar uma seção', 'error');
         }
       });
   }
@@ -213,7 +213,7 @@ export class CoursesDetailPageComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.pushNotify('Error', 'Failed to edit section', 'error');
+        this.pushNotify('Erro!', 'Falha ao editar uma seção', 'error');
       },
     });
   }
@@ -238,7 +238,7 @@ export class CoursesDetailPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.pushNotify('Error', 'Failed to delete question', 'error');
+          this.pushNotify('Erro!', 'Falha ao deletar uma questão', 'error');
         }
       });
   }

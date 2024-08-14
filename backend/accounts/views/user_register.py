@@ -5,6 +5,7 @@ from rest_framework import exceptions
 from ..serializers import UserRegisterSerializer, UserSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+
 class UserRegisterAPIView(APIView):
     def post(self, request):
         data =  request.data
