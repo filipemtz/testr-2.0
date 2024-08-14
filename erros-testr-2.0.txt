@@ -5,7 +5,9 @@ BUG: Na página de enviar submissão, o conteúdo do arquivo não está sendo su
 
 TODO: Permitir baixar o arquivo da submissão na página de detalhe da questão.
 
+--DONE--
 TODO: Em question-detail-page.component.html adicionei uns <br> para tornar o visual mais agradável. Substituir por css.
+--------
 
 TODO: Em question-detail-page.component.html, abaixo do relatório, criar uma seção para mostrar erros. A seção só deve ser exibida se a questão tiver sido avaliada e o status for fail. Ver formato do atributo report_json anexo.
 
