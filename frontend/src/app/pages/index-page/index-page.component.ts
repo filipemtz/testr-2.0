@@ -40,6 +40,8 @@ export class IndexPageComponent implements OnInit {
   user: any;
   myNotify: any;
   isProfessor: boolean = false;
+  teacherList: any[] = [];
+
   defaultCourse: Course = {
     id: -1,
     url: "",
@@ -47,17 +49,7 @@ export class IndexPageComponent implements OnInit {
     visible: true,
     teachers: [],
     originalName: "Novo Curso"
-  }
-  
-  baseCourse: Course = {
-    name: "",
-    visible: true,
-    teachers: [],
-    isEditing: false,
-    id: -1,
-    url: '',
-    originalName: "",
-  };
+  } 
 
   constructor(
     private authService: AuthService,
@@ -111,13 +103,13 @@ export class IndexPageComponent implements OnInit {
 
   confirmAdd(): void {
     if (this.addForm.valid) {
-      this.baseCourse.teachers.push(this.user.id);
-      const newCourse = { ...this.baseCourse, ...this.addForm.value };
+      this.teacherList.push(this.user.id);
+      const newCourse = { ...this.teacherList, ...this.addForm.value };
       console.log(newCourse);
       this.courseService.createCourse(newCourse).subscribe({
         next: (course) => {
           this.addForm.reset();
-          this.baseCourse.teachers = [];
+          this.teacherList = [];
           this.courses.push(course);
           this.modalService.dismissAll();
           this.pushNotify('Success', 'Course added successfully', 'success');
