@@ -9,7 +9,7 @@ import { DateFormatPipe } from '../../utils/date-format.pipe';
 import { QuestionFile } from '../../interfaces/question-file';
 import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../interfaces/input-output';
-
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
@@ -23,6 +23,9 @@ export class QuestionDetailPageComponent implements OnInit {
   ios: InputOutput[] = [] as InputOutput[];
   submission: any;
   selectedFile: File | null = null;
+  apiUrl = `${environment.apiUrl}`;
+  submissionsList: any[] = [];
+  isProfessor: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -35,10 +38,19 @@ export class QuestionDetailPageComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
+    
+
     if (id !== null) {
       this.questionService.getQuestion(+id).subscribe({
         next: (question: Question) => {
           this.question = question;
+
+          this.authService.userInfo().subscribe({
+            next: (response: any) => {
+              this.isProfessor = response.groups.includes('teacher');
+              this.getSubmissionsList();
+            },
+          });
         },
         error: (err) => {
           console.log(err);
@@ -80,7 +92,24 @@ export class QuestionDetailPageComponent implements OnInit {
   }
 
   resetSubmissionStatus(): void {
-    // TODO:
+    const questionId = this.question.id;
+
+    this.submissionService.resetSubmission(questionId).subscribe({
+      next: (response) => {
+        console.log('Submission status reset successfully', response);
+        this.submissionService.getSubmission(questionId).subscribe({
+          next: (submission) => {
+            this.submission = submission;
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      },
+      error: (err) => {
+        console.log('Error resetting submission status', err);
+      },
+    });
   }
 
   onFileSelected(event: any): void {
@@ -136,5 +165,18 @@ export class QuestionDetailPageComponent implements OnInit {
       return 'Success';
     }
     return '';
+  }
+
+  getSubmissionsList(): void {
+    const questionId = this.question.id;
+
+    this.submissionService.listSubmissions(questionId).subscribe({
+      next: (response) => {
+        this.submissionsList = response;
+      },
+      error: (err) => {
+        console.log('Error getting submissions list:', err);
+      },
+    });
   }
 }

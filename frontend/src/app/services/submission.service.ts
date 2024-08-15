@@ -24,4 +24,15 @@ export class SubmissionService {
 
     return this.http.post(`${this.apiUrl}/add/`, formData);
   }
+
+  // Metodo para resetar status de uma submissão
+  resetSubmission(questionId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-status/?question_id=${questionId}`, {});
+  }
+
+  // Método para listar todos os alunos que submeteram uma questão
+
+  listSubmissions(questionId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/list/?question_id=${questionId}`);
+  }
 }

@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 import yaml
-
+import os
 from backend.utils.io import safe_load_yaml
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -147,3 +147,13 @@ if config_data['frontend']['host']:
 CORS_ALLOWED_ORIGINS = []
 for host in ALLOWED_HOSTS:
     CORS_ALLOWED_ORIGINS.append(f"http://{host}:{config_data['frontend']['port']}")
+    
+    
+    
+    
+    
+# arquivos de midea/upload
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'

@@ -12,10 +12,14 @@ class SubmissionStatus(models.TextChoices):
     SUCCESS = 'SC', _('Success')
 
 
+def upload_file(instance, filename):
+    return f'{instance.id}-{filename}'
+
+
 class Submission(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.BinaryField()
+    file = models.FileField(upload_to=upload_file)
     file_name = models.CharField(max_length=128)
     status = models.TextField(
         max_length=2,
