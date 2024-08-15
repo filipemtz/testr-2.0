@@ -10,6 +10,7 @@ import csv
 class UserRegisterAPIView(APIView):
     def post(self, request):
         data =  request.data
+        print(data)
         
         if data['password'] != data['password_confirm']:
             raise exceptions.APIException('Passwords do not match')
@@ -44,6 +45,7 @@ class StudentCSVRegisterAPIView(APIView):
                 'email': row['email'],
                 'first_name': row['first_name'],
                 'last_name': row['last_name'],
+                'group': 'student'
             }
             
             serializer = UserRegisterSerializer(data=data)

@@ -17,6 +17,10 @@ export class AuthService {
     return this.http.post(`${this.api}/register/`, body);
   }
 
+  registerStudentsCSV(body: any){
+    return this.http.post(`${this.api}/register-student-csv/`, body);
+  }
+
   login(body: any){
     return this.http.post(`${this.api}/login/`, body, {withCredentials: true});
   }

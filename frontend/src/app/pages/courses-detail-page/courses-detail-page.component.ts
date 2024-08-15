@@ -53,6 +53,8 @@ export class CoursesDetailPageComponent implements OnInit {
 
   sectionToEdit: Section | null = null;
 
+  selectedFile: File | null = null;
+
   defaultSection: Section = {
     id: -1,
     url: '',
@@ -283,6 +285,29 @@ export class CoursesDetailPageComponent implements OnInit {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
+  uploadCSV() {
+    if (!this.selectedFile) {
+      this.pushNotify('Erro!', 'Selecione um arquivo csv!', 'warning');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile, this.selectedFile.name);
+
+    this.authService.registerStudentsCSV(formData).subscribe({
+      next: response => {
+        console.log('Upload successful:', response);
+      },
+      error: err => {
+        console.error('Upload failed:', err);
+        alert('Upload failed!');
+      }
+    });
   }
 
   pushNotify(title: string, text: string | undefined, status: any) {
