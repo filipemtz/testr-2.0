@@ -1,41 +1,58 @@
 <h1 class="display-2 text-center mb-4">Cursos</h1>
 
-<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-	<div *ngFor="let course of courses" class="col">
-		<div class="card shadow-sm h-100">
-			<div class="card-body h-100">
-				<div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
-					<input #courseInput class="form-control input-inline fs-5 w-50" [(ngModel)]="course.name"/>
-					<div class="d-flex justify-content-between align-items-center">
-						<a *ngIf="isProfessor" class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline(course)"></a>
-						<a *ngIf="isProfessor" class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
-					</div>
-				</div>
-
-				<ng-template #viewMode>
-					<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
-						<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
-						<div *ngIf="isProfessor">
-							<a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
-							<a class="btn btn-sm fa-solid fa-trash text-danger" (click)="openDeleteModal(course, deleteModal)"></a>
+<div *ngIf="isProfessor; else studentView">
+	<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+		<div *ngFor="let course of courses" class="col">
+			<div class="card shadow-sm h-100">
+				<div class="card-body h-100">
+					<div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
+						<input #courseInput class="form-control input-inline fs-5 w-50" [(ngModel)]="course.name"/>
+						<div class="d-flex justify-content-between align-items-center">
+							<a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline(course)"></a>
+							<a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
 						</div>
 					</div>
-				</ng-template>
+
+					<ng-template #viewMode>
+						<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
+							<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
+							<div *ngIf="isProfessor">
+								<a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
+								<a class="btn btn-sm fa-solid fa-trash text-danger" (click)="openDeleteModal(course, deleteModal)"></a>
+							</div>
+						</div>
+					</ng-template>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="col" style="height: 138px;" *ngIf="isProfessor">
-		<div class="card h-100 new-question border-0" (click)="createDefaultCourse(user.id)">
-			<div class="card-body d-flex align-items-center justify-content-center">
-				<i class="fa-regular fa-plus fa-xl me-1"></i>
-				<div>
-					Novo Curso
+		<div class="col" style="height: 138px;">
+			<div class="card h-100 new-question border-0" (click)="createDefaultCourse(user.id)">
+				<div class="card-body d-flex align-items-center justify-content-center">
+					<i class="fa-regular fa-plus fa-xl me-1"></i>
+					<div>
+						Novo Curso
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+
+<ng-template #studentView>
+	<div *ngIf="allCourses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+		<div *ngFor="let course of allCourses" class="col">
+			<div class="card shadow-sm h-100">
+				<div class="card-body h-100">
+					<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
+						<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
 
 <ng-template #noCourses>
 	<div *ngIf="isProfessor" class="card new-question border-0" (click)="createDefaultCourse(user.id)" style="width: calc(20%);">
