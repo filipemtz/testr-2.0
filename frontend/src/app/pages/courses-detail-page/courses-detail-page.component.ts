@@ -281,6 +281,10 @@ export class CoursesDetailPageComponent implements OnInit {
     this.addSectionForm.reset();
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+  }
+
   pushNotify(title: string, text: string | undefined, status: any) {
     this.myNotify = new Notify({
       status: status,

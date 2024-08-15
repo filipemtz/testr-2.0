@@ -8,10 +8,26 @@
 <br>
 
 <!-- Botão de adicionar seção (aparece apenas se for professor) -->
-<button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="createDefaultSection(course.id)">
-	<i class="fa-regular fa-plus"></i>
-	Nova Seção
-</button>
+<div class="d-flex">
+	<button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="createDefaultSection(course.id)">
+		<i class="fa-regular fa-plus"></i>
+		Nova Seção
+	</button>
+
+	<div class="d-flex">
+		<input
+		  type="file"
+		  class="form-control me-2"
+		  accept=".csv"
+		  (change)="onFileSelected($event)"
+		/>
+		<!--(click)="importFiles()"-->
+		<button class="btn btn-outline-primary" >
+			Importar
+		</button>
+	</div>
+</div>
+
 
 <!-- Seções -->
 <ul *ngIf="sections.length > 0; else noSections" class="list-group list-group-flush">
