@@ -36,7 +36,6 @@ export class IndexPageComponent implements OnInit {
   addForm: FormGroup;
 
   courses: Course[] = [];
-  allCourses: Course[] = [];
   courseToDelete: Course | null = null;
   user: any;
   myNotify: any;
@@ -91,15 +90,8 @@ export class IndexPageComponent implements OnInit {
   loadCourses() {
     this.courseService.getCourses().subscribe({
       next: (response) => {
-        this.allCourses = response.results;
-        this.allCourses.forEach(c => {
-          this.teacherList = c.teachers;
-          this.teacherList.forEach(t => {
-            if(t == this.user.id){
-              this.courses.push(c);
-            }
-          });
-        });
+        this.courses = response.results;
+        
       },
       error: (err) => {
         console.log(err);

@@ -5,7 +5,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from accounts.permissions import IsTeacher, ReadOnly
 
 class SectionViewSet(viewsets.ModelViewSet):
     """
@@ -13,7 +13,7 @@ class SectionViewSet(viewsets.ModelViewSet):
     """
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | ReadOnly]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=['get'])
@@ -25,3 +25,8 @@ class SectionViewSet(viewsets.ModelViewSet):
         questions = section.question_set.all()
         serializer = QuestionSerializer(questions, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    # Retorna apenas as seções que o usuário está relacionado por meio dos cursos
+    def get_queryset(self):
+        user = self.request.user
+        return Section.objects.filter(course__teachers=user) | Section.objects.filter(course__students=user)

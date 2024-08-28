@@ -6,6 +6,7 @@ from ..models.course import Course
 from ..serializers.course_serializer import CourseSerializer
 from ..serializers.section_serializer import SectionSerializer
 from rest_framework.authentication import TokenAuthentication
+from accounts.permissions import IsTeacher, ReadOnly
 from rest_framework.permissions import IsAuthenticated
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -14,7 +15,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | ReadOnly] 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     
     @action(detail=True, methods=['get'])
@@ -26,3 +27,18 @@ class CourseViewSet(viewsets.ModelViewSet):
         sections = course.section_set.all()
         serializer = SectionSerializer(sections, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    # exibe apenas os cursos aos quais o usuario está relacionado. Além de permitir que o professor edite apenas os cursos que ele leciona
+    def get_queryset(self):
+        user = self.request.user
+        return Course.objects.filter(teachers=user) | Course.objects.filter(students=user)
+    
+    
+    
+    
+    
+
+        
+        
+    
+    

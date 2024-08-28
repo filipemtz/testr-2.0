@@ -41,8 +41,8 @@
 
 
 <ng-template #studentView>
-	<div *ngIf="allCourses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-		<div *ngFor="let course of allCourses" class="col">
+	<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+		<div *ngFor="let course of courses" class="col">
 			<div class="card shadow-sm h-100">
 				<div class="card-body h-100">
 					<div class="h-100 d-flex flex-wrap justify-content-between mb-5">

@@ -147,6 +147,4 @@ class GetAllStudentsSubmissionsAPIView(APIView):
         
        
        
-def is_student(user):
-    return user.groups.filter(name='students').exists()
          

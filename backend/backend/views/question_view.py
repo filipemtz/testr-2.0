@@ -10,13 +10,15 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from accounts.permissions import IsTeacher, ReadOnly
+
 class QuestionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | ReadOnly]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=['get'])
@@ -42,3 +44,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
         files = question.questionfile_set.all()
         serializer = QuestionFileSerializer(files, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    # Retorna apenas as questões que o usuário está relacionado por meio dos cursos
+    def get_queryset(self):
+        user = self.request.user
+        return Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)
