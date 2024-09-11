@@ -6,6 +6,7 @@ import { CourseService } from '../../services/course.service';
 import { CommonModule } from '@angular/common';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-report-page',
@@ -21,17 +22,25 @@ export class ReportPageComponent {
   
   course: Course = {} as Course;
   selectedFile: File | null = null;
+
+  students: any;
   myNotify: any;
 
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
     private router: Router,
-    private authService: AuthService,
+    private adminService: AdminService,
   ){}
 
   ngOnInit(): void {
     this.loadCourse();
+
+    this.adminService.getUsers().subscribe({
+      next: response => {
+        console.log(response.results);
+      }
+    })
   }
 
   loadCourse() {
