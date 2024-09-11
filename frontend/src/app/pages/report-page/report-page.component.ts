@@ -39,6 +39,7 @@ export class ReportPageComponent {
     this.adminService.getUsers().subscribe({
       next: response => {
         console.log(response.results);
+        this.students = response.results;
       }
     })
   }

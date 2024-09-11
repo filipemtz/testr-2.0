@@ -42,7 +42,11 @@
         </thead>
         <tbody>
             <tr *ngFor="let student of students; let i = index">
-
+                <th>{{ i + 1 }}</th>
+                <th> {{ student.first_name }} </th>
+                <th> {{ student.username }} </th>
+                <th> {{ student.email }} </th>
+                <th> 0 </th>
             </tr>
         </tbody>
     </table>
