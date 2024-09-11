@@ -48,6 +48,7 @@ export class IndexPageComponent implements OnInit {
     name: "Novo Curso",
     visible: true,
     teachers: [],
+    students: [],
     originalName: "Novo Curso"
   } 
 

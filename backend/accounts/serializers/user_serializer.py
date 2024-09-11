@@ -22,7 +22,7 @@ class UserSerializer(ModelSerializer):
             group_instance = Group.objects.get(name=group)
             if group_instance is not None:
                 instance.groups.add(group_instance)
-            
+
         instance.save()
         return instance
     

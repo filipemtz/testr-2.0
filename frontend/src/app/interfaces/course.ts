@@ -3,7 +3,8 @@ export interface Course {
     url: string;
     name: string;
     visible: boolean;
-    teachers: string[]; 
+    teachers: string[];
+    students?: string[];
     isEditing?: boolean;
     originalName: string;
 }

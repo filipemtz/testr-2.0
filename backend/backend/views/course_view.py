@@ -5,7 +5,6 @@ from rest_framework.authentication import SessionAuthentication
 from ..models.course import Course
 from rest_framework.views import APIView
 
-
 from rest_framework.authentication import TokenAuthentication
 from accounts.permissions import IsTeacher, ReadOnly
 from django.contrib.auth.models import User
@@ -62,9 +61,9 @@ class CourseRegisterStudents(APIView):
                 'group': 'student'
             }
 
+            print(data)
             user = User.objects.filter(username=row['username']).first()
             if user:
-                # Se o usuário já existir, adiciona ao curso
                 if not course.students.filter(id=user.id).exists():
                     course.students.add(user)
                     responses.append({
@@ -77,14 +76,21 @@ class CourseRegisterStudents(APIView):
                         'user': UserSerializer(user).data
                     })
             else:
-                # Se o usuário não existir, cria um novo registro
                 serializer = UserRegisterSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
+
                     user = serializer.instance
+
+                    user.first_name = row['first_name']
+                    user.last_name = row['last_name']
+                    user.save()
+
                     token, created = Token.objects.get_or_create(user=user)
-                    # Adiciona o novo usuário ao curso
                     course.students.add(user)
+                    print(user)
+                    print(UserSerializer(user).data)
+                    print()
                     responses.append({
                         'token': token.key, 
                         'user': UserSerializer(user).data

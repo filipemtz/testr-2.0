@@ -23,8 +23,8 @@ export class ReportPageComponent {
   course: Course = {} as Course;
   selectedFile: File | null = null;
 
-  students: any;
   myNotify: any;
+  enrolledStudents: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,11 +35,24 @@ export class ReportPageComponent {
 
   ngOnInit(): void {
     this.loadCourse();
+    this.loadStudents();
+  }
 
+    loadStudents(){
     this.adminService.getUsers().subscribe({
       next: response => {
+        console.log("RECEBA");
         console.log(response.results);
-        this.students = response.results;
+        const allUsers = response.results;
+
+        const courseStudents = this.course.students;
+        console.log(courseStudents);
+        if (courseStudents) {
+          const enrolledStudents = allUsers.filter((student: any) => 
+            courseStudents.includes(student.id) // Converte o ID para string para comparar
+          );
+          this.enrolledStudents = enrolledStudents;
+        }
       }
     })
   }
@@ -67,10 +80,13 @@ export class ReportPageComponent {
     this.courseService.registerStudentsCSV(formData, this.course.id).subscribe({
       next: response => {
         console.log('Upload successful:', response);
+        console.log(response);
+        this.loadCourse();
+        this.loadStudents();
       },
       error: err => {
         console.error('Upload failed:', err);
-        alert('Upload failed!');
+        this.pushNotify('Erro!', "Upload de arquivo falhou", 'error');
       }
     });
   }

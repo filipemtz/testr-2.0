@@ -5,5 +5,5 @@ from ..models import Course
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['url', 'id', 'name', 'visible', 'teachers']
+        fields = ['url', 'id', 'name', 'visible', 'teachers', 'students']
         

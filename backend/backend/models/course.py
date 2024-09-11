@@ -9,7 +9,7 @@ class Course(models.Model):
     visible = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
     teachers = models.ManyToManyField(User, related_name='courses_teaching')
-    students = models.ManyToManyField(User, related_name='courses_enrolled')
+    students = models.ManyToManyField(User, related_name='courses_enrolled', blank=True)
     
     class Meta:
         ordering = ['created_at']
