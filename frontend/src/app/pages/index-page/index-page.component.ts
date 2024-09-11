@@ -83,8 +83,6 @@ export class IndexPageComponent implements OnInit {
         this.loadCourses();
       },
     });
-
-    
   }
 
   loadCourses() {

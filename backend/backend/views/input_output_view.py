@@ -16,4 +16,4 @@ class InputOutputViewSet(viewsets.ModelViewSet):
     # Retorna apenas os arquivos que o usuário está relacionado por meio dos cursos
     def get_queryset(self):
         user = self.request.user
-        return (InputOutput.objects.filter(question__section__course__teachers=user) | InputOutput.objects.filter(question__section__course__students=user, visible=True)).distinct
+        return (InputOutput.objects.filter(question__section__course__teachers=user) | InputOutput.objects.filter(question__section__course__students=user, visible=True)).distinct()

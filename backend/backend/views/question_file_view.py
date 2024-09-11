@@ -17,6 +17,6 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     # Retorna apenas os arquivos que o usuário está relacionado por meio dos cursos
     def get_queryset(self):
         user = self.request.user
-        return QuestionFile.objects.filter(question__section__course__teachers=user) | QuestionFile.objects.filter(question__section__course__students=user)
+        return (QuestionFile.objects.filter(question__section__course__teachers=user) | QuestionFile.objects.filter(question__section__course__students=user)).distinct()
     
 

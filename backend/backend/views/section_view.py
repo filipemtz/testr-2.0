@@ -25,3 +25,8 @@ class SectionViewSet(viewsets.ModelViewSet):
         questions = section.question_set.all()
         serializer = QuestionSerializer(questions, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    # Retorna apenas as seções que o usuário está relacionado por meio dos cursos
+    def get_queryset(self):
+        user = self.request.user
+        return (Section.objects.filter(course__teachers=user) | Section.objects.filter(course__students=user)).distinct()

@@ -47,4 +47,4 @@ class QuestionViewSet(viewsets.ModelViewSet):
     # Retorna apenas as questões que o usuário está relacionado por meio dos cursos
     def get_queryset(self):
         user = self.request.user
-        return (Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)).distinct
+        return (Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)).distinct()
