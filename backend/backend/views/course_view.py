@@ -34,11 +34,12 @@ class CourseViewSet(viewsets.ModelViewSet):
         sections = course.section_set.all()
         serializer = SectionSerializer(sections, many=True, context={'request': request})
         return Response(serializer.data)
+
     
     # exibe apenas os cursos aos quais o usuario está relacionado. Além de permitir que o professor edite apenas os cursos que ele leciona
     def get_queryset(self):
         user = self.request.user
-        return Course.objects.filter(teachers=user) | Course.objects.filter(students=user)
+        return (Course.objects.filter(teachers=user) | Course.objects.filter(students=user)).distinct()
     
 class CourseRegisterStudents(APIView):
     def post(self, request, course_id=None):

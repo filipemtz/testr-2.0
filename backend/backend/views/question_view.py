@@ -24,7 +24,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def inputs_outputs(self, request, pk=None):
         user = request.user
-        
         question = self.get_object()
         inputs_outputs = question.inputoutput_set.all()
         
@@ -48,4 +47,4 @@ class QuestionViewSet(viewsets.ModelViewSet):
     # Retorna apenas as questões que o usuário está relacionado por meio dos cursos
     def get_queryset(self):
         user = self.request.user
-        return Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)
+        return (Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)).distinct
