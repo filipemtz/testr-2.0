@@ -9,11 +9,11 @@ class UserSerializer(ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True, 'required': False}
         }
+        
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         group = validated_data.pop('group', None)
         instance = self.Meta.model(**validated_data)
-        
         
         if password is not None:
             instance.set_password(password)
@@ -25,6 +25,7 @@ class UserSerializer(ModelSerializer):
             
         instance.save()
         return instance
+    
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
 

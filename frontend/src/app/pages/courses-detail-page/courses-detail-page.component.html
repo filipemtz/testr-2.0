@@ -3,9 +3,14 @@
 </h1>
 <a class="icon-link icon-link-hover mb-2" [routerLink]="['/']">
 	<i class="bi fa-solid fa-arrow-left"></i>
-	Back
+	Voltar
 </a>
-<br>
+
+<div class="d-flex justify-content-between mt-2 mb-2">
+	<a *ngIf="isProfessor" class="icon-link icon-link-hover mb-2" style="cursor: pointer" [routerLink]="['/course', course.id ,'report']">
+		Relatorio 
+	  </a>
+</div>
 
 <!-- Botão de adicionar seção (aparece apenas se for professor) -->
 <div class="d-flex justify-content-between">
@@ -13,20 +18,7 @@
 		<i class="fa-regular fa-plus"></i>
 		Nova Seção
 	</button>
-
-	<div class="d-flex	">
-		<input
-		  type="file"
-		  class="form-control me-2 my-1"
-		  accept=".csv"
-		  (change)="onFileSelected($event)"
-		/>
-		<button class="btn btn-outline-primary my-1" (click)="uploadCSV()">
-			Enviar
-		</button>
-	</div>
 </div>
-
 
 <!-- Seções -->
 <ul *ngIf="sections.length > 0; else noSections" class="list-group list-group-flush">

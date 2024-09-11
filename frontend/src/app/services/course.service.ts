@@ -21,6 +21,10 @@ export class CourseService {
     return this.http.get<{ results: Course[] }>(`${this.apiUrl}/`, { withCredentials: true });
   }
 
+  registerStudentsCSV(body: any, course_id: number){
+    return this.http.post(`${this.apiUrl}/${course_id}/register-students/`, body);
+  }
+
   getCourse(id: number): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/${id}/`, { withCredentials: true });
   }

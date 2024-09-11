@@ -106,6 +106,7 @@ export class CoursesDetailPageComponent implements OnInit {
 		config.keyboard = false;
   }
   isProfessor: boolean = false;
+  
   ngOnInit(): void {
     this.loadCourse();
     this.authService.userInfo().subscribe({
@@ -288,26 +289,6 @@ export class CoursesDetailPageComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
-  }
-
-  uploadCSV() {
-    if (!this.selectedFile) {
-      this.pushNotify('Erro!', 'Selecione um arquivo csv!', 'warning');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile, this.selectedFile.name);
-
-    this.authService.registerStudentsCSV(formData).subscribe({
-      next: response => {
-        console.log('Upload successful:', response);
-      },
-      error: err => {
-        console.error('Upload failed:', err);
-        alert('Upload failed!');
-      }
-    });
   }
 
   pushNotify(title: string, text: string | undefined, status: any) {

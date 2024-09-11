@@ -17,8 +17,8 @@ urlpatterns = [
     path('profile/', UserProfileAPIView.as_view(), name='profile'),
     # path('refresh/', UserRefreshAPIView.as_view(), name='refresh'),
     path('change-password/', ChagePasswordAPIView.as_view(), name='change-password'),
-    path('', include(router.urls)),
     path('user-info/', UserInfoAPIView.as_view(), name='user-info'),
+    path('', include(router.urls)),
 ]
 
 

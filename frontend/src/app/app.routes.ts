@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
@@ -32,6 +33,10 @@ export const routes: Routes = [
       { 
         path: 'course/:id', 
         component: CoursesDetailPageComponent
+      },
+      {
+        path: 'course/:id/report', 
+        component: ReportPageComponent
       },
       { 
         path: 'question/:id', 

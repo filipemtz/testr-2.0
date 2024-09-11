@@ -3,11 +3,18 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication
 from ..models.course import Course
-from ..serializers.course_serializer import CourseSerializer
-from ..serializers.section_serializer import SectionSerializer
+from rest_framework.views import APIView
+
+
 from rest_framework.authentication import TokenAuthentication
 from accounts.permissions import IsTeacher, ReadOnly
-from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+from accounts.serializers import UserRegisterSerializer, UserSerializer
+from ..serializers.course_serializer import CourseSerializer
+from ..serializers.section_serializer import SectionSerializer
+import csv
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
@@ -33,12 +40,58 @@ class CourseViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return Course.objects.filter(teachers=user) | Course.objects.filter(students=user)
     
-    
-    
-    
-    
+class CourseRegisterStudents(APIView):
+    def post(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        
+        csv_file = request.FILES['file']
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        reader = csv.DictReader(decoded_file, delimiter=';')
 
-        
-        
-    
-    
+        responses = []
+
+        for row in reader:
+            data = {
+                'username': row['username'],
+                'password': row['password'],
+                'password_confirm': row['password'], 
+                'email': row['email'],
+                'first_name': row['first_name'],
+                'last_name': row['last_name'],
+                'group': 'student'
+            }
+
+            user = User.objects.filter(username=row['username']).first()
+            if user:
+                # Se o usuário já existir, adiciona ao curso
+                if not course.students.filter(id=user.id).exists():
+                    course.students.add(user)
+                    responses.append({
+                        'message': f"User {user.username} already exists and was added to the course.",
+                        'user': UserSerializer(user).data
+                    })
+                else:
+                    responses.append({
+                        'message': f"User {user.username} already exists and is already in the course.",
+                        'user': UserSerializer(user).data
+                    })
+            else:
+                # Se o usuário não existir, cria um novo registro
+                serializer = UserRegisterSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    user = serializer.instance
+                    token, created = Token.objects.get_or_create(user=user)
+                    # Adiciona o novo usuário ao curso
+                    course.students.add(user)
+                    responses.append({
+                        'token': token.key, 
+                        'user': UserSerializer(user).data
+                    })
+                else:
+                    responses.append({
+                        'error': serializer.errors,
+                        'data': data
+                    })
+
+        return Response(responses)

@@ -10,7 +10,6 @@ import csv
 class UserRegisterAPIView(APIView):
     def post(self, request):
         data =  request.data
-        print(data)
         
         if data['password'] != data['password_confirm']:
             raise exceptions.APIException('Passwords do not match')
