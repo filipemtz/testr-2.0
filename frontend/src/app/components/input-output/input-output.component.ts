@@ -80,7 +80,6 @@ export class InputOutputComponent {
           //this.pushNotify('Erro!', 'Falha ao atualizar entrada/saida', 'error');
         }, 
       });
-      
   }
 
   editIO(io: InputOutput): void {
