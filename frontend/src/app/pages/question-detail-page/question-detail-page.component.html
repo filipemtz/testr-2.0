@@ -67,6 +67,52 @@
 
 <div *ngIf="isProfessor; else student">
   <div style="margin-top: 2.5%">
+    <h3 class="fw-bold mb-3">Enviar Resposta</h3>
+    <div class="d-flex flex-wrap mb-3">
+      <input
+        class="form-control me-2 my-1"
+        type="file"
+        (change)="onFileSelected($event)"
+        style="max-width: 700px"
+      />
+      <button class="btn btn-success my-1" (click)="onSubmitFile()">
+        Upload
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="submission">
+    <h3 class="fw-bold mb-3">Relatório</h3>
+    <table class="table table-bordered table-striped">
+      <tbody>
+        <tr>
+          <th scope="row">Nome do Arquivo</th>
+          <td>
+            <a [href]="apiUrl + '/' + submission.file" download>{{
+              submission.file_name
+            }}</a>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Data da Submissão</th>
+          <td>{{ submission.created_at | dateFormat }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Status</th>
+          <td>{{ getSubmissionStatus(submission.status) }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Relatório</th>
+          <td *ngFor="let v of extractErrorMessages(submission.report_json)">{{ v }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+      Reavaliar
+    </button>
+  </div>
+  
+  <div style="margin-top: 2.5%">
     <h3 class="fw-bold mb-3">Submissões</h3>
     <div *ngIf="submissionsList.length; else noSubmissions">
       <table class="table table-bordered table-striped">

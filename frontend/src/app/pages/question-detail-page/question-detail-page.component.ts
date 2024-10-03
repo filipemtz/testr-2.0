@@ -156,14 +156,14 @@ export class QuestionDetailPageComponent implements OnInit {
   }
 
   extractErrorMessages(data: string): string[] {
-    const parsedData = JSON.parse(data);
+    if(data){
+      const parsedData = JSON.parse(data);
 
-    if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
-      return parsedData.error_msgs; 
-    } 
-    else {
-      return [];
+      if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
+        return parsedData.error_msgs; 
+      } 
     }
+    return [];
 }
 
   getSubmissionStatus(value: string): string {

@@ -8,9 +8,13 @@
 
 Judge: TypeError: a bytes-like object is required, not 'FieldFile'
 
+--DONE?-- // PROFESSOR APARECE NA TABELA DE ALUNOS QUE SUBMETERAM O ARQUIVO. ISSO É CORRETO?
 professor poder enviar resposta da questão.
+------
 
+--DONE--
 no relatório do judge na questão, mostrar apenas o campo error_msgs ao invés do json inteiro. 
+------
 
 testar se o judge está funcionando quando a correção dá certo.
 
