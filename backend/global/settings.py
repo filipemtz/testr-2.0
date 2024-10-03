@@ -149,9 +149,6 @@ for host in ALLOWED_HOSTS:
     CORS_ALLOWED_ORIGINS.append(f"http://{host}:{config_data['frontend']['port']}")
     
     
-    
-    
-    
 # arquivos de midea/upload
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
