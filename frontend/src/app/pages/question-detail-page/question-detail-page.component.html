@@ -136,7 +136,7 @@
         </tr>
         <tr>
           <th scope="row">Relatório</th>
-          <td>{{ submission.report_json }}</td>
+          <td *ngFor="let v of extractErrorMessages(submission.report_json)">{{ v }}</td>
         </tr>
       </tbody>
     </table>

@@ -21,7 +21,9 @@ export class QuestionDetailPageComponent implements OnInit {
   question: Question = {} as Question;
   questionFiles: QuestionFile[] = [] as QuestionFile[];
   ios: InputOutput[] = [] as InputOutput[];
+
   submission: any;
+
   selectedFile: File | null = null;
   apiUrl = `${environment.apiUrl}`;
   submissionsList: any[] = [];
@@ -37,8 +39,6 @@ export class QuestionDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
-    
 
     if (id !== null) {
       this.questionService.getQuestion(+id).subscribe({
@@ -128,6 +128,7 @@ export class QuestionDetailPageComponent implements OnInit {
           this.submissionService.getSubmission(questionId).subscribe({
             next: (submission) => {
               this.submission = submission;
+              
             },
             error: (err) => {
               console.log(err);
@@ -153,6 +154,17 @@ export class QuestionDetailPageComponent implements OnInit {
     }
     return '';
   }
+
+  extractErrorMessages(data: string): string[] {
+    const parsedData = JSON.parse(data);
+
+    if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
+      return parsedData.error_msgs; 
+    } 
+    else {
+      return [];
+    }
+}
 
   getSubmissionStatus(value: string): string {
     if (value === 'WE') {
