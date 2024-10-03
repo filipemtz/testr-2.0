@@ -1,4 +1,43 @@
 
+** URGENTE **
+
+- matricula com erro
+	- matricula dos alunos nao eh feito
+	- curso deixa de ser visivel para alunos 
+	- com localhost não funciona, com ip funciona. 
+
+Judge: TypeError: a bytes-like object is required, not 'FieldFile'
+
+professor poder enviar resposta da questão.
+
+no relatório do judge na questão, mostrar apenas o campo error_msgs ao invés do json inteiro. 
+
+testar se o judge está funcionando quando a correção dá certo.
+
+permitir que professores rodem o judge novamente para todos os alunos em uma questão
+
+atualizar status e relatório do judge  quando novo arquivo for enviado como resposta
+
+
+
+** MENOS URGENTE **
+
+remover espaço abaixo do login
+
+- visível e não visível sempre disponível (mesmo quando não estiver em modo de edição. 
+
+permitir copiar curso 
+
+relatório por questão mostrando quais alunos fizeram uma tentativa, quais tentaram, mas falharam e quais acertaram 
+
+relatório por turma mostrando para cada aluno quantas questões foram resolvidas, quantas foram tentadas e quantas não foram tentadas. 
+
+Trazer para o testr novo o script para exportar tabelão de notas.
+
+no judge: criar mecanismo para atualizar status do judge sem precisar fazer f5 na página
+
+
+
 TODO: implementar a funcao resetSubmissionStatus definida em question-detail-page.component.ts e utilizada em question-detail-page.component.html. A função deve atualizar a submissão e definir o status como waiting evaluation.
 
 BUG: Na página de enviar submissão, o conteúdo do arquivo não está sendo submetido.
