@@ -28,7 +28,7 @@ atualizar status e relatório do judge  quando novo arquivo for enviado como res
 
 remover espaço abaixo do login
 
-- visível e não visível sempre disponível (mesmo quando não estiver em modo de edição. 
+- visível e não visível sempre disponível mesmo quando não estiver em modo de edição. 
 
 permitir copiar curso 
 

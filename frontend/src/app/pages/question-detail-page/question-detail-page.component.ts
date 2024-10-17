@@ -82,7 +82,7 @@ export class QuestionDetailPageComponent implements OnInit {
       this.submissionService.getSubmission(+id).subscribe({
         next: (submission) => {
           this.submission = submission;
-          console.log(submission);
+          //console.log(submission);
         },
         error: (err) => {
           console.log(err);

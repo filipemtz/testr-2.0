@@ -90,7 +90,7 @@ export class IndexPageComponent implements OnInit {
     this.courseService.getCourses().subscribe({
       next: (response) => {
         this.courses = response.results;
-        console.log(response.results);
+        //console.log(response.results);
       },
       error: (err) => {
         console.log(err);

@@ -41,12 +41,12 @@ export class ReportPageComponent {
     loadStudents(){
     this.adminService.getUsers().subscribe({
       next: response => {
-        console.log("RECEBA");
-        console.log(response.results);
+        //console.log("RECEBA");
+        //console.log(response.results);
         const allUsers = response.results;
 
         const courseStudents = this.course.students;
-        console.log(courseStudents);
+        //console.log(courseStudents);
         if (courseStudents) {
           const enrolledStudents = allUsers.filter((student: any) => 
             courseStudents.includes(student.id) // Converte o ID para string para comparar
@@ -79,7 +79,7 @@ export class ReportPageComponent {
 
     this.courseService.registerStudentsCSV(formData, this.course.id).subscribe({
       next: response => {
-        console.log('Upload successful:', response);
+        //console.log('Upload successful:', response);
         console.log(response);
         this.loadCourse();
         this.loadStudents();
