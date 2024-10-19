@@ -13,7 +13,8 @@ router.register(r'submissions-debug', SubmissionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('courses/<int:course_id>/register-students/', CourseRegisterStudents.as_view(), name="course-registration"),
+    path('courses/<int:course_id>/register-students/', CourseRegisterStudentsAPIView.as_view(), name="course-registration"),
+    path('courses/<int:course_id>/report/', CourseReportAPIView.as_view(), name="course-report"),
     path('submissions/get/', GetSubmissionAPIView.as_view(), name='get-submission'),
     path('submissions/add/', AddSubmissionAPIView.as_view(), name='add-submission'),
     path('submissions/reset-status/', ResetStatusSubmissionAPIView.as_view(), name='reset-status-submission'),

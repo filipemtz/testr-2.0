@@ -41,4 +41,8 @@ export class CourseService {
     return this.http.delete<void>(url, { withCredentials: true });
   }
 
+  getReport(course_id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${course_id}/report/`, { withCredentials: true });
+  }
+
 }

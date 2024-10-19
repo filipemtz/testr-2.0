@@ -1,53 +1,57 @@
-
-<div class="display-2 text-center mb-2 fw-semibold">
-	Relatorio
-</div>
+<div class="display-2 text-center mb-2 fw-semibold">Relatório</div>
 
 <div class="display-6 text-center mb-2">
-    {{ course.name }}
+  {{ course.name }}
 </div>
 
-<a class="icon-link icon-link-hover mb-2 justify-content-between" [routerLink]="['/course', course.id]">
-	<i class="bi fa-solid fa-arrow-left"></i>
-	Voltar
+<a
+  class="icon-link icon-link-hover mb-2 justify-content-between"
+  [routerLink]="['/course', course.id]"
+>
+  <i class="bi fa-solid fa-arrow-left"></i>
+  Voltar
 </a>
 
 <h2 class="mt-2">Cadastro de alunos</h2>
 <div class="d-flex flex-wrap">
-    <input
-      type="file"
-      class="form-control me-2 my-1"
-      accept=".csv"
-      style="max-width: 700px;"
-      (change)="onFileSelected($event)"
-      id="csv"
-    />
-    <button class="btn btn-outline-primary my-1" (click)="uploadCSV()">
-        Enviar
-    </button>
+  <input
+    type="file"
+    class="form-control me-2 my-1"
+    accept=".csv"
+    style="max-width: 700px"
+    (change)="onFileSelected($event)"
+    id="csv"
+  />
+  <button class="btn btn-outline-primary my-1" (click)="uploadCSV()">
+    Enviar
+  </button>
 </div>
 
 <h2 class="mt-2 text-center">Alunos</h2>
 
 <div class="d-flex">
-    <table class="table table-hover align-middle" >
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nome</th>
-                <th>Usuário</th>
-                <th>Email</th>
-                <th>Acertos</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let student of enrolledStudents; let i = index">
-                <th>{{ i + 1 }}</th>
-                <th> {{ student.first_name }} </th>
-                <th> {{ student.username }} </th>
-                <th> {{ student.email }} </th>
-                <th> 0 </th>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <!-- <th>Nome</th> -->
+        <th>Usuário</th>
+        <th>Email</th>
+        <th>Acertos</th>
+        <th>Tentativas</th>
+        <th>Não tentadas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of report; let i = index">
+        <th>{{ i + 1 }}</th>
+        <!-- <th> {{ row.student.first_name }} </th> -->
+        <th>{{ row.student.username }}</th>
+        <th>{{ row.student.email }}</th>
+        <th>{{ row.solved }}</th>
+        <th>{{ row.tried }}</th>
+        <th>{{ row.not_tried }}</th>
+      </tr>
+    </tbody>
+  </table>
 </div>

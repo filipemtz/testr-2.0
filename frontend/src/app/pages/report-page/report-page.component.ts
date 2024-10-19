@@ -25,7 +25,7 @@ export class ReportPageComponent {
 
   myNotify: any;
   enrolledStudents: any[] = [];
-
+  report: any;
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
@@ -35,27 +35,8 @@ export class ReportPageComponent {
 
   ngOnInit(): void {
     this.loadCourse();
-    this.loadStudents();
   }
 
-    loadStudents(){
-    this.adminService.getUsers().subscribe({
-      next: response => {
-        //console.log("RECEBA");
-        //console.log(response.results);
-        const allUsers = response.results;
-
-        const courseStudents = this.course.students;
-        //console.log(courseStudents);
-        if (courseStudents) {
-          const enrolledStudents = allUsers.filter((student: any) => 
-            courseStudents.includes(student.id) // Converte o ID para string para comparar
-          );
-          this.enrolledStudents = enrolledStudents;
-        }
-      }
-    })
-  }
 
   loadCourse() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -63,7 +44,17 @@ export class ReportPageComponent {
       // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
       next: (response) => {
         this.course = response;
+        this.loadReport();
         // this.loadSections(this.course.id);
+      },
+    });
+  }
+
+
+  loadReport(){
+    this.courseService.getReport(this.course.id).subscribe({
+      next: (response) => {
+        this.report = response;
       },
     });
   }
@@ -82,7 +73,7 @@ export class ReportPageComponent {
         //console.log('Upload successful:', response);
         console.log(response);
         this.loadCourse();
-        this.loadStudents();
+        this.loadReport();
       },
       error: err => {
         console.error('Upload failed:', err);

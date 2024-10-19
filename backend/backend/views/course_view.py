@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication
 from ..models.course import Course
+from ..models.question import Question
 from rest_framework.views import APIView
 
 from rest_framework.authentication import TokenAuthentication
@@ -14,6 +15,7 @@ from accounts.serializers import UserRegisterSerializer, UserSerializer
 from ..serializers.course_serializer import CourseSerializer
 from ..serializers.section_serializer import SectionSerializer
 import csv
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
@@ -40,7 +42,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return (Course.objects.filter(teachers=user) | Course.objects.filter(students=user)).distinct()
     
-class CourseRegisterStudents(APIView):
+class CourseRegisterStudentsAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    
     def post(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
         
@@ -102,3 +107,40 @@ class CourseRegisterStudents(APIView):
                     })
 
         return Response(responses)
+
+
+class CourseReportAPIView(APIView):
+    """
+    Relatório por turma mostrando para cada aluno quantas questões foram resolvidas (submissão existe e o status é sucesso),
+    quantas foram tentadas (submissão existe) e quantas não foram tentadas (submissão não existe).
+    """
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    def get(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        students = course.students.all()
+
+        data = []
+        for student in students:
+            solved = 0
+            tried = 0
+            not_tried = 0
+            
+            questions = Question.objects.filter(section__course=course)
+            for question in questions:
+                sub = question.submission_set.filter(student=student).first()
+                if sub:
+                    if sub.status == 'SC':
+                        solved += 1
+                    tried += 1
+                else:
+                    not_tried += 1
+
+            data.append({
+                'student': UserSerializer(student).data,
+                'solved': solved,
+                'tried': tried,
+                'not_tried': not_tried
+            })
+
+        return Response(data)
