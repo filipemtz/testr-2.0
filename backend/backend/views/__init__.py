@@ -1,6 +1,6 @@
 
-from .course_view import CourseViewSet, CourseRegisterStudentsAPIView, CourseReportAPIView
-from .question_view import QuestionViewSet
+from .course_view import CourseViewSet, CourseRegisterStudentsAPIView, CourseReportAPIView, CourseCreateCopyAPIView
+from .question_view import QuestionViewSet, QuestionReportAPIView
 from .section_view import SectionViewSet
 from .question_file_view import QuestionFileViewSet
 from .submission_view import SubmissionViewSet, GetSubmissionAPIView, AddSubmissionAPIView, ResetStatusSubmissionAPIView, GetAllStudentsSubmissionsAPIView, ResetSubmitionForAllStudentsAPIView

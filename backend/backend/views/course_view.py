@@ -4,6 +4,10 @@ from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication
 from ..models.course import Course
 from ..models.question import Question
+from ..models.section import Section
+from ..models.input_output import InputOutput
+from ..models.question_file import QuestionFile
+
 from rest_framework.views import APIView
 
 from rest_framework.authentication import TokenAuthentication
@@ -144,3 +148,61 @@ class CourseReportAPIView(APIView):
             })
 
         return Response(data)
+    
+# Cria uma cópia de um curso que o professor leciona para um novo curso sem alunos mas com todas as questões, seções e arquivos associados
+class CourseCreateCopyAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+
+        if not course.teachers.filter(id=request.user.id).exists():
+            return Response({'error': 'You do not have permission to copy this course.'}, status=403)
+
+        # Cria o novo curso
+        new_course = Course.objects.create(
+            name=f"{course.name} - Copy",
+        )
+        new_course.teachers.add(request.user)
+
+        # Copia seções, questões e arquivos associados
+        for section in course.section_set.all():
+            new_section = Section.objects.create(
+                course=new_course,
+                name=section.name,
+                created_at=section.created_at
+            )
+
+            for question in section.question_set.all():
+                new_question = Question.objects.create(
+                    section=new_section,
+                    name=question.name,
+                    description=question.description,
+                    language=question.language,
+                    time_limit_seconds=question.time_limit_seconds,
+                    memory_limit=question.memory_limit,
+                    cpu_limit=question.cpu_limit,
+                    submission_deadline=question.submission_deadline
+                )
+
+                for input_output in question.inputoutput_set.all():
+                    InputOutput.objects.create(
+                        question=new_question,
+                        input=input_output.input,
+                        output=input_output.output,
+                        visible=input_output.visible
+                    )
+
+                for question_file in question.questionfile_set.all():
+                    QuestionFile.objects.create(
+                        question=new_question,
+                        file=question_file.file,
+                        file_name=question_file.file_name,
+                    )
+
+        # Retorna o novo curso com o contexto da requisição
+        serializer = CourseSerializer(new_course, context={'request': request})
+        return Response(serializer.data)
+
+    

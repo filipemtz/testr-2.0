@@ -167,19 +167,17 @@ export class QuestionDetailPageComponent implements OnInit {
     return '';
   }
 
-
-
-  getSubmissionsList(): void {
-    const questionId = this.question.id;
-
-    this.submissionService.listSubmissions(questionId).subscribe({
+  getReport(id: number): void {
+    this.questionService.getReport(id).subscribe({
       next: (response) => {
         this.submissionsList = response;
       },
-      error: (err) => {
-        console.log('Error getting submissions list:', err);
-      },
     });
+  }
+
+  getSubmissionsList(): void {
+    const questionId = this.question.id;
+    this.getReport(questionId);
   }
 
   resetAllSubmissions(): void {
@@ -188,14 +186,7 @@ export class QuestionDetailPageComponent implements OnInit {
     this.submissionService.resetAllSubmissions(questionId).subscribe({
       next: (response) => {
         this.pushNotify('Success!', 'All submissions reset successfully', 'success');
-        this.submissionService.listSubmissions(questionId).subscribe({
-          next: (response) => {
-            this.submissionsList = response;
-          },
-          error: (err) => {
-            console.log('Error getting submissions list:', err);
-          },
-        });
+        this.getReport(questionId);
       },
       error: (err) => {
         this.pushNotify('Error!', 'Failed to reset all submissions', 'error');

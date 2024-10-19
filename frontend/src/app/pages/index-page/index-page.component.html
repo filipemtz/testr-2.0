@@ -17,6 +17,7 @@
 						<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
 							<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
 							<div *ngIf="isProfessor">
+								<a class="btn btn-sm fa-regular fa-copy text-secondary" (click)="makeACopy(course)"></a>
 								<a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
 								<a class="btn btn-sm fa-solid fa-trash text-danger" (click)="openDeleteModal(course, deleteModal)"></a>
 							</div>

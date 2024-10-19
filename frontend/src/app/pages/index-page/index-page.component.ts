@@ -185,6 +185,19 @@ export class IndexPageComponent implements OnInit {
       }
     }
   }
+
+  makeACopy(course: Course): void {
+    this.courseService.makeACopy(course.id).subscribe({
+      next: (response) => {
+        this.pushNotify('Sucesso!', 'Cópia do curso feita com sucesso', 'success');
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error(err);
+        this.pushNotify('Erro!', 'Falha ao fazer cópia do curso', 'error');
+      },
+    });
+  }
   
   close() {
     this.myNotify.close()

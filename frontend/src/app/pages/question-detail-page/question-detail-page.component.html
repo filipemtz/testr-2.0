@@ -128,8 +128,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let submission of submissionsList">
-            <td>{{ submission.username }}</td>
-            <td>{{ getSubmissionStatus(submission.status) }}</td>
+            <td>{{ submission.student }}</td>
+            <td>{{submission.status }}</td>
             <td>
               <a [href]="apiUrl + '/' + submission.file" download>{{
                 submission.file_name

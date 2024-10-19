@@ -15,6 +15,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('courses/<int:course_id>/register-students/', CourseRegisterStudentsAPIView.as_view(), name="course-registration"),
     path('courses/<int:course_id>/report/', CourseReportAPIView.as_view(), name="course-report"),
+    path('courses/<int:course_id>/copy/', CourseCreateCopyAPIView.as_view(), name="course-copy"),
+    path('questions/<int:question_id>/report/', QuestionReportAPIView.as_view(), name="question-report"),
     path('submissions/get/', GetSubmissionAPIView.as_view(), name='get-submission'),
     path('submissions/add/', AddSubmissionAPIView.as_view(), name='add-submission'),
     path('submissions/reset-status/', ResetStatusSubmissionAPIView.as_view(), name='reset-status-submission'),

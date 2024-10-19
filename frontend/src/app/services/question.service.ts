@@ -47,4 +47,8 @@ export class QuestionService {
         }))
       ));
   }
+
+  getReport(question_id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${question_id}/report/`, { withCredentials: true });
+  }
 }
