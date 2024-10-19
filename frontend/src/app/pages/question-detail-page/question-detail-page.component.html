@@ -55,7 +55,7 @@
   <div *ngIf="questionFiles.length; else noQuestionFile">
     <ul class="list-group list-group-flush">
       <li *ngFor="let file of questionFiles" class="list-group-item">
-        <a [href]="file.file_url" download>{{ file.file_name }}</a>
+        <a [href]="file.file" download>{{ file.file_name }}</a>
       </li>
     </ul>
   </div>

@@ -31,6 +31,11 @@ export class UploadQuestionFileComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.questionId = params['questionId'];
+      this.questionService.getQuestionFiles(this.questionId).subscribe({
+        next: files => {
+          this.fileInfos = files;
+        }
+      });
       
       console.log(this.fileInfos);
     });
