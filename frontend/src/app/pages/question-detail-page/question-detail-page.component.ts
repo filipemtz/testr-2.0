@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Question } from '../../interfaces/question';
 import { QuestionService } from '../../services/question.service';
@@ -20,10 +20,10 @@ import 'simple-notify/dist/simple-notify.css';
   styleUrl: './question-detail-page.component.css',
 })
 export class QuestionDetailPageComponent implements OnInit {
+  private intervalId: any;
   question: Question = {} as Question;
   questionFiles: QuestionFile[] = [] as QuestionFile[];
   ios: InputOutput[] = [] as InputOutput[];
-
   submission: any;
 
   selectedFile: File | null = null;
@@ -84,6 +84,7 @@ export class QuestionDetailPageComponent implements OnInit {
       this.submissionService.getSubmission(+id).subscribe({
         next: (submission) => {
           this.submission = submission;
+          this.startSubmissionStatusCheck();
           //console.log(submission);
         },
         error: (err) => {
@@ -99,14 +100,7 @@ export class QuestionDetailPageComponent implements OnInit {
     this.submissionService.resetSubmission(questionId).subscribe({
       next: (response) => {
         console.log('Submission status reset successfully', response);
-        this.submissionService.getSubmission(questionId).subscribe({
-          next: (submission) => {
-            this.submission = submission;
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        });
+        this.getSubmission(questionId);
       },
       error: (err) => {
         console.log('Error resetting submission status', err);
@@ -127,15 +121,7 @@ export class QuestionDetailPageComponent implements OnInit {
         next: (response) => {
           console.log('File uploaded successfully', response);
           this.selectedFile = null;
-          this.submissionService.getSubmission(questionId).subscribe({
-            next: (submission) => {
-              this.submission = submission;
-              
-            },
-            error: (err) => {
-              console.log(err);
-            },
-          });
+          this.getSubmission(questionId);
         },
         error: (err) => {
           console.log('Error uploading file', err);
@@ -181,6 +167,8 @@ export class QuestionDetailPageComponent implements OnInit {
     return '';
   }
 
+
+
   getSubmissionsList(): void {
     const questionId = this.question.id;
 
@@ -223,5 +211,31 @@ export class QuestionDetailPageComponent implements OnInit {
       effect: 'slide',
       type: 'filled',
     });
+  }
+
+  getSubmission(id: number): void {
+    this.submissionService.getSubmission(id).subscribe({
+      next: (submission) => {
+        this.submission = submission;
+      },
+      error: (err) => {
+        console.log('Error getting submission:', err);
+      }
+    });
+  }
+
+  
+
+  // A cada 30 segundos, verifica o status da submissão
+  startSubmissionStatusCheck(): void {
+    this.intervalId = setInterval(() => {
+      if (this.submission) {
+        this.getSubmission(this.submission.id);
+      }
+    }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
   }
 }

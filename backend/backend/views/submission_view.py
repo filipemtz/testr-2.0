@@ -23,7 +23,7 @@ class GetSubmissionAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def get(self, request):
-        print('chegei aqui')
+       
         student = request.user
         question_id = request.query_params.get('question_id')
 
