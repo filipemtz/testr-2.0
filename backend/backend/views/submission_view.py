@@ -9,6 +9,8 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.views import APIView
 from django.utils import timezone
 from django.contrib.auth.models import User
+from accounts.permissions import IsTeacher
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
@@ -144,6 +146,29 @@ class GetAllStudentsSubmissionsAPIView(APIView):
             
         return Response(data)
         
+        
+class ResetSubmitionForAllStudentsAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request):
+        question_id = request.query_params.get('question_id')
+        
+        if not question_id:
+            return Response({"detail": "question_id query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            question = Question.objects.get(id=question_id)
+        except Question.DoesNotExist:
+            return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        submissions = Submission.objects.filter(question=question)
+        
+        for submission in submissions:
+            submission.status = SubmissionStatus.WAITING_EVALUATION
+            submission.save()
+        
+        return Response({"detail": "Submissions reseted."})
         
        
        

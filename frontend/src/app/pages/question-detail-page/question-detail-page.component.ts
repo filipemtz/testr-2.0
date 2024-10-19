@@ -10,6 +10,8 @@ import { QuestionFile } from '../../interfaces/question-file';
 import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../interfaces/input-output';
 import { environment } from '../../../environments/environment';
+import Notify from 'simple-notify';
+import 'simple-notify/dist/simple-notify.css';
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
@@ -28,7 +30,7 @@ export class QuestionDetailPageComponent implements OnInit {
   apiUrl = `${environment.apiUrl}`;
   submissionsList: any[] = [];
   isProfessor: boolean = false;
-
+  myNotify: any;
   constructor(
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -189,6 +191,37 @@ export class QuestionDetailPageComponent implements OnInit {
       error: (err) => {
         console.log('Error getting submissions list:', err);
       },
+    });
+  }
+
+  resetAllSubmissions(): void {
+    const questionId = this.question.id;
+
+    this.submissionService.resetAllSubmissions(questionId).subscribe({
+      next: (response) => {
+        this.pushNotify('Success!', 'All submissions reset successfully', 'success');
+        this.submissionService.listSubmissions(questionId).subscribe({
+          next: (response) => {
+            this.submissionsList = response;
+          },
+          error: (err) => {
+            console.log('Error getting submissions list:', err);
+          },
+        });
+      },
+      error: (err) => {
+        this.pushNotify('Error!', 'Failed to reset all submissions', 'error');
+     
+      },
+    });
+  }
+  pushNotify(title: string, text: string | undefined, status: any) {
+    this.myNotify = new Notify({
+      status: status,
+      title: title,
+      text: text,
+      effect: 'slide',
+      type: 'filled',
     });
   }
 }

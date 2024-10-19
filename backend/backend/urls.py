@@ -18,4 +18,5 @@ urlpatterns = [
     path('submissions/add/', AddSubmissionAPIView.as_view(), name='add-submission'),
     path('submissions/reset-status/', ResetStatusSubmissionAPIView.as_view(), name='reset-status-submission'),
     path('submissions/list/', GetAllStudentsSubmissionsAPIView.as_view(), name='all-students-submissions'),
+    path('submissions/reset-all/', ResetSubmitionForAllStudentsAPIView.as_view(), name='reset-all-submissions'),
 ]

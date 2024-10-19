@@ -31,8 +31,12 @@ export class SubmissionService {
   }
 
   // Método para listar todos os alunos que submeteram uma questão
-
   listSubmissions(questionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/list/?question_id=${questionId}`);
+  }
+
+  // método para resetar o status de todas as submissões de uma questão
+  resetAllSubmissions(questionId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-all/?question_id=${questionId}`, {});
   }
 }

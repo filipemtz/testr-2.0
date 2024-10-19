@@ -113,7 +113,10 @@
   </div>
   
   <div style="margin-top: 2.5%">
-    <h3 class="fw-bold mb-3">Submissões</h3>
+    <div class="d-flex mb-3">
+      <h3 class="fw-bold">Submissões</h3>
+      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()">Resetar todas as submissões <i class="fa-solid fa-repeat"></i></button>
+    </div>
     <div *ngIf="submissionsList.length; else noSubmissions">
       <table class="table table-bordered table-striped">
         <thead>
