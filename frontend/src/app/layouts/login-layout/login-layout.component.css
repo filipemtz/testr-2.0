@@ -1,9 +1,5 @@
-.vertical-align-middle {
-  height: 90vh;
-  /* Define a altura como 100% da altura da tela */
-  display: flex;
-  align-items: center;
-  /* Centraliza verticalmente */
+.container-fluid{
+  height: 100vh;
 }
 
 .title {
@@ -11,6 +7,8 @@
   font-weight: bold;
   color: black;
   font-size: 32px;
+  display: block;
+  flex-grow: 0;
 }
 
 .title-icon {
@@ -29,13 +27,38 @@
 .left-panel {
   /* top right bottom left */
   padding: 25px 50px 25px 50px;
+  width: 67%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.login-form{
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .right-panel {
-  height: 100vh;
   background: repeating-linear-gradient(45deg,
       #1071ba,
       #1071ba 100px,
       #ffffff 100px,
       #ffffff 150px);
+  z-index: -1;
+  position: absolute;
+  width: 33%;
+  height: 100%;
+  right: 0;
+  top: 0;
+
+}
+
+/* Ajustar para o left pannel ocupar toda a largura da tela no mobile */
+@media (max-width: 768px) {
+  .left-panel {
+    width: 100%;
+  }
 }
