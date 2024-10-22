@@ -69,6 +69,11 @@ export class InputOutputComponent {
     })
   }
 
+  changeVisibility(io: InputOutput): void {
+    io.visible = !io.visible;
+    this.updateInputOutput(io);
+  }
+
   updateInputOutput(io: InputOutput): void{
       const updatedIO: InputOutput = { ...io}
 

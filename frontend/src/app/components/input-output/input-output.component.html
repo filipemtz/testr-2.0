@@ -43,12 +43,16 @@
             
             <div class="d-flex flex-column justify-content-between">
                 <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="editIO(io)"></a>
+                <div *ngIf="io.visible; else visibleOff">
+                    <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(io)"></a>
+                </div>
                 <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="deleteInputOutput(io.url, io)"></a>
+                
             </div>
         </ng-template>
 
         <ng-template #visibleOff >
-            <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="io.visible = !io.visible;"></a>
+            <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibility(io)"></a>
         </ng-template>
     </div>
 </div>
