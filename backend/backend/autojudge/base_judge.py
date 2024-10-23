@@ -98,8 +98,7 @@ class BaseJudge(ABC):
 
         # save the submitted file
         file_name = self.test_dir.joinpath(submission.file_name)
-        with open(file_name, "wb") as f:
-            f.write(submission.file)
+        os.symlink(submission.file.path, file_name)
 
         # unzip file if needed, and then remove the zip file
         if file_name.suffix == '.zip':
@@ -155,8 +154,7 @@ class BaseJudge(ABC):
         for question_file in question.questionfile_set.all():
             file_name = os.path.join(self.test_dir, question_file.file_name)
             self.known_question_files.append(file_name)
-            with open(file_name, "wb") as f:
-                f.write(question_file.file)
+            os.symlink(question_file.file.path, file_name)
 
     '''
     def _run_test(self,
