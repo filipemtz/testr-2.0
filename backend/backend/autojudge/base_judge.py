@@ -98,7 +98,12 @@ class BaseJudge(ABC):
 
         # save the submitted file
         file_name = self.test_dir.joinpath(submission.file_name)
-        os.symlink(submission.file.path, file_name)
+
+        if platform.system() == 'Windows':
+            # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
+            shutil.copyfile(submission.file.path, file_name)
+        else:
+            os.symlink(submission.file.path, file_name)
 
         # unzip file if needed, and then remove the zip file
         if file_name.suffix == '.zip':
@@ -155,6 +160,13 @@ class BaseJudge(ABC):
             file_name = os.path.join(self.test_dir, question_file.file_name)
             self.known_question_files.append(file_name)
             os.symlink(question_file.file.path, file_name)
+
+            if platform.system() == 'Windows':
+                # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
+                shutil.copyfile(question_file.file.path, file_name)
+            else:
+                os.symlink(question_file.file.path, file_name)
+
 
     '''
     def _run_test(self,
