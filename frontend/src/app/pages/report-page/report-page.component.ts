@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Course } from '../../interfaces/course';
+import { Course } from '../../models/course';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course.service';
@@ -11,7 +11,7 @@ import { AdminService } from '../../services/admin.service';
 @Component({
   selector: 'app-report-page',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     RouterModule],
   templateUrl: './report-page.component.html',
@@ -19,7 +19,7 @@ import { AdminService } from '../../services/admin.service';
 })
 
 export class ReportPageComponent {
-  
+
   course: Course = {} as Course;
   selectedFile: File | null = null;
 

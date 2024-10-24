@@ -7,9 +7,9 @@ import {
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Course } from '../../interfaces/course';
-import { Section } from '../../interfaces/section';
-import { Question } from '../../interfaces/question';
+import { Course } from '../../models/course';
+import { Section } from '../../models/section';
+import { Question } from '../../models/question';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
@@ -101,12 +101,12 @@ export class CoursesDetailPageComponent implements OnInit {
       cpu_limit: ['', Validators.required],
       submission_deadline: ['', Validators.required],
     });
-  
+
     config.backdrop = 'static';
 		config.keyboard = false;
   }
   isProfessor: boolean = false;
-  
+
   ngOnInit(): void {
     this.loadCourse();
     this.authService.userInfo().subscribe({
@@ -134,7 +134,7 @@ export class CoursesDetailPageComponent implements OnInit {
           });
         });
       },
-    
+
     });
   }
 
@@ -259,7 +259,7 @@ export class CoursesDetailPageComponent implements OnInit {
     const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
     this.questionService.postQuestion(defQuestion).subscribe({
       next: question => {
-        this.router.navigate([`/question/${question.id}/edit`]); 
+        this.router.navigate([`/question/${question.id}/edit`]);
       },
       error: err => {
         console.error(err);

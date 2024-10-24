@@ -3,12 +3,12 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Question } from '../../interfaces/question';
+import { Question } from '../../models/question';
 import { QuestionService } from '../../services/question.service';
-import { InputOutput } from '../../interfaces/input-output';
+import { InputOutput } from '../../models/input-output';
 import { InputOutputService } from '../../services/input-output.service';
 
-@Component({ 
+@Component({
   selector: 'app-input-output',
   standalone: true,
   imports: [CommonModule, RouterModule, MatIconModule, FormsModule, ReactiveFormsModule],
@@ -56,7 +56,7 @@ export class InputOutputComponent {
         }
       })
     }
-    else 
+    else
       console.error('Sem ID');
   }
 
@@ -83,7 +83,7 @@ export class InputOutputComponent {
         },
         error: (err) => {
           //this.pushNotify('Erro!', 'Falha ao atualizar entrada/saida', 'error');
-        }, 
+        },
       });
   }
 
@@ -96,7 +96,7 @@ export class InputOutputComponent {
 
   cancelEditIO(io : InputOutput): void {
     io.isEditing = false;
-    
+
     io.input = io.initialInput ?? '';
     io.output = io.initialOutput ?? '';
     io.visible = io.initialVisible ?? false;

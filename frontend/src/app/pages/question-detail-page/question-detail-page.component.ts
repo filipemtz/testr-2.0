@@ -1,14 +1,14 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Question } from '../../interfaces/question';
+import { Question } from '../../models/question';
 import { QuestionService } from '../../services/question.service';
 import { SubmissionService } from '../../services/submission.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DateFormatPipe } from '../../utils/date-format.pipe';
-import { QuestionFile } from '../../interfaces/question-file';
+import { QuestionFile } from '../../models/question-file';
 import { CommonModule } from '@angular/common';
-import { InputOutput } from '../../interfaces/input-output';
+import { InputOutput } from '../../models/input-output';
 import { environment } from '../../../environments/environment';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
@@ -148,8 +148,8 @@ export class QuestionDetailPageComponent implements OnInit {
       const parsedData = JSON.parse(data);
 
       if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
-        return parsedData.error_msgs; 
-      } 
+        return parsedData.error_msgs;
+      }
     }
     return [];
 }
@@ -190,7 +190,7 @@ export class QuestionDetailPageComponent implements OnInit {
       },
       error: (err) => {
         this.pushNotify('Error!', 'Failed to reset all submissions', 'error');
-     
+
       },
     });
   }
@@ -215,7 +215,7 @@ export class QuestionDetailPageComponent implements OnInit {
     });
   }
 
-  
+
 
   // A cada 30 segundos, verifica o status da submissão
   startSubmissionStatusCheck(): void {
