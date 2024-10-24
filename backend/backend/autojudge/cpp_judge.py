@@ -133,7 +133,9 @@ class CppJudge(BaseJudge):
                 pass
 
         cc = self.config['judge']['cpp']['cc']
-        flags = self.config['judge']['cpp']['flags']
+        cflags = self.config['judge']['cpp']['cflags']
+        iflags = self.config['judge']['cpp']['iflags']
+        lflags = self.config['judge']['cpp']['lflags']
 
         src = map(
             lambda f: self._clean_file_names(f, self.test_dir),
@@ -144,7 +146,7 @@ class CppJudge(BaseJudge):
         executable = os.path.join(self.test_dir, 'main')
         executable = self._clean_file_names(executable, self.test_dir)
 
-        return f"{cc} {flags} -o {executable} {src}"
+        return f"{cc} {cflags} -o {executable} {src} {iflags} {lflags}"
 
     def _find_first_directory(self, files):
         # assume the first directory is the one with smaller name
