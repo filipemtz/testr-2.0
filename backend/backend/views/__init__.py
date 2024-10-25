@@ -1,5 +1,5 @@
 
-from .course_view import CourseViewSet, CourseRegisterStudentsAPIView, CourseReportAPIView, CourseCreateCopyAPIView, CourseTeachersAPIView,CourseRemoveTeacherAPIView
+from .course_view import CourseViewSet, CourseRegisterStudentsAPIView, CourseReportAPIView, CourseCreateCopyAPIView, CourseTeachersAPIView,CourseRemoveTeacherAPIView, CourseAddTeacherAPIView
 from .question_view import QuestionViewSet, QuestionReportAPIView
 from .section_view import SectionViewSet
 from .question_file_view import QuestionFileViewSet
