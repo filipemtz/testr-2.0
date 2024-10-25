@@ -39,7 +39,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         sections = course.section_set.all()
         serializer = SectionSerializer(sections, many=True, context={'request': request})
         return Response(serializer.data)
-
     
     # exibe apenas os cursos aos quais o usuario está relacionado. Além de permitir que o professor edite apenas os cursos que ele leciona
     def get_queryset(self):
@@ -111,8 +110,22 @@ class CourseRegisterStudentsAPIView(APIView):
                     })
 
         return Response(responses)
+    
+class CourseTeachersAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    def get(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        teachers = course.teachers.all()
 
+        data = []
+        for t in teachers:
+            data.append({
+                'teacher': UserSerializer(t).data,
+            })
 
+        return Response(data)
+    
 class CourseReportAPIView(APIView):
     """
     Relatório por turma mostrando para cada aluno quantas questões foram resolvidas (submissão existe e o status é sucesso),

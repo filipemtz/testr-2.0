@@ -12,6 +12,31 @@
   Voltar
 </a>
 
+<h2 class="mt-4 mb-2">Professores</h2>
+
+<div class="d-flex">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <!-- <th>Nome</th> -->
+        <th>Usuário</th>
+        <th>Email</th>
+        <th>Remover?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of teachers; let i = index">
+        <th>{{ i + 1 }}</th>
+        <!-- <th> {{ row.student.first_name }} </th> -->
+        <th>{{ row.teacher.username }}</th>
+        <th>{{ row.teacher.email }}</th>
+        <th><button class="fas btn fa-trash text-danger" (click)="removeTeacher(row.teacher.id)"></button></th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <h2 class="mt-2">Cadastro de alunos</h2>
 <div class="d-flex flex-wrap">
   <input
@@ -27,7 +52,7 @@
   </button>
 </div>
 
-<h2 class="mt-2 text-center">Alunos</h2>
+<h2 class="mt-4 mb-2">Alunos</h2>
 
 <div class="d-flex">
   <table class="table table-hover align-middle">

@@ -45,6 +45,10 @@ export class CourseService {
     return this.http.get(`${this.apiUrl}/${course_id}/report/`, { withCredentials: true });
   }
 
+  getCourseTeachers(course_id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${course_id}/teachers/`, { withCredentials: true });
+  }
+
   makeACopy(course_id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${course_id}/copy/`, {}, { withCredentials: true });
   }

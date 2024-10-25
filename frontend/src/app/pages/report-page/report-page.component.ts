@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { Course } from '../../interfaces/course';
-import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course.service';
 import { CommonModule } from '@angular/common';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
-import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-report-page',
@@ -26,17 +24,16 @@ export class ReportPageComponent {
   myNotify: any;
   enrolledStudents: any[] = [];
   report: any;
+  teachers: any;
+  
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private router: Router,
-    private adminService: AdminService,
   ){}
 
   ngOnInit(): void {
     this.loadCourse();
   }
-
 
   loadCourse() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -44,12 +41,13 @@ export class ReportPageComponent {
       // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
       next: (response) => {
         this.course = response;
+        console.log(response)
         this.loadReport();
+        this.loadCourseTeachers();
         // this.loadSections(this.course.id);
       },
     });
   }
-
 
   loadReport(){
     this.courseService.getReport(this.course.id).subscribe({
@@ -57,6 +55,22 @@ export class ReportPageComponent {
         this.report = response;
       },
     });
+  }
+
+  loadCourseTeachers(){
+    this.courseService.getCourseTeachers(this.course.id).subscribe({
+      next: (response) => {
+        this.teachers = response;
+      },
+    });
+  }
+
+  removeTeacher(id : number){
+    if(this.course.teachers.length <= 1){
+      this.pushNotify('Erro!', 'Todo curso deve ter pelo menos um professor!', 'error');
+      return;
+    }
+    
   }
 
   uploadCSV() {
