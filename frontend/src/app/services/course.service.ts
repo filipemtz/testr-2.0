@@ -49,6 +49,14 @@ export class CourseService {
     return this.http.get(`${this.apiUrl}/${course_id}/teachers/`, { withCredentials: true });
   }
 
+  removeTeacher(course_id: number, teacher_id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${course_id}/remove_teacher/`, { teacher_id: teacher_id });
+  }
+
+  removeTeachers(course_id: number, teacher_id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${course_id}/remove-teacher/`, { teacher_id: teacher_id });
+  }
+
   makeACopy(course_id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${course_id}/copy/`, {}, { withCredentials: true });
   }

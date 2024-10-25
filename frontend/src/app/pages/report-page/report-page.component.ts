@@ -70,7 +70,15 @@ export class ReportPageComponent {
       this.pushNotify('Erro!', 'Todo curso deve ter pelo menos um professor!', 'error');
       return;
     }
-    
+    this.courseService.removeTeachers(this.course.id, id).subscribe({
+      next: () => {
+        this.loadCourseTeachers();
+      },
+      error: (error) => {
+        this.pushNotify('Erro!', 'Problema ao remover o professor!', 'error');
+        console.log(error);
+      }
+    });
   }
 
   uploadCSV() {
