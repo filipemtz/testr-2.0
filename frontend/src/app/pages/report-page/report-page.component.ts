@@ -81,6 +81,14 @@ export class ReportPageComponent {
     });
   }
 
+  addTeacher(username: string){
+    if(username.length < 1){
+      this.pushNotify('Erro!', 'Barra de pesquisa vazia! Digite o nome do professor', 'error');
+      return;
+    }
+    console.log(username);
+  }
+
   uploadCSV() {
     if (!this.selectedFile) {
       this.pushNotify('Erro!', 'Selecione um arquivo csv!', 'warning');

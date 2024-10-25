@@ -14,6 +14,11 @@
 
 <h2 class="mt-4 mb-2">Professores</h2>
 
+<div class="mb-3 input-group">
+  <input type="text" style="max-width: 40%;" placeholder="Digite o nome do usuário do professor" class="form-control" #username>
+  <button type="button" class="btn btn-primary" (click)="addTeacher(username.value)">Enviar</button>
+</div>
+
 <div class="d-flex">
   <table class="table table-hover align-middle">
     <thead>
@@ -37,8 +42,9 @@
   </table>
 </div>
 
-<h2 class="mt-2">Cadastro de alunos</h2>
-<div class="d-flex flex-wrap">
+<h2 class="mt-4 mb-2">Alunos</h2>
+
+<div class="d-flex flex-wrap mb-2">
   <input
     type="file"
     class="form-control me-2 my-1"
@@ -51,8 +57,6 @@
     Enviar
   </button>
 </div>
-
-<h2 class="mt-4 mb-2">Alunos</h2>
 
 <div class="d-flex">
   <table class="table table-hover align-middle">
