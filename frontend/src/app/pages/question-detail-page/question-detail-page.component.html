@@ -93,24 +93,24 @@
     <table class="table table-bordered table-striped">
       <tbody>
         <tr>
-          <th scope="row">Nome do Arquivo</th>
-          <td>
+          <th scope="row" class="col-2">Arquivo</th>
+          <td class="col-10">
             <a [href]="apiUrl + '/' + submission.file" download>{{
               submission.file_name
             }}</a>
           </td>
         </tr>
         <tr>
-          <th scope="row">Data da Submissão</th>
-          <td>{{ submission.created_at | dateFormat }}</td>
+          <th scope="row" class="col-2">Data da Submissão</th>
+          <td class="col-10">{{ submission.created_at | dateFormat }}</td>
         </tr>
         <tr>
-          <th scope="row">Status</th>
-          <td>{{ getSubmissionStatus(submission.status) }}</td>
+          <th scope="row" class="col-2">Status</th>
+          <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
         </tr>
         <tr>
-          <th scope="row">Relatório</th>
-          <td>
+          <th scope="row" class="col-2">Relatório</th>
+          <td class="col-10">
             <div *ngFor="let v of extractErrorMessages(submission.report_json)">
               <div [innerHTML]="v" class="mb-4"></div>
             </div>
@@ -128,6 +128,7 @@
       <h3 class="fw-bold">Submissões</h3>
       <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i> Reavaliar Todos </button>
     </div>
+    <br>
     <div *ngIf="submissionsList.length; else noSubmissions">
       <table class="table table-bordered table-striped">
         <thead>
@@ -179,24 +180,24 @@
     <table class="table table-bordered table-striped">
       <tbody>
         <tr>
-          <th scope="row">Nome do Arquivo</th>
-          <td>
+          <th scope="row" class="col-2">Arquivo</th>
+          <td class="col-10">
             <a [href]="apiUrl + '/' + submission.file" download>{{
               submission.file_name
             }}</a>
           </td>
         </tr>
         <tr>
-          <th scope="row">Data da Submissão</th>
-          <td>{{ submission.created_at | dateFormat }}</td>
+          <th scope="row" class="col-2">Data da Submissão</th>
+          <td class="col-10">{{ submission.created_at | dateFormat }}</td>
         </tr>
         <tr>
-          <th scope="row">Status</th>
-          <td>{{ getSubmissionStatus(submission.status) }}</td>
+          <th scope="row" class="col-2">Status</th>
+          <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
         </tr>
         <tr>
-          <th scope="row">Relatório</th>
-          <td>
+          <th scope="row" class="col-2">Relatório</th>
+          <td class="col-10">
             <div *ngFor="let v of extractErrorMessages(submission.report_json)">
               <div [innerHTML]="v" class="mb-4"></div>
             </div>
