@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QuestionFileService } from '../../services/question-file.service';
 import { QuestionService } from '../../services/question.service';
-import { QuestionFile } from '../../interfaces/question-file';
+import { QuestionFile } from '../../models/question-file';
 import { CommonModule } from '@angular/common';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -19,9 +19,9 @@ export class UploadQuestionFileComponent implements OnInit {
   selectedFiles?: FileList;
   progressInfos: any[] = [];
   message: string[] = [];
-  
+
   fileInfos: QuestionFile[] = [];
-  
+
   constructor(
     private questionFileService: QuestionFileService,
     private questionService: QuestionService,
@@ -36,7 +36,7 @@ export class UploadQuestionFileComponent implements OnInit {
           this.fileInfos = files;
         }
       });
-      
+
       console.log(this.fileInfos);
     });
   }
@@ -82,7 +82,7 @@ export class UploadQuestionFileComponent implements OnInit {
             console.log('entrou aqui');
             console.log(event);
             this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
-          } else 
+          } else
           if (event instanceof HttpResponse) {
             const msg = 'Upload com sucesso do arquivo: ' + file.name;
             this.message.push(msg);

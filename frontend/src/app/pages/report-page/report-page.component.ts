@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Course } from '../../interfaces/course';
+import { Course } from '../../models/course';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course.service';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import 'simple-notify/dist/simple-notify.css';
 @Component({
   selector: 'app-report-page',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     RouterModule],
   templateUrl: './report-page.component.html',
@@ -17,7 +17,7 @@ import 'simple-notify/dist/simple-notify.css';
 })
 
 export class ReportPageComponent {
-  
+
   course: Course = {} as Course;
   selectedFile: File | null = null;
 

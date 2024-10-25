@@ -103,6 +103,8 @@ class BaseJudge(ABC):
             # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
             shutil.copyfile(submission.file.path, file_name)
         else:
+            if os.path.exists(file_name):
+                os.remove(file_name)
             os.symlink(submission.file.path, file_name)
 
         # unzip file if needed, and then remove the zip file
@@ -165,6 +167,8 @@ class BaseJudge(ABC):
                 # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
                 shutil.copyfile(question_file.file.path, file_name)
             else:
+                if os.path.exists(file_name):
+                    os.remove(file_name)
                 os.symlink(question_file.file.path, file_name)
 
 

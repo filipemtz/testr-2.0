@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
-import { Course } from '../../interfaces/course';
+import { Course } from '../../models/course';
 import Notify from 'simple-notify'
 import 'simple-notify/dist/simple-notify.css'
 import {
@@ -50,7 +50,7 @@ export class IndexPageComponent implements OnInit {
     teachers: [],
     students: [],
     originalName: "Novo Curso"
-  } 
+  }
 
   constructor(
     private authService: AuthService,
@@ -198,7 +198,7 @@ export class IndexPageComponent implements OnInit {
       },
     });
   }
-  
+
   close() {
     this.myNotify.close()
   }

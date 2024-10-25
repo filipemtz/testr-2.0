@@ -2,7 +2,7 @@
 
 Refactor of Testr with modern technologies, software architecture, and development tools.
 
-## Manual Installation
+## Installation
 
 The installation process was tested on Ubuntu 22.
 
@@ -69,24 +69,17 @@ python -m pip install -r requirements.txt
 
 Copy the `config-sample.yaml` file to `config.yaml` and edit variables according to your system.
 
-Create the django database:
+Run the setup commmand in the backend folder:
 
 ```
 cd backend
-python manage.py migrate
+python manage.py setup
 ```
 
-Create a admin superuser:
+This command will create the database for the project, create the super user with default credentials (username=admin and password=admin) and define permissions for the user's roles.
 
-```
-python manage.py createsuperuser
-```
+**IMPORTANT**: Update the superuser credentials in the backend admin interface (see the next section).
 
-Set permissions:
-
-```
-python manage.py setperms permissions.json
-```
 
 ## Running the Application
 
@@ -112,4 +105,6 @@ python manage.py runserver 0.0.0.0:8000
 
 To expose the API for external access, replace the IP by a public IP. In most cases, this is not necessary or recommended.
 
+### Back-end Admin Interfaces
 
+After running the backend service, the django admin interface is available at ```http://localhost:8000/admin```. The admin interface for the REST services can be accessed in ```http://localhost:8000```.
