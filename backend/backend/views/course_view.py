@@ -29,6 +29,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     permission_classes = [IsTeacher | ReadOnly] 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+
     
     @action(detail=True, methods=['get'])
     def sections(self, request, pk=None):
@@ -45,6 +46,25 @@ class CourseViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return (Course.objects.filter(teachers=user) | Course.objects.filter(students=user)).distinct()
     
+class CourseRemoveTeacherAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        teacher_id = request.data.get('teacher_id')
+        
+        try:
+            teacher = User.objects.get(id=teacher_id)
+        except User.DoesNotExist:
+            return Response({'error': 'Professor não encontrado.'}, status=404)
+
+        if teacher in course.teachers.all():
+            course.teachers.remove(teacher)
+            return Response({'message': f'Professor {teacher.username} removido do curso com sucesso.'})
+        else:
+            return Response({'error': 'Este professor não está associado a este curso.'}, status=400)
+        
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
