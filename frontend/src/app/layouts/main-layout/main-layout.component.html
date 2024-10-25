@@ -18,7 +18,7 @@
 
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-center flex-grow-1">
-          <li *ngFor="let item of sidebarItems" class="nav-item mx-1">  
+          <li *ngFor="let item of sidebarItems" class="nav-item mx-1">
             <a *ngIf="!item.dropdown"  class="nav-link" [routerLink]="[item.link]">{{ item.label }}</a>
             <div *ngIf="item.dropdown" ngbDropdown>
               <a class="nav-link" ngbDropdownToggle role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ item.label }}</a>
@@ -30,8 +30,8 @@
             </div>
           </li>
         </ul>
-        
-        
+
+
 
         <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" *ngIf="authenticated">
           <li class="nav-item mx-1 my-1">
@@ -41,7 +41,7 @@
             <a class="btn btn-primary"  (click)="logout()">Logout</a>
           </li>
         </ul>
-        
+
 
         <ul class="navbar-nav d-flex flex-row justify-content-center fs-5" *ngIf="!authenticated">
           <li class="nav-item mx-1 my-1">

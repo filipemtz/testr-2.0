@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Question } from '../../models/question';
@@ -12,6 +13,8 @@ import { InputOutput } from '../../models/input-output';
 import { environment } from '../../../environments/environment';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
+
+
 @Component({
   selector: 'app-question-detail-page',
   standalone: true,
@@ -31,6 +34,7 @@ export class QuestionDetailPageComponent implements OnInit {
   submissionsList: any[] = [];
   isProfessor: boolean = false;
   myNotify: any;
+
   constructor(
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -46,6 +50,9 @@ export class QuestionDetailPageComponent implements OnInit {
       this.questionService.getQuestion(+id).subscribe({
         next: (question: Question) => {
           this.question = question;
+
+          this.question.description = this.question.description.replace(/\n/g, "<br>");
+          this.question.description = this.question.description.replace(/  /g, "&nbsp;&nbsp;");
 
           this.authService.userInfo().subscribe({
             next: (response: any) => {
@@ -194,6 +201,7 @@ export class QuestionDetailPageComponent implements OnInit {
       },
     });
   }
+
   pushNotify(title: string, text: string | undefined, status: any) {
     this.myNotify = new Notify({
       status: status,
@@ -214,8 +222,6 @@ export class QuestionDetailPageComponent implements OnInit {
       }
     });
   }
-
-
 
   // A cada 30 segundos, verifica o status da submissão
   startSubmissionStatusCheck(): void {

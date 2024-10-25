@@ -88,3 +88,11 @@
   outline: none;
 }
 
+.code {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #F7F7F7;
+  padding: 20px 20px 20px 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}

@@ -1,27 +1,50 @@
-<h1 class="display-2 text-center mb-4">{{ question.name }}</h1>
-<a
-  class="icon-link icon-link-hover mb-2"
-  style="cursor: pointer"
-  (click)="goBack()"
->
-  <i class="bi fa-solid fa-arrow-left"></i>
-  Voltar
-</a>
 
-<!--Informações-->
-<div class="mt-2">
-  <p>
-    <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
-  </p>
-  <p>
-    <strong>Linguagem de Programação:</strong>
-    {{ getLanguageName(question.language) }}
-  </p>
-  <p><strong>Descrição:</strong> {{ question.description }}</p>
+<h1 class="display-2 text-center mb-4">{{ question.name }}</h1>
+
+<div style="padding-bottom: 50px">
+  <a
+    class="icon-link icon-link-hover mb-2"
+    style="cursor: pointer"
+    (click)="goBack()"
+  >
+    <i class="bi fa-solid fa-arrow-left"></i>
+    Voltar
+  </a>
 </div>
 
+<!--Informações-->
+<div style="padding-bottom: 50px">
+  <div class="mb-4">
+    <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
+  </div>
+  <div class="mb-4">
+    <strong>Linguagem de Programação:</strong>
+    {{ getLanguageName(question.language) }}
+  </div>
+  <div class="mb-4">
+    <strong>Descrição:</strong>
+    <div [innerHTML]="question.description"></div>
+  </div>
+</div>
+
+<!--Arquivos-->
+<div style="margin-bottom: 50px;">
+  <h3 class="fw-bold">Arquivos</h3>
+  <div *ngIf="questionFiles.length; else noQuestionFile">
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let file of questionFiles" class="list-group-item">
+        <a [href]="file.file" download>{{ file.file_name }}</a>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noQuestionFile>
+    <p class="ms-3">Não existem arquivos</p>
+  </ng-template>
+</div>
+
+
 <!--Entradas e Saídas-->
-<div style="margin-top: 5%">
+<div style="margin-bottom: 50px;">
   <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
   <div *ngIf="ios.length; else noIO">
     <div *ngFor="let io of ios; let i = index" class="row my-3">
@@ -43,30 +66,14 @@
       </div>
     </div>
   </div>
+  <ng-template #noIO>
+    <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
+  </ng-template>
 </div>
 
-<ng-template #noIO>
-  <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
-</ng-template>
-
-<!--Arquivos-->
-<div style="margin-top: 2.5%">
-  <h3 class="fw-bold">Arquivos</h3>
-  <div *ngIf="questionFiles.length; else noQuestionFile">
-    <ul class="list-group list-group-flush">
-      <li *ngFor="let file of questionFiles" class="list-group-item">
-        <a [href]="file.file" download>{{ file.file_name }}</a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<ng-template #noQuestionFile>
-  <p class="ms-3">Não existem arquivos</p>
-</ng-template>
 
 <div *ngIf="isProfessor; else student">
-  <div style="margin-top: 2.5%">
+  <div style="padding-bottom: 50px">
     <h3 class="fw-bold mb-3">Enviar Resposta</h3>
     <div class="d-flex flex-wrap mb-3">
       <input
@@ -81,7 +88,7 @@
     </div>
   </div>
 
-  <div *ngIf="submission">
+  <div *ngIf="submission" style="padding-bottom: 50px">
     <h3 class="fw-bold mb-3">Relatório</h3>
     <table class="table table-bordered table-striped">
       <tbody>
@@ -103,7 +110,11 @@
         </tr>
         <tr>
           <th scope="row">Relatório</th>
-          <td *ngFor="let v of extractErrorMessages(submission.report_json)">{{ v }}</td>
+          <td>
+            <div *ngFor="let v of extractErrorMessages(submission.report_json)">
+              <div [innerHTML]="v" class="mb-4"></div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -111,11 +122,11 @@
       Reavaliar
     </button>
   </div>
-  
-  <div style="margin-top: 2.5%">
-    <div class="d-flex mb-3">
+
+  <div style="padding-bottom: 50px">
+    <div class="d-flex">
       <h3 class="fw-bold">Submissões</h3>
-      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()">Resetar todas as submissões <i class="fa-solid fa-repeat"></i></button>
+      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i> Reavaliar Todos </button>
     </div>
     <div *ngIf="submissionsList.length; else noSubmissions">
       <table class="table table-bordered table-striped">
@@ -148,7 +159,7 @@
 
 <ng-template #student>
   <!--Arquivo a ser submetido-->
-  <div style="margin-top: 2.5%">
+  <div style="padding-bottom: 50px">
     <h3 class="fw-bold mb-3">Enviar Resposta</h3>
     <div class="d-flex flex-wrap mb-3">
       <input
@@ -185,7 +196,11 @@
         </tr>
         <tr>
           <th scope="row">Relatório</th>
-          <td *ngFor="let v of extractErrorMessages(submission.report_json)">{{ v }}</td>
+          <td>
+            <div *ngFor="let v of extractErrorMessages(submission.report_json)">
+              <div [innerHTML]="v" class="mb-4"></div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
