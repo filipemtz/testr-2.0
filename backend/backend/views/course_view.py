@@ -178,11 +178,12 @@ class CourseReportAPIView(APIView):
             
             questions = Question.objects.filter(section__course=course)
             for question in questions:
-                sub = question.submission_set.filter(student=student).first()
-                if sub:
-                    if sub.status == 'SC':
+                submission = question.submission_set.filter(student=student).first()
+                if submission:
+                    if submission.status == 'SC':
                         solved += 1
-                    tried += 1
+                    elif submission.status == 'FL':
+                        tried += 1
                 else:
                     not_tried += 1
 
