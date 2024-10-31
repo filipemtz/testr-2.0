@@ -50,10 +50,6 @@ export class CourseService {
   }
 
   removeTeacher(course_id: number, teacher_id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${course_id}/remove_teacher/`, { teacher_id: teacher_id });
-  }
-
-  removeTeachers(course_id: number, teacher_id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${course_id}/remove-teacher/`, { teacher_id: teacher_id });
   }
 
