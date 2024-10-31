@@ -1,16 +1,20 @@
-<h1 class="display-2 text-center mb-4">
-	{{ course.name }}
-</h1>
+
+<div class="d-flex justify-content-center align-items-center">
+<div style="padding-right: 20px">
+<h1 class="display-2">{{ course.name }}</h1>
+</div>
+<div>
+<a *ngIf="isProfessor" class="mb-2" [routerLink]="['/course', course.id ,'report']">
+	<i class="display-6 fa fa-cog"></i>
+</a>
+</div>
+</div>
+
+
 <a class="icon-link icon-link-hover mb-2" [routerLink]="['/']">
 	<i class="bi fa-solid fa-arrow-left"></i>
 	Voltar
 </a>
-
-<div class="d-flex justify-content-between mt-2 mb-2">
-	<a *ngIf="isProfessor" class="icon-link icon-link-hover mb-2" style="cursor: pointer" [routerLink]="['/course', course.id ,'report']">
-		Relatório 
-	  </a>
-</div>
 
 <!-- Botão de adicionar seção (aparece apenas se for professor) -->
 <div class="d-flex justify-content-between">

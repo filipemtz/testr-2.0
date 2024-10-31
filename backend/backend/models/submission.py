@@ -13,7 +13,8 @@ class SubmissionStatus(models.TextChoices):
 
 
 def upload_file(instance, filename):
-    return f'{instance.id}-{filename}'
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")  
+    return f'{instance.question.id}-{instance.student.id}-{timestamp}-{filename}'
 
 
 class Submission(models.Model):

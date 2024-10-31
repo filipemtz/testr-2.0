@@ -161,7 +161,6 @@ class BaseJudge(ABC):
         for question_file in question.questionfile_set.all():
             file_name = os.path.join(self.test_dir, question_file.file_name)
             self.known_question_files.append(file_name)
-            os.symlink(question_file.file.path, file_name)
 
             if platform.system() == 'Windows':
                 # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
@@ -251,8 +250,22 @@ class BaseJudge(ABC):
                         "<hr> <br>"
                     )
                 else:
+                    expected_output = test['expected_output'].replace("\n", "<br>\n")
+                    program_output = test['program_output'].replace("\n", "<br>\n")
                     self.report["error_msgs"].append(
-                        f"output mismatch in test {visible_test_id}. <div class='row'> <div class='col'> <b> Expected: </b> <br> {test['expected_output']} </div> <div class='col'> <b> Produced: </b> <br> {test['program_output']} </div> </div>")
+                        f"""<b>output mismatch in test {visible_test_id}</b>.<br>\n
+                        <div class='d-flex flex-row'>
+                            <div class='p-2 flex-fill'>
+                                <b> Expected:</b>
+                                <br>
+                                {expected_output}
+                            </div>
+                            <div class='p-2 flex-fill'>
+                                <b> Produced:</b>
+                                <br>
+                                {program_output}
+                            </div>
+                        </div>""")
                 visible_test_id += 1
             else:
                 if test["time_limit_exceeded"]:
@@ -306,7 +319,6 @@ class BaseJudge(ABC):
     def _cleanup(self):
         # clean up resources used for running the tests, e.g., remove the test
         # directory.
-
         if not self._keep_files:
             shutil.rmtree(self.test_dir)
 

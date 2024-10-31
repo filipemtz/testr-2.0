@@ -64,6 +64,19 @@ class CourseRemoveTeacherAPIView(APIView):
             return Response({'message': f'Professor {teacher.username} removido do curso com sucesso.'})
         else:
             return Response({'error': 'Este professor não está associado a este curso.'}, status=400)
+
+class CourseAddTeacherAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        teacher_id = request.data.get('teacher_id')
+
+        try:
+            teacher = User.objects.get(id=teacher_id)
+        except User.DoesNotExist:
+            return Response({'error': 'Professor não encontrado.'}, status=404)
         
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]
@@ -165,11 +178,12 @@ class CourseReportAPIView(APIView):
             
             questions = Question.objects.filter(section__course=course)
             for question in questions:
-                sub = question.submission_set.filter(student=student).first()
-                if sub:
-                    if sub.status == 'SC':
+                submission = question.submission_set.filter(student=student).first()
+                if submission:
+                    if submission.status == 'SC':
                         solved += 1
-                    tried += 1
+                    elif submission.status == 'FL':
+                        tried += 1
                 else:
                     not_tried += 1
 

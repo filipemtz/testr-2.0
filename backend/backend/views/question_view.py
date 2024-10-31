@@ -26,14 +26,14 @@ class QuestionViewSet(viewsets.ModelViewSet):
         user = request.user
         question = self.get_object()
         inputs_outputs = question.inputoutput_set.all()
-        
+
         # se o usuario nao for um professor exibir apenas aqueles visiveis
         if not user.groups.filter(name='teacher').exists():
             inputs_outputs = inputs_outputs.filter(visible=True)
-        
+
         serializer = InputOutputSerializer(inputs_outputs, many=True, context={'request': request})
         return Response(serializer.data)
-    
+
     @action(detail=True, methods=['get'])
     def files(self, request, pk=None):
         """
@@ -43,27 +43,27 @@ class QuestionViewSet(viewsets.ModelViewSet):
         files = question.questionfile_set.all()
         serializer = QuestionFileSerializer(files, many=True, context={'request': request})
         return Response(serializer.data)
-    
+
     # Retorna apenas as questões que o usuário está relacionado por meio dos cursos
     def get_queryset(self):
         user = self.request.user
         return (Question.objects.filter(section__course__teachers=user) | Question.objects.filter(section__course__students=user)).distinct()
-    
+
 
 class QuestionReportAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    
+
     def get(self, request, question_id=None):
         question = Question.objects.get(pk=question_id)
         students = question.section.course.students.all()
-        
+
         data = []
         for student in students:
             status = 'Não respondida'
             submission = question.submission_set.filter(student=student).first()
             submission_file = submission.file if submission else None
-          
+
             if submission:
                 if submission.status == 'SC':
                     status = 'Resposta correta'
@@ -71,8 +71,6 @@ class QuestionReportAPIView(APIView):
                     status = 'Resposta incorreta'
                 else:
                     status = 'Aguardando avaliação'
-                    
-        
 
             data.append({
                 'student': student.username,
@@ -80,7 +78,7 @@ class QuestionReportAPIView(APIView):
                 'file': submission_file.url if submission_file else None,
                 'file_name': submission.file_name if submission else None
             })
-        
+
         return Response(data)
-            
-    
+
+
