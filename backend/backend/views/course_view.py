@@ -71,12 +71,22 @@ class CourseAddTeacherAPIView(APIView):
 
     def post(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
-        teacher_id = request.data.get('teacher_id')
+        username = request.data.get('teacher_username')
 
         try:
-            teacher = User.objects.get(id=teacher_id)
+            user = User.objects.get(username=username)
+            group = user.groups.get()
+
+            if(group.name == "teacher"): 
+                if(course.teachers.filter(id=user.id).exists()):
+                    return Response({'error': 'Professor já está no curso.'}, status=404)
+                else:
+                    course.teachers.add(user)
+                    return Response({'message': f'Professor {user.username} adicionado ao curso com sucesso.'})
+            else:
+                return Response({'error': 'Alunos não podem ser professores.'}, status=404)
         except User.DoesNotExist:
-            return Response({'error': 'Professor não encontrado.'}, status=404)
+            return Response({'error': 'Usuário não encontrado.'}, status=404)
         
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]

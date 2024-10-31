@@ -87,6 +87,11 @@ export class ReportPageComponent {
       return;
     }
     console.log(username);
+    this.courseService.addTeacher(this.course.id, username).subscribe({
+      next: () =>{
+        this.loadCourseTeachers();
+      }
+    })
   }
 
   uploadCSV() {

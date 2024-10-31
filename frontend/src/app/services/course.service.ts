@@ -49,6 +49,10 @@ export class CourseService {
     return this.http.get(`${this.apiUrl}/${course_id}/teachers/`, { withCredentials: true });
   }
 
+  addTeacher(course_id: number, username: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${course_id}/add-teacher/`, { teacher_username: username });
+  }
+
   removeTeacher(course_id: number, teacher_id: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${course_id}/remove-teacher/`, { teacher_id: teacher_id });
   }
