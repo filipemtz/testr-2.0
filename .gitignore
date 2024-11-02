@@ -16,3 +16,5 @@ a2.csv
 /backend/media
 
 backend/venv
+
+.env
