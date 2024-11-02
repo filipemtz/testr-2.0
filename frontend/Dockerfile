@@ -10,12 +10,10 @@ RUN npm install -g @angular/cli
 
 COPY . .
 
-# RUN ng serve  --configuration=production --host 0.0.0.0 --port 8080
-
-# FROM nginx:latest
-
-# COPY --from=build app/dist/frontend /usr/share/nginx/html
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 8080
 
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["sh", "-c", "ng serve  --configuration=production --host  0.0.0.0 --port 8080"]

@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     env_file: 
-      - backend/.env
+      - .env
     volumes:
       - ./backend:/app
     expose:
@@ -16,9 +16,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    environment:
-      - NODE_ENV=production
-      - API_URL=http://api.seudominio.com
+    env_file:
+      - .env
     volumes:
       - ./frontend:/app
     expose:
