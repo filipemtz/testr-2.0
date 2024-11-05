@@ -88,6 +88,29 @@ class CourseAddTeacherAPIView(APIView):
         except User.DoesNotExist:
             return Response({'error': 'Usuário não encontrado.'}, status=404)
         
+class CourseAddStudentAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, course_id=None):
+        course = Course.objects.get(pk=course_id)
+        username = request.data.get('student_username')
+
+        try:
+            user = User.objects.get(username=username)
+            group = user.groups.get()
+
+            if(group.name == "student"): 
+                if(course.students.filter(id=user.id).exists()):
+                    return Response({'error': 'Aluno já está no curso.'}, status=404)
+                else:
+                    course.students.add(user)
+                    return Response({'message': f'Aluno {user.username} adicionado ao curso com sucesso.'})
+            else:
+                return Response({'error': 'Professores não podem ser alunos.'}, status=404)
+        except User.DoesNotExist:
+            return Response({'error': 'Usuário não encontrado.'}, status=404)
+        
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]

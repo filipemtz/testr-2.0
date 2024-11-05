@@ -41,7 +41,6 @@ export class ReportPageComponent {
       // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
       next: (response) => {
         this.course = response;
-        console.log(response)
         this.loadReport();
         this.loadCourseTeachers();
         // this.loadSections(this.course.id);
@@ -76,7 +75,6 @@ export class ReportPageComponent {
       },
       error: (error) => {
         this.pushNotify('Erro!', 'Problema ao remover o professor!', 'error');
-        console.log(error);
       }
     });
   }
@@ -86,10 +84,27 @@ export class ReportPageComponent {
       this.pushNotify('Erro!', 'Barra de pesquisa vazia! Digite o nome do professor', 'error');
       return;
     }
-    console.log(username);
     this.courseService.addTeacher(this.course.id, username).subscribe({
       next: () =>{
         this.loadCourseTeachers();
+      },
+      error: (error) => {
+        this.pushNotify('Erro!', error.error.error, 'error');
+      }
+    })
+  }
+
+  addStudent(username: string){
+    if(username.length < 1){
+      this.pushNotify('Erro!', 'Barra de pesquisa vazia! Digite o nome do aluno', 'error');
+      return;
+    }
+    this.courseService.addStudent(this.course.id, username).subscribe({
+      next: () =>{
+        this.loadReport();
+      },
+      error: (error) => {
+        this.pushNotify('Erro!', error.error.error, 'error');
       }
     })
   }
@@ -105,8 +120,6 @@ export class ReportPageComponent {
 
     this.courseService.registerStudentsCSV(formData, this.course.id).subscribe({
       next: response => {
-        //console.log('Upload successful:', response);
-        console.log(response);
         this.loadCourse();
         this.loadReport();
       },
