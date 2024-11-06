@@ -24,7 +24,7 @@
             <div class="d-flex flex-column justify-content-between">
                 <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
                     <div *ngIf="io.visible; else visibleOff">
-                        <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="io.visible = !io.visible;"></a>
+                        <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(io)"></a>
                     </div>
                 <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEditIO(io)"></a>
             </div>

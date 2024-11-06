@@ -60,7 +60,8 @@ export class CoursesDetailPageComponent implements OnInit {
     url: '',
     name: "Nova Seção",
     course: -1,
-    originalName: "Nova Seção"
+    originalName: "Nova Seção",
+    visible: true
   }
 
   defaultQuestion: Question = {
@@ -74,6 +75,7 @@ export class CoursesDetailPageComponent implements OnInit {
     time_limit_seconds: 30,
     cpu_limit: 0.25,
     section: -1,
+    visible: true
   };
 
   myNotify: any;
@@ -289,6 +291,11 @@ export class CoursesDetailPageComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
     }
+  }
+
+  changeVisibility(section: Section): void {
+    section.visible = !section.visible;
+    this.confirmEditSection(section);
   }
 
   pushNotify(title: string, text: string | undefined, status: any) {

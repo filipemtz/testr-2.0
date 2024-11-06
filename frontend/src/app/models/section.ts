@@ -8,4 +8,5 @@ export interface Section {
     isEditing?: boolean;
     questions? : Question[];
     originalName: string;
+    visible: boolean;
 }

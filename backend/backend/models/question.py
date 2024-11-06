@@ -23,6 +23,7 @@ class Question(models.Model):
     cpu_limit = models.FloatField(default=0.25)
     created_at = models.DateTimeField(default=timezone.now)
     submission_deadline = models.DateTimeField(default=timezone.now)
+    visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

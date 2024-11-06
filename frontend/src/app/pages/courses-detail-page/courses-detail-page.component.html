@@ -1,13 +1,13 @@
 
 <div class="d-flex justify-content-center align-items-center">
-<div style="padding-right: 20px">
-<h1 class="display-2">{{ course.name }}</h1>
-</div>
-<div>
-<a *ngIf="isProfessor" class="mb-2" [routerLink]="['/course', course.id ,'report']">
-	<i class="display-6 fa fa-cog"></i>
-</a>
-</div>
+	<div style="padding-right: 20px">
+		<h1 class="display-2">{{ course.name }}</h1>
+	</div>
+	<div>
+		<a *ngIf="isProfessor" class="mb-2" [routerLink]="['/course', course.id ,'report']">
+			<i class="display-6 fa fa-cog"></i>
+		</a>
+	</div>
 </div>
 
 
@@ -44,6 +44,15 @@
 				<!-- Botões de editar e excluir seção (aparecem apenas se for professor) -->
 				<button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1"
 					(click)="enableEditSection(section)"></button>
+				<div *ngIf="section.visible; else visibleOff">
+                    <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(section)"></a>
+                </div>
+
+				<ng-template #visibleOff >
+					<a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibility(section)"></a>
+				</ng-template>
+
+
 				<button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1"
 					(click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
 			</div>

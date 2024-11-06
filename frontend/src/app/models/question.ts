@@ -10,4 +10,5 @@ export interface Question {
 	cpu_limit: number;
 	section: number;
 	isEditing?: boolean;
+	visible: boolean;
 }
