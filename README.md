@@ -32,78 +32,23 @@ GRANT ALL PRIVILEGES ON DATABASE testr TO testr_user;
 
 Add the database connection information in config.json.
 
-Install node version manager (nvm):
-
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-```
-
-Close and reopen the terminal to use nvm.
-Install the LTS version of nodejs (and npm, its package manager):
-
-```
-nvm install 20
-```
-
-Install angular:
-
-```
-npm install -g @angular/cli
-```
-
-Install the frontend dependencies:
-
-```
-cd frontend
-npm i
-```
-
-Install the backend dependencies (it is recommended to [create a python virtual environment](https://docs.python.org/3/library/venv.html)):
-
-```
-cd ../backend
-python -m pip install -r requirements.txt
-```
 
 ## First Time Setup
 
-Copy the `config-sample.yaml` file to `config.yaml` and edit variables according to your system.
+Copy the `.env-sample` file to `.env` and edit variables according to your system.
 
-Run the setup commmand in the backend folder:
-
-```
-cd backend
-python manage.py setup
-```
-
-This command will create the database for the project, create the super user with default credentials (username=admin and password=admin) and define permissions for the user's roles.
-
-**IMPORTANT**: Update the superuser credentials in the backend admin interface (see the next section).
-
+Enter the backend folder, copy the `config-sample.yaml` file to `config.yaml`, and configure the judge by updating the fields in this file.
 
 ## Running the Application
 
-### Front-end
-
-To serve the front-end application in a local network:
+To run the application, use the following command to build and start the services with Docker:
 
 ```
-cd frontend
-ng serve  --configuration=production --host 0.0.0.0 --port 8080
+docker compose up --build
 ```
 
+This command builds the Docker images and starts all necessary containers, allowing the application to run in a fully containerized environment.
 To serve the front-end application for external access, replace the IP for the server public IP.
-
-### Back-end
-
-To serve the back-end application locally:
-
-```
-cd backend
-python manage.py runserver 0.0.0.0:8000
-```
-
-To expose the API for external access, replace the IP by a public IP. In most cases, this is not necessary or recommended.
 
 ### Back-end Admin Interfaces
 

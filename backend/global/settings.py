@@ -1,24 +1,19 @@
-import sys
 from pathlib import Path
-import yaml
 import os
-from backend.utils.io import safe_load_yaml
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Path to the config file
-CONFIG_FILE = BASE_DIR.parent.joinpath("config.yaml")
-config_data = safe_load_yaml(CONFIG_FILE)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config_data['backend']['secret_key']
+SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config_data['backend']['debug']
+DEBUG = config('DEBUG', cast=bool, default=False)
 
 # Application definition
 INSTALLED_APPS = [
@@ -76,19 +71,20 @@ DB_BACKENDS = {
     "postgresql": "django.db.backends.postgresql",
 }
 
-if config_data['db']['type'] not in DB_BACKENDS:
-    raise ValueError(f"Invalid database type \"{config_data['db']['type']}\".")
+if config('DB_TYPE', default='sqlite') not in DB_BACKENDS:
+      raise ValueError(f"Invalid database type \"{config('DB_TYPE', default='sqlite')}\".")
 
 DATABASES = {
     'default': {
-        'ENGINE': DB_BACKENDS[config_data['db']['type']],
-        'NAME': config_data['db']['name'],
-        'USER': config_data['db']['user'],
-        'PASSWORD': config_data['db']['password'],
-        'HOST': config_data['db']['host'],
-        'PORT': config_data['db']['port'],
+        'ENGINE': DB_BACKENDS[config('DB_TYPE', default='sqlite')],
+        'NAME': config('DB_NAME', default='db.sqlite3'),
+        'USER': config('DB_USER', default=''), 
+        'PASSWORD': config('DB_PASSWORD', default=''),  
+        'HOST': config('DB_HOST', default=''), 
+        'PORT': config('DB_PORT', default=''), 
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -111,8 +107,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-LANGUAGE_CODE = config_data['backend']['language_code']
-TIME_ZONE = config_data['backend']['time_zone']
+LANGUAGE_CODE = config('LANGUAGE_CODE', default='pt-br')
+TIME_ZONE = config('TIME_ZONE', default='America/Sao_Paulo')
 USE_I18N = True
 USE_TZ = True
 
@@ -140,13 +136,9 @@ REST_FRAMEWORK = {
 # CORS Settings
 CORS_ALLOW_CREDENTIALS = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
-if config_data['frontend']['host']:
-    ALLOWED_HOSTS.append(config_data['frontend']['host'])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(), default='localhost')
 
-CORS_ALLOWED_ORIGINS = []
-for host in ALLOWED_HOSTS:
-    CORS_ALLOWED_ORIGINS.append(f"http://{host}:{config_data['frontend']['port']}")
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:8080')
     
     
 # arquivos de midea/upload

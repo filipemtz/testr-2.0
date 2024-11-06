@@ -12,13 +12,13 @@ import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class NavComponent implements OnInit {
   authenticated = false;
-  user : any = {
+  user: any = {
     username: '',
-  }
-  constructor(private authService: AuthService, private router: Router) {
-    
-
-  }
+  };
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   /*
   sidebarItems = [
@@ -60,15 +60,13 @@ export class NavComponent implements OnInit {
     }
   ];*/
 
-  
-
   ngOnInit(): void {
     this.authenticated = localStorage.getItem('authenticated') === 'true';
-    if (this.authenticated){
+    if (this.authenticated) {
       this.authService.profile().subscribe({
         next: (res: any) => {
           this.user = res;
-        }
+        },
       });
     }
     // AuthService.authEmitter.subscribe((authenticated) => {
@@ -84,14 +82,19 @@ export class NavComponent implements OnInit {
         localStorage.removeItem('authenticated');
         localStorage.removeItem('user');
         this.authenticated = false;
+
+        // remover todos os cookies
+        document.cookie.split(';').forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, '')
+            .replace(
+              /=.*/,
+              '=;expires=' + new Date().toUTCString() + ';path=/',
+            );
+        });
         // AuthService.authEmitter.emit(false);
         this.router.navigate(['/accounts/login']);
       },
     });
   }
-
-  
-
-
-
 }

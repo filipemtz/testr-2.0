@@ -23,7 +23,7 @@ from backend.utils.io import unzip, safe_load_yaml
 
 class BaseJudge(ABC):
     def __init__(self, keep_files: bool):
-        self.config = safe_load_yaml("../config.yaml")
+        self.config = safe_load_yaml("/app/config.yaml")
         self._keep_files = keep_files
 
     def judge(self, submission: Submission, verbose: bool = False) -> Dict[str, Any]:

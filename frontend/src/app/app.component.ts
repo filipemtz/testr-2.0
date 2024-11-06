@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { environment } from './../environments/environment';
-fetch(environment.apiUrl);
 
 @Component({
   selector: 'app-root',
@@ -11,6 +9,6 @@ fetch(environment.apiUrl);
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'frontend';
+  title =  'frontend';
 
 }

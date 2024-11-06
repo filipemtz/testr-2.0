@@ -14,3 +14,10 @@ a2.csv
 /mutz
 
 /backend/media
+
+backend/venv
+
+.env
+
+/backend/config.yaml
+
