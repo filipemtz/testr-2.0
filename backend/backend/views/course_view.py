@@ -37,7 +37,12 @@ class CourseViewSet(viewsets.ModelViewSet):
         Retrieve all sections associated with a specific course.
         """
         course = self.get_object()
-        sections = course.section_set.all()
+        
+        if request.user in course.teachers.all():
+            sections = course.section_set.all()
+        else:
+            sections = course.section_set.filter(visible=True)
+
         serializer = SectionSerializer(sections, many=True, context={'request': request})
         return Response(serializer.data)
     

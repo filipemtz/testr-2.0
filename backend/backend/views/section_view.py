@@ -22,7 +22,12 @@ class SectionViewSet(viewsets.ModelViewSet):
         Retrieve all questions associated with a specific section.
         """
         section = self.get_object()
-        questions = section.question_set.all()
+        
+        if request.user in section.course.teachers.all():
+            questions = section.question_set.all()
+        else:
+            questions = section.question_set.filter(visible=True)
+        
         serializer = QuestionSerializer(questions, many=True, context={'request': request})
         return Response(serializer.data)
     

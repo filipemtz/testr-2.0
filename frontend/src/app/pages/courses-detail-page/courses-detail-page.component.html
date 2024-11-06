@@ -44,14 +44,16 @@
 				<!-- Botões de editar e excluir seção (aparecem apenas se for professor) -->
 				<button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1"
 					(click)="enableEditSection(section)"></button>
-				<div *ngIf="section.visible; else visibleOff">
-                    <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(section)"></a>
-                </div>
 
-				<ng-template #visibleOff >
-					<a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibility(section)"></a>
-				</ng-template>
+				<div *ngIf="isProfessor">
+					<div *ngIf="section.visible; else visibleOff">
+						<a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibilitySection(section)"></a>
+					</div>
 
+					<ng-template #visibleOff >
+						<a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibilitySection(section)"></a>
+					</ng-template>
+				</div>
 
 				<button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1"
 					(click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
@@ -69,6 +71,17 @@
 						[routerLink]="['/question',question.id,'edit']">
 						<i class="fa-solid fa-pencil fa-sm"></i>
 					</button>
+
+					<div *ngIf="isProfessor">
+						<div *ngIf="question.visible; else visibleOff">
+							<a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibilityQuestion(question)"></a>
+						</div>
+		
+						<ng-template #visibleOff >
+							<a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibilityQuestion(question)"></a>
+						</ng-template>
+					</div>
+
 					<button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-danger ms-1"
 						(click)="openDeleteQuestionModal(question, deleteQuestionModal)">
 						<i class="fa-solid fa-trash fa-sm"></i>

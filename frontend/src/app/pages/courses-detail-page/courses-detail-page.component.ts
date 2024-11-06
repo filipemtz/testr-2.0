@@ -107,13 +107,14 @@ export class CoursesDetailPageComponent implements OnInit {
     config.backdrop = 'static';
 		config.keyboard = false;
   }
+
   isProfessor: boolean = false;
 
   ngOnInit(): void {
-    this.loadCourse();
     this.authService.userInfo().subscribe({
       next: (response: any) => {
         this.isProfessor = response.groups.includes('teacher');
+        this.loadCourse();
       },
     });
   }
@@ -269,6 +270,18 @@ export class CoursesDetailPageComponent implements OnInit {
     });
   }
 
+  putQuestion(q : Question) {
+    const updatedQuestion = { ...q};
+    this.questionService.editQuestion(q.url, updatedQuestion).subscribe({
+      next: () => {
+      },
+      error: (err) => {
+        console.error(err);
+        this.pushNotify('Erro!', 'Falha ao editar uma questão', 'error');
+      },
+    });
+  }
+
   @HostListener('window:keydown', ['$event'])
   keyEventListener(event: KeyboardEvent): void {
     const editingSection = this.sections.find(section => section.isEditing);
@@ -293,9 +306,14 @@ export class CoursesDetailPageComponent implements OnInit {
     }
   }
 
-  changeVisibility(section: Section): void {
+  changeVisibilitySection(section: Section): void {
     section.visible = !section.visible;
     this.confirmEditSection(section);
+  }
+
+  changeVisibilityQuestion(question: Question): void {
+    question.visible = !question.visible;
+    this.putQuestion(question);
   }
 
   pushNotify(title: string, text: string | undefined, status: any) {
