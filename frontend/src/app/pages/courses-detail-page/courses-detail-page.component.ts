@@ -6,6 +6,8 @@ import {
   ElementRef,
   HostListener,
 } from '@angular/core';
+
+import { ImportQuestionComponent } from '../../components/import-question/import-question.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
 import { Section } from '../../models/section';
@@ -35,6 +37,7 @@ import { AuthService } from '../../services/auth.service';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
+    ImportQuestionComponent,
   ],
   templateUrl: './courses-detail-page.component.html',
   styleUrls: ['./courses-detail-page.component.css'],
@@ -324,5 +327,9 @@ export class CoursesDetailPageComponent implements OnInit {
       effect: 'slide',
       type: 'filled',
     });
+  }
+
+  openImportQuestionModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 }

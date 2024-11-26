@@ -21,6 +21,7 @@ urlpatterns = [
     path('courses/<int:course_id>/remove-teacher/', CourseRemoveTeacherAPIView.as_view(), name="remove-teacher"),
     path('courses/<int:course_id>/copy/', CourseCreateCopyAPIView.as_view(), name="course-copy"),
     path('questions/<int:question_id>/report/', QuestionReportAPIView.as_view(), name="question-report"),
+    path('questions-import/', QuestionImportAPIView.as_view(), name="question-import"),
     path('submissions/get/', GetSubmissionAPIView.as_view(), name='get-submission'),
     path('submissions/add/', AddSubmissionAPIView.as_view(), name='add-submission'),
     path('submissions/reset-status/', ResetStatusSubmissionAPIView.as_view(), name='reset-status-submission'),

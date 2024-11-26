@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../models/question';
 import { InputOutput } from '../models/input-output';
@@ -50,5 +50,13 @@ export class QuestionService {
 
   getReport(question_id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${question_id}/report/`, { withCredentials: true });
+  }
+
+  importQuestion(formData: FormData): Observable<HttpEvent<any>> {
+    const req = new HttpRequest('POST', `${this.apiUrl}-import/`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+    return this.http.request(req);
   }
 }

@@ -77,11 +77,7 @@ export class QuestionDetailPageComponent implements OnInit {
 
       this.questionService.getInputsOutputs(+id).subscribe({
         next: (ios: any) => {
-          ios.forEach( (io : InputOutput) => {
-            if(io.visible != false){
-              this.ios.push(io);
-            }
-          })
+          this.ios = ios;
         },
         error: (err) => {
           console.log(err);
