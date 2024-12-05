@@ -332,4 +332,26 @@ export class CoursesDetailPageComponent implements OnInit {
   openImportQuestionModal(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
+
+  downloadQuestion(question: Question) {
+    this.questionService.exportQuestion(question.id).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'application/zip' });
+
+        // Cria um link temporário para o download do arquivo
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${question.name}.zip`;  // Define o nome do arquivo a ser baixado
+        document.body.appendChild(a);
+        a.click();  // Dispara o download
+        document.body.removeChild(a);
+      },
+      error: (err) => {
+        console.error(err);
+        this.pushNotify('Error!', 'Falha ao exportar a questão', 'error');
+      },
+    });
+
+  }
 }

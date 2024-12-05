@@ -88,6 +88,7 @@ import zipfile
 import tempfile
 from rest_framework import status
 from django.core.files import File
+from django.http import HttpResponse
 
 
 class QuestionImportAPIView(APIView):
@@ -132,7 +133,7 @@ class QuestionImportAPIView(APIView):
                 })
 
         return input_output_pairs
-
+      
     def post(self, request, *args, **kwargs):
         """
         Importa questões no formato BOCA, organizadas em pastas com arquivos de entrada/saída.
@@ -169,9 +170,6 @@ class QuestionImportAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Aqui, você pode iterar sobre os arquivos extraídos
-            extracted_files = os.listdir(tmpdirname)
-            
             # Cria uma nova seção para armazenar as questões importadas
             new_section, created = Section.objects.get_or_create(course_id=course_id, name=section_name)
             
@@ -183,23 +181,21 @@ class QuestionImportAPIView(APIView):
                 name=file_name_without_extension,
             )
 
-            # Par de arquivos input/output usando a função auxiliar
-            input_output_pairs = self.pair_input_output_files(tmpdirname, visible=False)
-            print("Pares de arquivos: ", input_output_pairs)
+            # Par de arquivos input/output usando a função auxiliar para arquivos invisíveis
+            input_output_pairs_invisible = self.pair_input_output_files(tmpdirname, visible=False)
+            print("Pares de arquivos (invisíveis): ", input_output_pairs_invisible)
 
-            # Cria objetos InputOutput para cada par de arquivos
-            for pair in input_output_pairs:
-                input_output = InputOutput.objects.create(
+            # Cria objetos InputOutput para cada par de arquivos invisíveis
+            for pair in input_output_pairs_invisible:
+                InputOutput.objects.create(
                     question=new_question,
                     visible=pair['visible'],
                     input=pair['input'],
                     output=pair['output']
                 )
-                
-            
-            # Acessa o diretorio description e extrai o conteúdo do arquivo .zip dentro dessa pasta
+
+            # Acessa o diretório description e extrai o conteúdo do arquivo .zip dentro dessa pasta
             description_dir = os.path.join(tmpdirname, 'description')
-            # Verifica se o diretório existe
             if os.path.isdir(description_dir):
                 zip_file = None
                 other_files = []
@@ -212,7 +208,7 @@ class QuestionImportAPIView(APIView):
                         other_files.append(f)  # Adiciona outros arquivos à lista `other_files`
 
                 if zip_file:
-                    # Caminho completo do arquivo .zip
+                    # Caminho completo do arquivo .zip dentro de 'description'
                     inner_zip_path = os.path.join(description_dir, zip_file)
                     
                     # Cria um diretório temporário para extrair o conteúdo do .zip
@@ -221,26 +217,25 @@ class QuestionImportAPIView(APIView):
                         with zipfile.ZipFile(inner_zip_path, 'r') as inner_zip_ref:
                             inner_zip_ref.extractall(extracted_dir)
 
-                        # Par de arquivos input/output usando a função auxiliar
-                        input_output_pairs_visible = self.pair_input_output_files(tmpdirname, visible=True)
-                        print("Pares de arquivos: ", input_output_pairs_visible)
+                        # Par de arquivos input/output usando a função auxiliar para arquivos visíveis
+                        input_output_pairs_visible = self.pair_input_output_files(extracted_dir, visible=True)
+                        print("Pares de arquivos (visíveis): ", input_output_pairs_visible)
                         
-                        # Cria objetos InputOutput para cada par de arquivos
-                        for pair in input_output_pairs:
-                            input_output = InputOutput.objects.create(
+                        # Cria objetos InputOutput para cada par de arquivos visíveis
+                        for pair in input_output_pairs_visible:
+                            InputOutput.objects.create(
                                 question=new_question,
                                 visible=pair['visible'],
                                 input=pair['input'],
                                 output=pair['output']
                             )
-                        
-                        extracted_files = os.listdir(extracted_dir)
-                        # Filtra apenas os arquivos, ignorando diretórios
-                        files_only = [f for f in extracted_files if os.path.isfile(os.path.join(extracted_dir, f))]
 
-                        # Exibe os arquivos encontrados
-                        print("Arquivos extraídos:", files_only)
-                        
+                        # Exibe os arquivos extraídos no .zip de descrição (se necessário)
+                        extracted_files = os.listdir(extracted_dir)
+                        files_only = [f for f in extracted_files if os.path.isfile(os.path.join(extracted_dir, f))]
+                        print("Arquivos extraídos do inner zip:", files_only)
+
+                        # Para cada arquivo extraído, salva no banco de dados
                         for file in files_only:
                             file_path = os.path.join(extracted_dir, file)
                             with open(file_path, 'rb') as f:
@@ -251,23 +246,104 @@ class QuestionImportAPIView(APIView):
                                     question=new_question,  # Relaciona com a questão
                                     file_name=file,         # Nome do arquivo
                                     file=django_file        # Associa o arquivo ao campo `FileField`
-        )
-                        
-
-                        
-
+                                )
                 else:
                     print("Nenhum arquivo .zip encontrado no diretório 'description'.")
             else:
                 print("O diretório 'description' não foi encontrado.")
             
-            
-           
-            
             return Response({"message": "Questões importadas com sucesso."},
                 status=status.HTTP_201_CREATED)
 
-            
-            
-            
-    
+
+class QuestionExportAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def get(self, request, question_id):
+        """
+        Exporta uma questão do banco de dados, criando um arquivo zip com a estrutura solicitada.
+        O nome do arquivo zip será o nome da questão.
+        """
+        try:
+            # Obtém a questão com o ID fornecido
+            question = Question.objects.get(pk=question_id)
+            question_name = question.name  # Nome da questão
+
+            # Cria um diretório temporário para armazenar os arquivos
+            with tempfile.TemporaryDirectory() as tmpdirname:
+                # Criação da estrutura de diretórios 'input', 'output' e 'description'
+                input_dir = os.path.join(tmpdirname, 'input')
+                output_dir = os.path.join(tmpdirname, 'output')
+                description_dir = os.path.join(tmpdirname, 'description')
+
+                # Cria os diretórios 'input', 'output' e 'description'
+                os.makedirs(input_dir)
+                os.makedirs(output_dir)
+                os.makedirs(description_dir)
+
+                # Exporta os arquivos de entrada e saída (invisíveis)
+                input_output_pairs_invisible = InputOutput.objects.filter(question=question, visible=False)
+                for idx, pair in enumerate(input_output_pairs_invisible, start=1):
+                    # Arquivos 'test_[index]' dentro de 'input' e 'output'
+                    input_filename = f"test_{idx}.txt"
+                    with open(os.path.join(input_dir, input_filename), 'w') as input_file:
+                        input_file.write(pair.input)
+
+                    output_filename = f"test_{idx}.txt"
+                    with open(os.path.join(output_dir, output_filename), 'w') as output_file:
+                        output_file.write(pair.output)
+
+                # Cria o arquivo .zip dentro da pasta 'description' (para pares visíveis)
+                description_zip_path = os.path.join(description_dir, f"{question_name}.zip")
+                with zipfile.ZipFile(description_zip_path, 'w', zipfile.ZIP_DEFLATED) as description_zip:
+                    # Cria a estrutura interna de 'input' e 'output' para os pares visíveis
+                    description_input_dir = 'input'
+                    description_output_dir = 'output'
+
+                    # Exporta os arquivos de entrada e saída (visíveis)
+                    input_output_pairs_visible = InputOutput.objects.filter(question=question, visible=True)
+                    for idx, pair in enumerate(input_output_pairs_visible, start=1):
+                        # Arquivos 'test_[index]' dentro de 'input' e 'output' para visíveis
+                        input_filename = f"test_{idx}.txt"
+                        description_zip.writestr(os.path.join(description_input_dir, input_filename), pair.input)  # ALTERADO
+
+                        output_filename = f"test_{idx}.txt"
+                        description_zip.writestr(os.path.join(description_output_dir, output_filename), pair.output)  # ALTERADO
+
+                    # Adiciona o arquivo PDF associado à questão (do modelo QuestionFile)
+                    question_file = QuestionFile.objects.filter(question=question, file_name=f"{question_name}.pdf").first()
+                    if question_file:
+                        pdf_file_path = question_file.file.path  # Caminho do arquivo PDF
+                        # Adiciona o arquivo PDF ao zip
+                        description_zip.write(pdf_file_path, os.path.basename(pdf_file_path))
+
+                # Cria o arquivo zip principal com a estrutura 'input', 'output' e 'description'
+                final_zip_file_path = os.path.join(tmpdirname, f"{question_name}.zip")
+                with zipfile.ZipFile(final_zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    # Adiciona as pastas 'input', 'output' e 'description' com seus arquivos
+                    for dirpath, dirnames, filenames in os.walk(tmpdirname):
+                        if dirpath == tmpdirname:
+                          continue
+
+                        for filename in filenames:
+                            file_path = os.path.join(dirpath, filename)
+                            
+                            # Evita adicionar pastas vazias (só adiciona se houver arquivos)
+                            if not filenames:
+                                continue  # Pula diretórios vazios
+
+                            # Calcula o caminho relativo dentro do zip
+                            arcname = os.path.relpath(file_path, tmpdirname)  # Caminho relativo correto
+
+                            # Adiciona o arquivo ao .zip
+                            zipf.write(file_path, arcname)
+
+                # Envia o arquivo zip gerado como resposta para download
+                with open(final_zip_file_path, 'rb') as zip_file:
+                    response = HttpResponse(zip_file.read(), content_type='application/zip')
+                    response['Content-Disposition'] = f'attachment; filename={question_name}.zip'
+                    return response
+
+        except Question.DoesNotExist:
+            return Response({"error": "Questão não encontrada."}, status=404)

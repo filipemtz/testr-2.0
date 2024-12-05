@@ -154,6 +154,15 @@
           >
             <i class="fa-solid fa-trash fa-sm"></i>
           </button>
+
+          <button
+            *ngIf="isProfessor"
+            type="button"
+            class="btn btn-sm rounded-circle text-primary ms-1"
+            (click)="downloadQuestion(question)"
+          >
+            <i class="fa-solid fa-download fa-sm"></i>
+          </button>
         </div>
       </li>
     </ol>
