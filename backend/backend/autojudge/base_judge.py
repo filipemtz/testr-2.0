@@ -68,7 +68,8 @@ class BaseJudge(ABC):
                 #d = d.replace("\\", "/")
                 #run_cmd = f"docker run --memory={self.question.memory_limit}m --cpus={self.question.cpu_limit} -i --rm -v {d}:/{self.test_uuid} -w /{self.test_uuid} testr_docker_image timeout -s SIGKILL {self.question.time_limit_seconds}s {run_cmd}"
             else:
-                runner = UnsafeRunner(run_cmd, running_dir=self.test_dir)
+                runner = UnsafeRunner(
+                    run_cmd, running_dir=self.test_dir, timeout_seconds=self.question.time_limit_seconds)
 
             self._run_input_output_tests(runner)
 
