@@ -4,9 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     env_file: 
-      - .env
-    volumes:
-      - ./backend:/app
+      - backend/.env
     expose:
       - 8000
     ports:
@@ -17,9 +15,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     env_file:
-      - .env
-    volumes:
-      - ./frontend:/app
+      - frontend/.env
     expose:
       - 8080
     ports:
@@ -30,13 +26,11 @@ services:
   judge:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.judge
     env_file: 
-      - .env
-    volumes:
-      - ./backend:/app
-    command: ["python", "manage.py", "judge", "--verbose"]
+      - backend/.env
     depends_on:
       - backend
+
 
   

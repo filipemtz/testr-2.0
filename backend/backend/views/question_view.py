@@ -12,6 +12,12 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from accounts.permissions import IsTeacher, ReadOnly
+import os
+import zipfile
+import tempfile
+from rest_framework import status
+from django.core.files import File
+from django.http import HttpResponse
 
 class QuestionViewSet(viewsets.ModelViewSet):
     """
@@ -83,12 +89,7 @@ class QuestionReportAPIView(APIView):
         return Response(data)
     
   
-import os
-import zipfile
-import tempfile
-from rest_framework import status
-from django.core.files import File
-from django.http import HttpResponse
+
 
 
 class QuestionImportAPIView(APIView):
