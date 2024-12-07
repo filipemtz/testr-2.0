@@ -2,13 +2,13 @@ FROM node:18.19 as build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
+
+COPY . .
 
 RUN npm install
 
 RUN npm install -g @angular/cli
-
-COPY . .
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

@@ -1,0 +1,53 @@
+<div class="d-flex flex-wrap mb-3">
+  <label class="form-label fw-semibold me-2">Nome da Nova Seção:</label>
+  <input
+    #sectionInput
+    class="form-control  w-100 me-2 mb-3"
+    [(ngModel)]="section_name"
+  />
+
+  <label class="form-label fw-semibold me-2">Selecione as questões:</label>
+  <input
+    type="file"
+    class="form-control me-2 mb-3"
+    style="max-width: 700px"
+    multiple
+    (change)="selectFiles($event)"
+  />
+  <button
+    class="btn btn-success my-1"
+    [disabled]="!selectedFiles"
+    (click)="uploadFiles()"
+  >
+    Upload
+  </button>
+</div>
+
+<div *ngIf="progressInfos.length">
+  <button
+  type="button"
+  class="btn-close"
+  aria-label="Close"
+  (click)="clearProgressInfos()"
+></button>
+  <div *ngFor="let progressInfo of progressInfos" class="mb-2" >
+    <span>{{ progressInfo.fileName }}</span>
+    <span class="me-2">{{ progressInfo.value }}%</span>
+    <ngb-progressbar class="mb-3" [showValue]="true" type="info" [value]="progressInfo.value" [max]="100" />
+  </div>
+</div>
+
+<div *ngIf="message.length" class="alert alert-secondary my-3" role="alert">
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="clearMessages()"
+  ></button>
+  <ul *ngFor="let msg of message; let i = index">
+    <li>{{ msg }}</li>
+  </ul>
+</div>
+
+
+

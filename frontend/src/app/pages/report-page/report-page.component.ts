@@ -25,7 +25,7 @@ export class ReportPageComponent {
   enrolledStudents: any[] = [];
   report: any;
   teachers: any;
-  
+
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
@@ -145,5 +145,14 @@ export class ReportPageComponent {
       effect: 'slide',
       type: 'filled',
     });
+  }
+
+  onQuestionsFolderSelected(event: Event) {
+
+
+  }
+
+  uploadQuestionsFolder(){
+
   }
 }

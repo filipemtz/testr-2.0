@@ -89,3 +89,20 @@
     </tbody>
   </table>
 </div>
+
+<h2 class="mt-4 mb-2">Importar Questões</h2>
+
+<div class="d-flex flex-wrap mb-2">
+  <input
+    type="file"
+    class="form-control me-2 my-1"
+    webkitdirectory
+    directory
+    style="max-width: 700px"
+    (change)="onQuestionsFolderSelected($event)"
+    id="questionsFolder"
+  />
+  <button class="btn btn-outline-primary my-1" (click)="uploadQuestionsFolder()">
+    Enviar
+  </button>
+</div>
