@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .docker_runner import DockerRunner, UnsafeRunner
 from .base_judge import BaseJudge
+from decouple import config, Csv
 
 
 class CppJudge(BaseJudge):
@@ -81,7 +82,7 @@ class CppJudge(BaseJudge):
         compilation_cmd = self._get_compilation_command()
 
         # make with docker and check for compilation errors
-        if self.config['judge']['use_docker']:
+        if config('USE_DOCKER', default=True, cast=bool):
             runner = DockerRunner(
                 compilation_cmd,
                 timeout_seconds=120,
@@ -132,10 +133,10 @@ class CppJudge(BaseJudge):
                 # but none of them is in the project root.
                 pass
 
-        cc = self.config['judge']['cpp']['cc']
-        cflags = self.config['judge']['cpp']['cflags']
-        iflags = self.config['judge']['cpp']['iflags']
-        lflags = self.config['judge']['cpp']['lflags']
+        cc = config('CPP_CC', default='g++')
+        cflags = config('CPP_CFLAGS', default='', cast=Csv())
+        iflags = config('CPP_IFLAGS', default='', cast=Csv())
+        lflags = config('CPP_LFLAGS', default='', cast=Csv())
 
         src = map(
             lambda f: self._clean_file_names(f, self.test_dir),
