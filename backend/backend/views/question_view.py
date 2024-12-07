@@ -293,6 +293,13 @@ class QuestionExportAPIView(APIView):
                     output_filename = f"test_{idx}.txt"
                     with open(os.path.join(output_dir, output_filename), 'w') as output_file:
                         output_file.write(pair.output)
+                        
+                # Cria o arquivo problem.info dentro da pasta 'description'
+                problem_info_path = os.path.join(description_dir, 'problem.info')
+                with open(problem_info_path, 'w') as problem_info_file:
+                    problem_info_file.write(f"basename={question_name}\n")
+                    problem_info_file.write(f"fullname={question_name}\n")
+                    problem_info_file.write(f"descfile={question_name}.zip\n")
 
                 # Cria o arquivo .zip dentro da pasta 'description' (para pares visíveis)
                 description_zip_path = os.path.join(description_dir, f"{question_name}.zip")
