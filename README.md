@@ -58,7 +58,7 @@ After running the backend service, the django admin interface is available at ``
 
 If you prefer to use the Docker images from the repository instead of running `docker-compose up --build`, follow the instructions below:
 
-### 1. Create Docker Images (optional)
+### 1. Create Docker Images 
 
 To build the Docker images, use the `build_and_save_images.sh` script. This script builds the backend, frontend, and judge images and saves them as `.tar` files. Run the script with the following command:
 
