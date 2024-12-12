@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     env_file: 
       - backend/.env
+    volumes:
+      - ./backend:/app
     expose:
       - 8000
     ports:
@@ -29,6 +31,8 @@ services:
       dockerfile: Dockerfile.judge
     env_file: 
       - backend/.env
+    volumes:
+      - ./backend:/app
     depends_on:
       - backend
 

@@ -15,3 +15,5 @@ EXPOSE 8000
 
 # Run the application
 CMD ["sh", "-c", "python manage.py setup && python manage.py runserver 0.0.0.0:8000"]
+
+

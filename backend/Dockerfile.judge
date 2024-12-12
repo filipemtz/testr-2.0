@@ -1,22 +1,22 @@
-# Use uma imagem base com ferramentas de desenvolvimento para C
 FROM python:3.11-slim
 
-# Instale pacotes de sistema necessários para C
+# Set environment variables
+WORKDIR /app
+
+COPY requirements.txt ./
+
+# Install dependencies
+RUN python -m pip install --no-cache-dir -r requirements.txt
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
     make \
     && apt-get clean
 
-# Configure o diretório de trabalho
-WORKDIR /app
-
-# Copie os arquivos do backend para o contêiner
 COPY . .
 
-# Instale as dependências do Python
-RUN python -m pip install --no-cache-dir -r requirements.txt
-
-
+# Expose the port
+EXPOSE 8000
 # Comando para executar o judge
-CMD ["python", "manage.py", "judge", "--verbose"]
+CMD ["sh", "-c", "python manage.py judge --verbose"]
