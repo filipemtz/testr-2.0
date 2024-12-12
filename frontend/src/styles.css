@@ -96,3 +96,7 @@
   border-width: 1px;
   border-color: black;
 }
+
+.page-section {
+  padding-bottom: 40px;
+}

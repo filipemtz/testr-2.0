@@ -199,6 +199,19 @@ export class IndexPageComponent implements OnInit {
     });
   }
 
+  changeVisibilityCourse(course: Course): void {
+    course.visible = !course.visible;
+    this.courseService.updateCourse(course.url, course).subscribe({
+      next: (response) => {
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error(err);
+        this.pushNotify('Erro!', 'Falha ao mudar visibilidade do curso', 'error');
+      },
+    });
+  }
+
   close() {
     this.myNotify.close()
   }

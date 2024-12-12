@@ -1,3 +1,8 @@
+
+.card {
+  background-color: aquamarine;
+}
+
 .card-title {
   cursor: pointer;
 }
@@ -16,3 +21,6 @@
   background-color: var(--main-bg-color);
 }
 
+.course-list {
+  padding-top: 40px;
+}

@@ -4,105 +4,104 @@
   {{ course.name }}
 </div>
 
-<a
-  class="icon-link icon-link-hover mb-2 justify-content-between"
-  [routerLink]="['/course', course.id]"
->
+<a class="icon-link icon-link-hover mb-2 justify-content-between" [routerLink]="['/course', course.id]">
   <i class="bi fa-solid fa-arrow-left"></i>
   Voltar
 </a>
 
-<h2 class="mt-4 mb-2">Professores</h2>
+<div class="page-section">
+  <h2 class="mt-4 mb-2">Adicionar Professores</h2>
 
-<div class="mb-3 input-group">
-  <input type="text" style="max-width: 40%;" placeholder="Digite o nome do usuário do professor" class="form-control" #username>
-  <button type="button" class="btn btn-primary" (click)="addTeacher(username.value)">Enviar</button>
+  <div class="mb-3 input-group">
+    <input type="text" style="max-width: 40%;" placeholder="Digite o nome do usuário do professor" class="form-control"
+      #username>
+    <button type="button" class="btn btn-primary" (click)="addTeacher(username.value)">Enviar</button>
+  </div>
+
+  <div class="d-flex">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <!-- <th>Nome</th> -->
+          <th>Usuário</th>
+          <th>Email</th>
+          <th>Remover?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of teachers; let i = index">
+          <td>{{ i + 1 }}</td>
+          <!-- <td> {{ row.student.first_name }} </td> -->
+          <td>{{ row.teacher.username }}</td>
+          <td>{{ row.teacher.email }}</td>
+          <td><button class="fas btn fa-trash text-danger" (click)="removeTeacher(row.teacher.id)"></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class="d-flex">
-  <table class="table table-hover align-middle">
-    <thead>
-      <tr>
-        <th>#</th>
-        <!-- <th>Nome</th> -->
-        <th>Usuário</th>
-        <th>Email</th>
-        <th>Remover?</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of teachers; let i = index">
-        <th>{{ i + 1 }}</th>
-        <!-- <th> {{ row.student.first_name }} </th> -->
-        <th>{{ row.teacher.username }}</th>
-        <th>{{ row.teacher.email }}</th>
-        <th><button class="fas btn fa-trash text-danger" (click)="removeTeacher(row.teacher.id)"></button></th>
-      </tr>
-    </tbody>
-  </table>
+<div class="page-section">
+  <h2 class="mt-4 mb-2">Adicionar Alunos</h2>
+
+  <div class="mb-3 input-group">
+    <input type="text" style="max-width: 40%;" placeholder="Digite o nome do usuário do aluno" class="form-control"
+      #studentusername>
+    <button type="button" class="btn btn-primary" (click)="addStudent(studentusername.value)">Enviar</button>
+  </div>
+
+  <small class="form-text text-muted">
+    Envie um arquivo .CSV contendo o cabeçalho e seguindo o formato "username;password;email;first_name;last_name".
+    <br>
+    Os campos devem ser não nulos e o campos de e-mail deve conter um formato válido de e-mail.
+  </small>
+  <div class="d-flex flex-wrap mb-2">
+    <input type="file" class="form-control me-2 my-1" accept=".csv" style="max-width: 700px"
+      (change)="onFileSelected($event)" id="csv" />
+    <button class="btn btn-outline-primary my-1" (click)="uploadCSV()">
+      Enviar
+    </button>
+  </div>
+
+  <div class="d-flex">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <!-- <th>Nome</th> -->
+          <th>Usuário</th>
+          <th>Nome</th>
+          <th class='text-center'>Acertos</th>
+          <th class='text-center'>Tentativas</th>
+          <th class='text-center'>Não tentadas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of report; let i = index">
+          <td>{{ i + 1 }}</td>
+          <!-- <th> {{ row.student.first_name }} </th> -->
+          <td>{{ row.student.username }}</td>
+          <td>{{ row.student.first_name }} {{ row.student.last_name }}</td>
+          <td class='text-center text-success'>{{ row.solved }}</td>
+          <td class='text-center text-danger'>{{ row.tried }}</td>
+          <td class='text-center'>{{ row.not_tried }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<h2 class="mt-4 mb-2">Alunos</h2>
-
-<div class="mb-3 input-group">
-  <input type="text" style="max-width: 40%;" placeholder="Digite o nome do usuário do aluno" class="form-control" #studentusername>
-  <button type="button" class="btn btn-primary" (click)="addStudent(studentusername.value)">Enviar</button>
-</div>
-
-<div class="d-flex flex-wrap mb-2">
-  <input
-    type="file"
-    class="form-control me-2 my-1"
-    accept=".csv"
-    style="max-width: 700px"
-    (change)="onFileSelected($event)"
-    id="csv"
-  />
-  <button class="btn btn-outline-primary my-1" (click)="uploadCSV()">
-    Enviar
-  </button>
-</div>
-
-<div class="d-flex">
-  <table class="table table-hover align-middle">
-    <thead>
-      <tr>
-        <th>#</th>
-        <!-- <th>Nome</th> -->
-        <th>Usuário</th>
-        <th>Email</th>
-        <th>Acertos</th>
-        <th>Tentativas</th>
-        <th>Não tentadas</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of report; let i = index">
-        <th>{{ i + 1 }}</th>
-        <!-- <th> {{ row.student.first_name }} </th> -->
-        <th>{{ row.student.username }}</th>
-        <th>{{ row.student.email }}</th>
-        <th>{{ row.solved }}</th>
-        <th>{{ row.tried }}</th>
-        <th>{{ row.not_tried }}</th>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<h2 class="mt-4 mb-2">Importar Questões</h2>
-
-<div class="d-flex flex-wrap mb-2">
-  <input
-    type="file"
-    class="form-control me-2 my-1"
-    webkitdirectory
-    directory
-    style="max-width: 700px"
-    (change)="onQuestionsFolderSelected($event)"
-    id="questionsFolder"
-  />
-  <button class="btn btn-outline-primary my-1" (click)="uploadQuestionsFolder()">
-    Enviar
-  </button>
+<div class="page-section">
+  <h2 class="mt-4 mb-2">Importar Questões</h2>
+  <small class="form-text text-muted">
+    Envie um arquivo .zip contendo questões no formato usado pelo BOCA.
+  </small>
+  <div class="d-flex flex-wrap mb-2">
+    <input type="file" class="form-control me-2 my-1" webkitdirectory directory style="max-width: 700px"
+      (change)="onQuestionsFolderSelected($event)" id="questionsFolder" />
+    <button class="btn btn-outline-primary my-1" (click)="uploadQuestionsFolder()">
+      Enviar
+    </button>
+  </div>
 </div>
