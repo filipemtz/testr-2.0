@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+# Set environment variables
+WORKDIR /app
+
+COPY requirements.txt ./
+
+# Install dependencies
+RUN python -m pip install --no-cache-dir -r requirements.txt
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    make \
+    && apt-get clean
+
+COPY . .
+
+# Expose the port
+EXPOSE 8000
+

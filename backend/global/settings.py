@@ -1,10 +1,12 @@
-from pathlib import Path
+
 import os
+from pathlib import Path
+
 from decouple import config, Csv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -71,17 +73,20 @@ DB_BACKENDS = {
     "postgresql": "django.db.backends.postgresql",
 }
 
-if config('DB_TYPE', default='sqlite') not in DB_BACKENDS:
-      raise ValueError(f"Invalid database type \"{config('DB_TYPE', default='sqlite')}\".")
+db_type = config('DB_TYPE', default='sqlite')
+print("db_type:", db_type)
+
+if db_type not in DB_BACKENDS:
+    raise ValueError(f"Invalid database type \"{db_type}\".")
 
 DATABASES = {
     'default': {
         'ENGINE': DB_BACKENDS[config('DB_TYPE', default='sqlite')],
         'NAME': config('DB_NAME', default='db.sqlite3'),
-        'USER': config('DB_USER', default=''), 
-        'PASSWORD': config('DB_PASSWORD', default=''),  
-        'HOST': config('DB_HOST', default=''), 
-        'PORT': config('DB_PORT', default=''), 
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default=''),
+        'PORT': config('DB_PORT', default=''),
     }
 }
 
@@ -139,8 +144,8 @@ CORS_ALLOW_CREDENTIALS = True
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(), default='localhost')
 
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:8080')
-    
-    
+
+
 # arquivos de midea/upload
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

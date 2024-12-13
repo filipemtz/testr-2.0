@@ -1,42 +1,59 @@
+
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    env_file: 
-      - .env
+      dockerfile: Dockerfile.backend
+    env_file:
+      - backend/.env
     volumes:
       - ./backend:/app
     expose:
       - 8000
     ports:
       - "8000:8000"
-    
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+    command: python manage.py runserver 0.0.0.0:8000
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     env_file:
-      - .env
-    volumes:
-      - ./frontend:/app
+      - frontend/.env
     expose:
       - 8080
     ports:
       - "8080:8080"
     depends_on:
       - backend
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+    command: ng serve --configuration=production --host 0.0.0.0 --port 8080
 
   judge:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    env_file: 
-      - .env
+      dockerfile: Dockerfile.judge
+    env_file:
+      - backend/.env
     volumes:
       - ./backend:/app
-    command: ["python", "manage.py", "judge", "--verbose"]
     depends_on:
       - backend
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+    command: python manage.py judge --verbose
 
-  
+
+

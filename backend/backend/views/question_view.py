@@ -12,6 +12,12 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from accounts.permissions import IsTeacher, ReadOnly
+import os
+import zipfile
+import tempfile
+from rest_framework import status
+from django.core.files import File
+from django.http import HttpResponse
 
 class QuestionViewSet(viewsets.ModelViewSet):
     """
@@ -83,12 +89,7 @@ class QuestionReportAPIView(APIView):
         return Response(data)
     
   
-import os
-import zipfile
-import tempfile
-from rest_framework import status
-from django.core.files import File
-from django.http import HttpResponse
+
 
 
 class QuestionImportAPIView(APIView):
@@ -305,18 +306,19 @@ class QuestionExportAPIView(APIView):
                 description_zip_path = os.path.join(description_dir, f"{question_name}.zip")
                 with zipfile.ZipFile(description_zip_path, 'w', zipfile.ZIP_DEFLATED) as description_zip:
                     # Cria a estrutura interna de 'input' e 'output' para os pares visíveis
-                    description_input_dir = 'input'
-                    description_output_dir = 'output'
+                    description_zip.writestr('input/', '')
+                    description_zip.writestr('output/', '')
+    
 
                     # Exporta os arquivos de entrada e saída (visíveis)
                     input_output_pairs_visible = InputOutput.objects.filter(question=question, visible=True)
                     for idx, pair in enumerate(input_output_pairs_visible, start=1):
                         # Arquivos 'test_[index]' dentro de 'input' e 'output' para visíveis
                         input_filename = f"test_{idx}.txt"
-                        description_zip.writestr(os.path.join(description_input_dir, input_filename), pair.input)  # ALTERADO
+                        description_zip.writestr(os.path.join('input', input_filename), pair.input)  # ALTERADO
 
                         output_filename = f"test_{idx}.txt"
-                        description_zip.writestr(os.path.join(description_output_dir, output_filename), pair.output)  # ALTERADO
+                        description_zip.writestr(os.path.join('output', output_filename), pair.output)  # ALTERADO
 
                     # Adiciona o arquivo PDF associado à questão (do modelo QuestionFile)
                     question_file = QuestionFile.objects.filter(question=question, file_name=f"{question_name}.pdf").first()
@@ -328,6 +330,11 @@ class QuestionExportAPIView(APIView):
                 # Cria o arquivo zip principal com a estrutura 'input', 'output' e 'description'
                 final_zip_file_path = os.path.join(tmpdirname, f"{question_name}.zip")
                 with zipfile.ZipFile(final_zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    # Garante que as pastas 'input', 'output' e 'description' sejam incluídas mesmo se vazias
+                    for directory in [input_dir, output_dir, description_dir]:
+                        rel_dir = os.path.relpath(directory, tmpdirname) + '/'
+                        zipf.writestr(rel_dir, '')
+                        
                     # Adiciona as pastas 'input', 'output' e 'description' com seus arquivos
                     for dirpath, dirnames, filenames in os.walk(tmpdirname):
                         if dirpath == tmpdirname:
@@ -335,15 +342,7 @@ class QuestionExportAPIView(APIView):
 
                         for filename in filenames:
                             file_path = os.path.join(dirpath, filename)
-                            
-                            # Evita adicionar pastas vazias (só adiciona se houver arquivos)
-                            if not filenames:
-                                continue  # Pula diretórios vazios
-
-                            # Calcula o caminho relativo dentro do zip
-                            arcname = os.path.relpath(file_path, tmpdirname)  # Caminho relativo correto
-
-                            # Adiciona o arquivo ao .zip
+                            arcname = os.path.relpath(file_path, tmpdirname)
                             zipf.write(file_path, arcname)
 
                 # Envia o arquivo zip gerado como resposta para download
