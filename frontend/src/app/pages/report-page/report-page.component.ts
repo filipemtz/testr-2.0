@@ -147,12 +147,5 @@ export class ReportPageComponent {
     });
   }
 
-  onQuestionsFolderSelected(event: Event) {
 
-
-  }
-
-  uploadQuestionsFolder(){
-
-  }
 }
