@@ -122,7 +122,6 @@ export class QuestionDetailPageComponent implements OnInit {
 
       this.submissionService.addSubmission(questionId, this.selectedFile, fileName).subscribe({
         next: (response) => {
-          console.log('File uploaded successfully', response);
           this.selectedFile = null;
           this.getSubmission(questionId);
         },
@@ -222,10 +221,10 @@ export class QuestionDetailPageComponent implements OnInit {
   // A cada 30 segundos, verifica o status da submissão
   startSubmissionStatusCheck(): void {
     this.intervalId = setInterval(() => {
-      if (this.submission) {
-        this.getSubmission(this.submission.id);
+      if (this.question) {
+        this.getSubmission(this.question.id);
       }
-    }, 30000);
+    }, 1000);
   }
 
   ngOnDestroy(): void {

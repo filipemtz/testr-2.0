@@ -77,12 +77,13 @@
     <h3 class="fw-bold mb-3">Enviar Resposta</h3>
     <div class="d-flex flex-wrap mb-3">
       <input
+        #fileInput
         class="form-control me-2 my-1"
         type="file"
         (change)="onFileSelected($event)"
         style="max-width: 700px"
       />
-      <button class="btn btn-success my-1" (click)="onSubmitFile()">
+      <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
         Upload
       </button>
     </div>
@@ -164,12 +165,13 @@
     <h3 class="fw-bold mb-3">Enviar Resposta</h3>
     <div class="d-flex flex-wrap mb-3">
       <input
+        #fileInput
         class="form-control me-2 my-1"
         type="file"
         (change)="onFileSelected($event)"
         style="max-width: 700px"
       />
-      <button class="btn btn-success my-1" (click)="onSubmitFile()">
+      <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
         Upload
       </button>
     </div>
