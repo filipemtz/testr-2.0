@@ -74,7 +74,6 @@ DB_BACKENDS = {
 }
 
 db_type = config('DB_TYPE', default='sqlite')
-print("db_type:", db_type)
 
 if db_type not in DB_BACKENDS:
     raise ValueError(f"Invalid database type \"{db_type}\".")

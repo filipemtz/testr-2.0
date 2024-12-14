@@ -129,10 +129,17 @@ After generating the images, you can load them into Docker using the script belo
 
 Make sure you have installed the dependencies locally.
 
-Run the frontend with:
+In Ubuntu, run the frontend with:
 
 ```bash
 NG_APP_API_URL=http://localhost:8000 ng serve --configuration=production --host 0.0.0.0 --port 8080
+```
+
+In Windows, run the frontend with:
+
+```bash
+set NG_APP_API_URL=http://localhost:8000
+ng serve --configuration=production --host 0.0.0.0 --port 8080
 ```
 
 Run the backend with:

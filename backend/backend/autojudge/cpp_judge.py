@@ -134,9 +134,9 @@ class CppJudge(BaseJudge):
                 pass
 
         cc = config('CPP_CC', default='g++')
-        cflags = config('CPP_CFLAGS', default='', cast=Csv())
-        iflags = config('CPP_IFLAGS', default='', cast=Csv())
-        lflags = config('CPP_LFLAGS', default='', cast=Csv())
+        cflags = config('CPP_CFLAGS', default='')
+        iflags = config('CPP_IFLAGS', default='')
+        lflags = config('CPP_LFLAGS', default='')
 
         src = map(
             lambda f: self._clean_file_names(f, self.test_dir),

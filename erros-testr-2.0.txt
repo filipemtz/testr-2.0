@@ -1,23 +1,6 @@
 
 ** URGENTE **
 
-- matricula com erro
-	- matricula dos alunos nao eh feito
-	- curso deixa de ser visivel para alunos 
-	- com localhost não funciona, com ip funciona. 
-
-Judge: TypeError: a bytes-like object is required, not 'FieldFile'
-
---DONE?-- // PROFESSOR APARECE NA TABELA DE ALUNOS QUE SUBMETERAM O ARQUIVO. ISSO É CORRETO?
-professor poder enviar resposta da questão.
-------
-
---DONE--
-no relatório do judge na questão, mostrar apenas o campo error_msgs ao invés do json inteiro. 
-------
-
-testar se o judge está funcionando quando a correção dá certo.
-
 permitir que professores rodem o judge novamente para todos os alunos em uma questão
 
 atualizar status e relatório do judge  quando novo arquivo for enviado como resposta
@@ -26,21 +9,9 @@ atualizar status e relatório do judge  quando novo arquivo for enviado como res
 
 ** MENOS URGENTE **
 
-remover espaço abaixo do login
-
-- visível e não visível sempre disponível mesmo quando não estiver em modo de edição. 
-
-permitir copiar curso 
-
-relatório por questão mostrando quais alunos fizeram uma tentativa, quais tentaram, mas falharam e quais acertaram 
-
-relatório por turma mostrando para cada aluno quantas questões foram resolvidas, quantas foram tentadas e quantas não foram tentadas. 
-
 Trazer para o testr novo o script para exportar tabelão de notas.
 
 no judge: criar mecanismo para atualizar status do judge sem precisar fazer f5 na página
-
-
 
 TODO: implementar a funcao resetSubmissionStatus definida em question-detail-page.component.ts e utilizada em question-detail-page.component.html. A função deve atualizar a submissão e definir o status como waiting evaluation.
 
@@ -55,11 +26,11 @@ TODO: Em question-detail-page.component.html adicionei uns <br> para tornar o vi
 TODO: Em question-detail-page.component.html, abaixo do relatório, criar uma seção para mostrar erros. A seção só deve ser exibida se a questão tiver sido avaliada e o status for fail. Ver formato do atributo report_json anexo.
 
 --DONE--
-TODO: No editor de questões, ao clicar em salvar, apenas mostrar mensagem de sucesso de continuar na página. 
+TODO: No editor de questões, ao clicar em salvar, apenas mostrar mensagem de sucesso de continuar na página.
 --------
 
 --DONE--
-TODO: Ao atualizar nome de seção e curso ou remover seção e curso, não é necessário exibir o balãozinho dizendo que deu certo. Só é necessário mostrar mensagem se der errado. 
+TODO: Ao atualizar nome de seção e curso ou remover seção e curso, não é necessário exibir o balãozinho dizendo que deu certo. Só é necessário mostrar mensagem se der errado.
 --------
 
 --DONE--
@@ -67,7 +38,7 @@ TODO: Como professor, ver só os meus cursos.
 --------
 
 --FALTA ADICIONAR QUANTAS QUESTOES FEITAS--
-TODO: Criar um link na página de ver detalhes do curso que leve para uma página de relatório. Esta página deve permitir ver a lista de alunos e o número de questões resolvidas por cada um. Nesta página, permitir cadastrar alunos usando arquivo csv. O professor deve enviar um csv com o seguinte formato: 
+TODO: Criar um link na página de ver detalhes do curso que leve para uma página de relatório. Esta página deve permitir ver a lista de alunos e o número de questões resolvidas por cada um. Nesta página, permitir cadastrar alunos usando arquivo csv. O professor deve enviar um csv com o seguinte formato:
 
 -----
 username;password;email;first name; last name
@@ -86,15 +57,15 @@ TODO: Na página de questão, ter um link para visualizar a lista de alunos (use
 BUG: Nem todos os models aparecem no admin (e.g., submission).
 --------
 
-BUG: Em algumas situações que não consegui identificar ainda, todos os inputs deixam de ser editáveis. Só voltam quando atualizo a página. 
+BUG: Em algumas situações que não consegui identificar ainda, todos os inputs deixam de ser editáveis. Só voltam quando atualizo a página.
 
 --DONE--
-BUG: entradas e saídas devem ser criadas em modo de edição. Ao sair do modo de edição, elas devem aparecer como texto simples e não como caixas de texto. É frustrante para o usuário tentar editar o texto (por estar em uma caixa de texto, parece editável) e não conseguir. 
+BUG: entradas e saídas devem ser criadas em modo de edição. Ao sair do modo de edição, elas devem aparecer como texto simples e não como caixas de texto. É frustrante para o usuário tentar editar o texto (por estar em uma caixa de texto, parece editável) e não conseguir.
 --------
 
 BUG: quando a página está em formato de tela de celular, as caixas de texto das entradas e saídas saem da tela. Definir o tamanho das caixas para que fiquem totalmente vizíveis neste formato. Quando não está em modo de edição, fica normal.
 
-BUG: se apagar o local storage e cookies, a pessoa não desloga e o botão de sair não funciona 
+BUG: se apagar o local storage e cookies, a pessoa não desloga e o botão de sair não funciona
 
 --DONE--
 BUG: o sistema só aceita posts se o front for executado com "ng serve --host 0.0.0.0 --port 8080". Se o host for removido do comando, o sistema dá erro de CSRF dizendo que localhost não é uma trusted origin.

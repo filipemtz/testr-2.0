@@ -22,7 +22,10 @@ class UnsafeRunner(RunnerInterface):
         if not self._running_dir:
             self._running_dir = os.getcwd()
 
-    def run(self, input_str: str = '', discard_outputs: List[str] = [], verbose: bool = False):
+    def run(self, input_str: str = '', discard_outputs: Optional[List[str]] = None, verbose: bool = False):
+        if discard_outputs is None:
+            discard_outputs = []
+
         start = time.time()
         result = None
         time_limit_exceeded = False
@@ -42,7 +45,8 @@ class UnsafeRunner(RunnerInterface):
                 shell=True,
                 text=True,
                 cwd=self._running_dir,
-                timeout=self._timeout_seconds
+                timeout=self._timeout_seconds,
+                check=False
             )
 
             # when running with docker, we use the timeout function that returns
