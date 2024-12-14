@@ -207,8 +207,8 @@ export class QuestionDetailPageComponent implements OnInit {
     });
   }
 
-  getSubmission(id: number): void {
-    this.submissionService.getSubmission(id).subscribe({
+  getSubmission(question_id: number): void {
+    this.submissionService.getSubmission(question_id).subscribe({
       next: (submission) => {
         this.submission = submission;
       },

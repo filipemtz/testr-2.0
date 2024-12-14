@@ -6,6 +6,8 @@
 
 @include mat.core();
 
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
 $frontend-primary: mat.define-palette(mat.$indigo-palette);
 $frontend-accent: mat.define-palette(mat.$pink-palette);
 $frontend-warn: mat.define-palette(mat.$red-palette);
