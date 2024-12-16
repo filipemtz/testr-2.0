@@ -66,7 +66,8 @@ class AddSubmissionAPIView(APIView):
 
         # Procurar por submissão existente
         submission = Submission.objects.filter(question=question, student=student).first()
-        submission.delete()
+        if submission:
+            submission.delete()
 
         # Criar nova submissão
         serializer = SubmissionSerializer(data={

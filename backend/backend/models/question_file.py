@@ -5,6 +5,8 @@ from .question import Question
 
 
 def upload_file(instance, filename):
+    if '/' in filename or '\\' in filename:
+        return filename
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")  
     return f'{instance.question.id}-{timestamp}-{filename}'
 
