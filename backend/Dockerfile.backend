@@ -9,8 +9,7 @@ COPY . .
 
 # Install dependencies and setup the database
 RUN python -m pip install --no-cache-dir -r requirements.txt && \
-    python manage.py setup && \
-    python teste.py
+    python manage.py setup
 
 # Expose the port
 EXPOSE 8000
