@@ -5,12 +5,12 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-# Install dependencies
-RUN python -m pip install --no-cache-dir -r requirements.txt
-
 COPY . .
 
-RUN python manage.py setup
+# Install dependencies and setup the database
+RUN python -m pip install --no-cache-dir -r requirements.txt && \
+    python manage.py setup && \
+    python teste.py
 
 # Expose the port
 EXPOSE 8000

@@ -101,30 +101,6 @@ docker compose up --scale judge=0
 
 After running the backend service, the django admin interface is available at ```http://localhost:8000/admin```. The admin interface for the REST services can be accessed in ```http://localhost:8000```.
 
-## Creating and Using Docker Images
-
-If you prefer to use the Docker images from the repository instead of running `docker-compose up --build`, follow the instructions below:
-
-### 1. Create Docker Images
-
-To build the Docker images, use the `build_and_save_images.sh` script. This script builds the backend, frontend, and judge images and saves them as `.tar` files. Run the script with the following command:
-
-```bash
-./build_and_save_images.sh
-```
-Make sure that the `backend.tar`, `frontend.tar`, and `judge.tar` files are generated in the `docker-images` directory.
-
-If you encounter a permission error while running the script, you may need to add execute permissions. To do this, run:
-
-```bash
-sudo chmod +x build_and_save_images.sh load_and_run_containers.sh
-```
-
-### 2. Using the Created Docker Images
-
-After generating the images, you can load them into Docker using the script below. This script loads the saved images and starts the services with `./load_and_run_containers.sh`.
-
-
 ## Running the System without Docker
 
 Make sure you have installed the dependencies locally.

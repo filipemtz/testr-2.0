@@ -4,9 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install -g @angular/cli
-
-RUN npm install
+RUN npm install -g @angular/cli && npm install
 
 EXPOSE 8080
 

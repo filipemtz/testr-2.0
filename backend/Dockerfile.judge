@@ -6,9 +6,8 @@ WORKDIR /app
 COPY requirements.txt ./
 
 # Install dependencies
-RUN python -m pip install --no-cache-dir -r requirements.txt
-
-RUN apt-get update && apt-get install -y \
+RUN python -m pip install --no-cache-dir -r requirements.txt && \
+    apt-get update && apt-get install -y \
     build-essential \
     gcc \
     make \
