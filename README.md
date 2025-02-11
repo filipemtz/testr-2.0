@@ -101,6 +101,26 @@ docker compose up --scale judge=0
 
 After running the backend service, the django admin interface is available at ```http://localhost:8000/admin```. The admin interface for the REST services can be accessed in ```http://localhost:8000```.
 
+## Creating and Using Docker Images
+
+To build the backend docker image, use:
+
+```bash
+docker build -t backend -f ./backend/Dockerfile ./backend
+```
+
+To build the frontend docker image, use:
+
+```bash
+docker build -t frontend -f ./frontend/Dockerfile ./frontend
+```
+
+After generating the images, you can start the system by running:
+
+```bash
+docker compose up
+```
+
 ## Running the System without Docker
 
 Make sure you have installed the dependencies locally.
@@ -129,4 +149,3 @@ Run the autojudge system with:
 ```bash
 python manage.py judge --verbose
 ```
-
