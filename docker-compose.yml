@@ -1,9 +1,7 @@
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.backend
+    image: backend:latest
     env_file:
       - backend/.env
     volumes:
@@ -17,12 +15,16 @@ services:
         - action: sync
           path: ./backend
           target: /app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py setup && python manage.py runserver 0.0.0.0:8000"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8000/"
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: frontend:latest
     env_file:
       - frontend/.env
     expose:
@@ -39,15 +41,15 @@ services:
     command: ng serve --configuration=production --host 0.0.0.0 --port 8080
 
   judge:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.judge
+    image: backend
     env_file:
       - backend/.env
     volumes:
       - ./backend:/app
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+        restart: true
     develop:
       watch:
         - action: sync
