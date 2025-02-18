@@ -16,12 +16,6 @@ services:
           path: ./backend
           target: /app
     command: bash -c "python manage.py setup && python manage.py runserver 0.0.0.0:8000"
-    healthcheck:
-      test: "curl --fail --silent http://localhost:8000/"
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
 
   frontend:
     image: frontend:latest
@@ -47,9 +41,7 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      backend:
-        condition: service_healthy
-        restart: true
+      - backend
     develop:
       watch:
         - action: sync

@@ -1,6 +1,7 @@
 
 import random
 from time import sleep
+from django.db.utils import OperationalError
 from django.core.management.base import BaseCommand
 
 from backend.models.submission import Submission, SubmissionStatus
@@ -34,6 +35,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("\nAutojudge running.\n")
+
+        # handle the case in which the judge starts before the backend finishes initializing the basic infrastructure
+        while True:
+            try:
+                if Submission.objects.exists():
+                    break
+            except OperationalError:
+                print("Waiting for the submissions table to be created...")
+                sleep(1)
 
         if options['rerun']:
             Submission.objects.update(
