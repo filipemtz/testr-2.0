@@ -137,14 +137,24 @@ class CourseRegisterStudentsAPIView(APIView):
         course = Course.objects.get(pk=course_id)
         
         if not course.teachers.filter(id=request.user.id).exists():
-            return Response({'error': 'You do not have permission to add students to this course.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'message': 'You do not have permission to add students to this course.'}, status=status.HTTP_403_FORBIDDEN)
         
         csv_file = request.FILES['file']
+        
+        required_columns = {'username', 'password', 'email', 'first_name', 'last_name'}
+        csv_columns = set(next(csv.reader([csv_file.read().decode('utf-8').splitlines()[0]], delimiter=';')))
+        
+        if not required_columns.issubset(csv_columns):
+            return Response({'message': 'O arquivo CSV está faltando colunas obrigatórias.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        csv_file.seek(0)  # Reset file pointer to the beginning
+        
         decoded_file = csv_file.read().decode('utf-8').splitlines()
         reader = csv.DictReader(decoded_file, delimiter=';')
 
-        responses = []
-
+        success = []
+        errors = []
+        print('eu')
         for row in reader:
             data = {
                 'username': row['username'],
@@ -156,20 +166,14 @@ class CourseRegisterStudentsAPIView(APIView):
                 'group': 'student'
             }
 
-            print(data)
+
             user = User.objects.filter(username=row['username']).first()
             if user:
                 if not course.students.filter(id=user.id).exists():
                     course.students.add(user)
-                    responses.append({
-                        'message': f"User {user.username} already exists and was added to the course.",
-                        'user': UserSerializer(user).data
-                    })
+                    success.append(f"Usuário {user.username} já existe e foi adicionado ao curso.")
                 else:
-                    responses.append({
-                        'message': f"User {user.username} already exists and is already in the course.",
-                        'user': UserSerializer(user).data
-                    })
+                    errors.append(f"Usuário {user.username} já está no curso.")
             else:
                 serializer = UserRegisterSerializer(data=data)
                 if serializer.is_valid():
@@ -181,22 +185,27 @@ class CourseRegisterStudentsAPIView(APIView):
                     user.last_name = row['last_name']
                     user.save()
 
-                    token, created = Token.objects.get_or_create(user=user)
+                    #token, created = Token.objects.get_or_create(user=user)
                     course.students.add(user)
-                    print(user)
-                    print(UserSerializer(user).data)
-                    print()
-                    responses.append({
-                        'token': token.key, 
-                        'user': UserSerializer(user).data
-                    })
+                    # responses.append({
+                    #    'token': token.key, 
+                    #    'user': UserSerializer(user).data
+                    # })
+                    success.append(f"Usuário {row['username']} criado e adicionado ao curso.")
                 else:
-                    responses.append({
-                        'error': serializer.errors,
-                        'data': data
-                    })
+                    error_messages = []
+                    for field, messages in serializer.errors.items():
+                        error_messages.append(f"{field}: {', '.join(messages)}")
+                
+                    errors.append(f"Usuário {row['username']} - " + "; ".join(error_messages))
+                    
+        response_data = {
+            "status": "success" if success else "error",
+            "message": f"{len(success)} usuários processados, {len(errors)} erros.",
+            "details": success + errors
+        }        
 
-        return Response(responses)
+        return Response(response_data, status=status.HTTP_201_CREATED if not errors else status.HTTP_400_BAD_REQUEST)
     
 class CourseTeachersAPIView(APIView):
     permission_classes = [IsTeacher]

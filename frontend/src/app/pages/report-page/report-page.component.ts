@@ -25,6 +25,7 @@ export class ReportPageComponent {
   enrolledStudents: any[] = [];
   report: any;
   teachers: any;
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -90,7 +91,7 @@ export class ReportPageComponent {
       },
       error: (error) => {
         this.pushNotify('Erro!', error.error.error, 'error');
-      }
+      },
     })
   }
 
@@ -100,11 +101,20 @@ export class ReportPageComponent {
       return;
     }
     this.courseService.addStudent(this.course.id, username).subscribe({
-      next: () =>{
+      next: (response) =>{
         this.loadReport();
+        let mensagem = "Aluno adicionado com sucesso!";
+        if (response?.message) {
+          mensagem = response.message;
+        }
+        this.pushNotify('Sucesso!', mensagem, 'success');
       },
       error: (error) => {
-        this.pushNotify('Erro!', error.error.error, 'error');
+        let mensagem = "Erro ao adicionar aluno!";
+        if (error.error?.error) {
+          mensagem = error.error.error;
+        }
+        this.pushNotify('Erro!', mensagem, 'error');
       }
     })
   }
@@ -117,16 +127,38 @@ export class ReportPageComponent {
 
     const formData = new FormData();
     formData.append('file', this.selectedFile, this.selectedFile.name);
-
+    this.loading = true;
     this.courseService.registerStudentsCSV(formData, this.course.id).subscribe({
-      next: response => {
+      next: (response: { message?: string, details?: string }) => {
         this.loadCourse();
         this.loadReport();
+
+        let mensagem = "Upload de arquivo realizado com sucesso!";
+        if (response?.message) {
+          mensagem = response.message;
+        }
+
+        this.pushNotify('Sucesso!', mensagem, 'success');
+        this.loading = false;
       },
       error: err => {
-        console.error('Upload failed:', err);
-        this.pushNotify('Erro!', "Upload de arquivo falhou", 'error');
-      }
+        let mensagem = "Upload de arquivo falhou!";
+        let detalhes = "";
+        if (err.error?.message) {
+          mensagem = err.error.message; // Exibe o resumo de erros do backend
+        }
+
+        if (Array.isArray(err.error?.details) && err.error.details.length > 0) {
+          detalhes = err.error.details.join('\n');
+        }
+
+        if (detalhes) {
+          this.pushNotify('Detalhes:', detalhes, 'error');
+        }
+
+        this.pushNotify('Erro!', mensagem, 'error');
+        this.loading = false;
+      },
     });
   }
 
@@ -144,6 +176,7 @@ export class ReportPageComponent {
       text: text,
       effect: 'slide',
       type: 'filled',
+      speed: 1500,
     });
   }
 
