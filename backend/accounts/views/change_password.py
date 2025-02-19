@@ -12,8 +12,7 @@ class ChagePasswordAPIView(APIView):
     def post(self, request):
         user = request.user
         data = request.data
-        print(user)
-        print(data)
+
         if user.check_password(data['currentPassword']):
             user.set_password(data['newPassword'])
             user.save()
