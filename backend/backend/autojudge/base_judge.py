@@ -37,7 +37,7 @@ class BaseJudge(ABC):
         self.question = submission.question
 
         # test is defined as failed if there is at least one error message
-        # in the end of the valuation.
+        # in the end of the evaluation.
         date_format = "%d/%m/%Y %H:%M:%S"
         dt = datetime.now().strftime(date_format)
         self.report = {"error_msgs": [],

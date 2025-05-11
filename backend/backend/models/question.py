@@ -6,6 +6,7 @@ from .section import Section
 class Language(models.TextChoices):
     CCPP = 'CC', _('C/C++')
     PYTHON = 'PT', _('Python')
+    JUPYTER = 'JP', _('Jupyter')
 
 class Question(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)

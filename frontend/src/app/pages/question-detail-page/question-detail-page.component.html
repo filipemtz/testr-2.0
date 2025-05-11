@@ -30,7 +30,7 @@
 </div>
 
 <!--Arquivos-->
-<div style="margin-bottom: 50px;">
+<div style="margin-bottom: 50px;" *ngIf="isProfessor or question.language != 'JP'">
   <h3 class="fw-bold">Arquivos</h3>
   <div *ngIf="questionFiles.length; else noQuestionFile">
     <ul class="list-group list-group-flush">
@@ -46,7 +46,7 @@
 
 
 <!--Entradas e Saídas-->
-<div style="margin-bottom: 50px;">
+<div style="margin-bottom: 50px;" *ngIf="question.language != 'JP'">
   <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
   <div *ngIf="ios.length; else noIO">
     <div *ngFor="let io of ios; let i = index" class="row my-3">

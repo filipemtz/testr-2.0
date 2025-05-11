@@ -7,7 +7,7 @@ from .question import Question
 def upload_file(instance, filename):
     if '/' in filename or '\\' in filename:
         return filename
-    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")  
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     return f'{instance.question.id}-{timestamp}-{filename}'
 
 class QuestionFile(models.Model):
@@ -18,7 +18,7 @@ class QuestionFile(models.Model):
 
     class Meta:
         ordering = ['created_at']
-        
+
     def __str__(self):
         return f"{self.id} - Question {self.question.id} - {self.file_name}"
-    
+
