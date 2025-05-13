@@ -43,6 +43,7 @@ class PytestReportHook:
             tests = terminalreporter.stats[result_type]
 
             for test in tests:
+                print(test)
                 test_report = {
                     "file": test.fspath,
                     "name": test.head_line,
@@ -98,8 +99,14 @@ class JupyterJudge(ABC):
         self._prepare_directory_and_files_for_test(self.test_uuid, submission)
         self._save_question_files(self.question)
 
+        current_dir = os.getcwd()
+
+        # change dir to the one containing the ipynb file
+        os.chdir(self.test_dir)
+        
         # search for ipynb files and check if there is a single one
         paths = glob("**/*ipynb", recursive=True)
+        print("jupyter notebooks:", paths)
         if len(paths) == 0:
             self.report['error_msgs'].append('No .ipynb file found in the submission.')
         elif len(paths) > 1:
@@ -107,10 +114,6 @@ class JupyterJudge(ABC):
         else:
             ipynb_path = paths[0]
             ipynb_dir = os.path.dirname(ipynb_path)
-            current_dir = os.getcwd()
-
-            # change dir to the one containing the ipynb file
-            os.chdir(ipynb_dir)
 
             # Run pytest
             q = queue.Queue()
@@ -119,8 +122,6 @@ class JupyterJudge(ABC):
             results = q.get()
             thread.join()
 
-            print("OK!")
-
             # transformar o relatorio do pytest no formato esperado pelo restante do sistema
             for key in ['failed', 'error']:
                 for test_report in results[key]:
@@ -128,7 +129,7 @@ class JupyterJudge(ABC):
                     msg = test_report['message']
                     self.report['error_msgs'].append(f"<b>{name}</b>: {msg}")
 
-            os.chdir(current_dir)
+        os.chdir(current_dir)
 
         self._cleanup()
 
