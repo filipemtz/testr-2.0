@@ -1,4 +1,3 @@
-
 import os
 import uuid
 import json
@@ -12,20 +11,25 @@ from datetime import datetime
 from pathlib import Path
 import platform
 
+import django
 import pytest
+from _pytest.reports import CollectReport
 import threading
+from multiprocessing import Process, Queue
 import queue
 
 from .docker_runner import DockerRunner
 from .unsafe_runner import UnsafeRunner
+
 from .runner_interface import RunnerInterface
+
+django.setup() # for using multiprocessing
 from backend.models.input_output import InputOutput
 from backend.models.submission import Submission
 from backend.models.question import Question
 from backend.models.question_file import QuestionFile
 from backend.utils.io import unzip, safe_load_yaml
 from decouple import config
-
 
 
 class PytestReportHook:
@@ -43,27 +47,46 @@ class PytestReportHook:
             tests = terminalreporter.stats[result_type]
 
             for test in tests:
-                print(test)
-                test_report = {
-                    "file": test.fspath,
-                    "name": test.head_line,
-                    "start": test.start,
-                    "stop": test.stop,
-                    "outcome": test.outcome,
-                    "when": test.when,
-                    "message": ""
-                }
-
-                if not test.longrepr:
-                    test_report["message"] = "success"
+                if isinstance(test, pytest.CollectReport):
+                    test_report = {
+                        "file": test.fspath,
+                        "name": test.head_line,
+                        "start": 0,
+                        "stop": 0,
+                        "outcome": test.outcome,
+                        "when": test.when,
+                        "message": str(test.longrepr)
+                    }
                 else:
-                    last_exception = test.longrepr.chain[-1]
-                    test_report["message"] = last_exception[1].message
+                    test_report = {
+                        "file": test.fspath,
+                        "name": test.head_line,
+                        "start": test.start,
+                        "stop": test.stop,
+                        "outcome": test.outcome,
+                        "when": test.when,
+                        "message": ""
+                    }
+
+                    if not test.longrepr:
+                        test_report["message"] = "success"
+                    else:
+                        last_exception = test.longrepr.chain[-1]
+                        test_report["message"] = last_exception[1].message
 
                 self.report[result_type].append(test_report)
 
 
-def do_judging(q: queue.Queue):
+#####################################
+# do_judging with multithreading
+#####################################
+# def do_judging(q: queue.Queue):
+#     # Run pytest
+#     hook = PytestReportHook()
+#     pytest.main(["-qq", "--tb=no", "-s"], plugins=[hook])
+#     q.put(hook.report)
+
+def do_judging(q: Queue):
     # Run pytest
     hook = PytestReportHook()
     pytest.main(["-qq", "--tb=no", "-s"], plugins=[hook])
@@ -103,7 +126,7 @@ class JupyterJudge(ABC):
 
         # change dir to the one containing the ipynb file
         os.chdir(self.test_dir)
-        
+
         # search for ipynb files and check if there is a single one
         paths = glob("**/*ipynb", recursive=True)
         print("jupyter notebooks:", paths)
@@ -115,9 +138,18 @@ class JupyterJudge(ABC):
             ipynb_path = paths[0]
             ipynb_dir = os.path.dirname(ipynb_path)
 
-            # Run pytest
-            q = queue.Queue()
-            thread = threading.Thread(target=do_judging, args=(q, ))
+            #####################################
+            # Run pytest with multithreading
+            #####################################
+            # q = queue.Queue()
+            # thread = threading.Thread(target=do_judging, args=(q, ))
+            # thread.start()
+            # results = q.get()
+            # thread.join()
+
+
+            q = Queue()
+            thread = Process(target=do_judging, args=(q, ))
             thread.start()
             results = q.get()
             thread.join()
@@ -183,5 +215,6 @@ class JupyterJudge(ABC):
         # clean up resources used for running the tests, e.g., remove the test
         # directory.
         if not self._keep_files:
+            print("removing test dir", self.test_dir)
             shutil.rmtree(self.test_dir)
 
