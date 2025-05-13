@@ -86,6 +86,13 @@ class PytestReportHook:
 #     pytest.main(["-qq", "--tb=no", "-s"], plugins=[hook])
 #     q.put(hook.report)
 
+#####################################
+# do_judging with multiprocessing
+# IMPORTANT: IT HAS TO USE MULTIPROCESSING BECAUSE PYTEST LOADS THE
+# TEST FILE AS A MODULE INTO SYS.MODULES USING ITS NAME. IN MULTITHREADING,
+# IN THE SECOND CALL TO PYTEST USING THE SAME TEST, A NAME CONFLICT HAPPENS
+# BECAUSE THE MODULE IS ALREADY REGISTERED, BUT WITH A DIFFERENT __FILE__.
+#####################################
 def do_judging(q: Queue):
     # Run pytest
     hook = PytestReportHook()
