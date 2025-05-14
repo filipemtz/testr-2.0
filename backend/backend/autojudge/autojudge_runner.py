@@ -3,6 +3,7 @@ import json
 import traceback
 from datetime import datetime
 
+import psycopg2
 from .cpp_judge import CppJudge
 from .base_judge import BaseJudge
 from .python_judge import PythonJudge
@@ -55,7 +56,11 @@ class AutoJudgeRunner:
         else:
             submission.status = SubmissionStatus.FAIL
 
-        submission.save()
+        try:
+            submission.save()
+        except psycopg2.errors.UniqueViolation:
+            print("** WARNING **: Trying to create a submission when that already exists when updating in the autojudge. I'll pretent nothing happens and try to correct again, but it is important to check what is causing that!!")
+            return
 
         if verbose:
             print("--------------------------")
