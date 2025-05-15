@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from ..models.course import Course
 from ..models.question import Question
@@ -11,7 +12,7 @@ from ..models.question_file import QuestionFile
 from rest_framework.views import APIView
 
 from rest_framework.authentication import TokenAuthentication
-from accounts.permissions import IsTeacher, ReadOnly
+from accounts.permissions import IsTeacher, IsStudentSafeMethods
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
@@ -27,7 +28,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsTeacher | ReadOnly] 
+    permission_classes = [IsTeacher | IsStudentSafeMethods] 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     
@@ -59,16 +60,20 @@ class CourseRemoveTeacherAPIView(APIView):
         course = Course.objects.get(pk=course_id)
         teacher_id = request.data.get('teacher_id')
         
+        user = request.user
+        if not course.teachers.filter(id=user.id).exists():
+            return Response({'error': 'Você não tem permissão para remover professores deste curso.'}, status=status.HTTP_403_FORBIDDEN)
+        
         try:
             teacher = User.objects.get(id=teacher_id)
         except User.DoesNotExist:
-            return Response({'error': 'Professor não encontrado.'}, status=404)
+            return Response({'error': 'Professor não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
         if teacher in course.teachers.all():
             course.teachers.remove(teacher)
             return Response({'message': f'Professor {teacher.username} removido do curso com sucesso.'})
         else:
-            return Response({'error': 'Este professor não está associado a este curso.'}, status=400)
+            return Response({'error': 'Este professor não está associado a este curso.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CourseAddTeacherAPIView(APIView):
     permission_classes = [IsTeacher]
@@ -77,6 +82,10 @@ class CourseAddTeacherAPIView(APIView):
     def post(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
         username = request.data.get('teacher_username')
+        
+        user = request.user
+        if not course.teachers.filter(id=user.id).exists():
+            return Response({'error': 'Você não tem permissão para adicionar professores a este curso.'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             user = User.objects.get(username=username)
@@ -84,14 +93,14 @@ class CourseAddTeacherAPIView(APIView):
 
             if(group.name == "teacher"): 
                 if(course.teachers.filter(id=user.id).exists()):
-                    return Response({'error': 'Professor já está no curso.'}, status=404)
+                    return Response({'error': 'Professor já está no curso.'}, status=status.HTTP_404_NOT_FOUND)
                 else:
                     course.teachers.add(user)
                     return Response({'message': f'Professor {user.username} adicionado ao curso com sucesso.'})
             else:
-                return Response({'error': 'Alunos não podem ser professores.'}, status=404)
+                return Response({'error': 'Alunos não podem ser professores.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
-            return Response({'error': 'Usuário não encontrado.'}, status=404)
+            return Response({'error': 'Usuário não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
         
 class CourseAddStudentAPIView(APIView):
     permission_classes = [IsTeacher]
@@ -100,6 +109,10 @@ class CourseAddStudentAPIView(APIView):
     def post(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
         username = request.data.get('student_username')
+        
+        user = request.user
+        if not course.teachers.filter(id=user.id).exists():
+            return Response({'error': 'Você não tem permissão para adicionar alunos a este curso.'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             user = User.objects.get(username=username)
@@ -107,14 +120,14 @@ class CourseAddStudentAPIView(APIView):
 
             if(group.name == "student"): 
                 if(course.students.filter(id=user.id).exists()):
-                    return Response({'error': 'Aluno já está no curso.'}, status=404)
+                    return Response({'error': 'Aluno já está no curso.'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     course.students.add(user)
                     return Response({'message': f'Aluno {user.username} adicionado ao curso com sucesso.'})
             else:
-                return Response({'error': 'Professores não podem ser alunos.'}, status=404)
+                return Response({'error': 'Professores não podem ser alunos.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
-            return Response({'error': 'Usuário não encontrado.'}, status=404)
+            return Response({'error': 'Usuário não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
         
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]
@@ -123,12 +136,25 @@ class CourseRegisterStudentsAPIView(APIView):
     def post(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
         
+        if not course.teachers.filter(id=request.user.id).exists():
+            return Response({'message': 'You do not have permission to add students to this course.'}, status=status.HTTP_403_FORBIDDEN)
+        
         csv_file = request.FILES['file']
+        
+        required_columns = {'username', 'password', 'email', 'first_name', 'last_name'}
+        csv_columns = set(next(csv.reader([csv_file.read().decode('utf-8').splitlines()[0]], delimiter=';')))
+        
+        if not required_columns.issubset(csv_columns):
+            return Response({'message': 'O arquivo CSV está faltando colunas obrigatórias.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        csv_file.seek(0)  # Reset file pointer to the beginning
+        
         decoded_file = csv_file.read().decode('utf-8').splitlines()
         reader = csv.DictReader(decoded_file, delimiter=';')
 
-        responses = []
-
+        success = []
+        errors = []
+        print('eu')
         for row in reader:
             data = {
                 'username': row['username'],
@@ -140,20 +166,14 @@ class CourseRegisterStudentsAPIView(APIView):
                 'group': 'student'
             }
 
-            print(data)
+
             user = User.objects.filter(username=row['username']).first()
             if user:
                 if not course.students.filter(id=user.id).exists():
                     course.students.add(user)
-                    responses.append({
-                        'message': f"User {user.username} already exists and was added to the course.",
-                        'user': UserSerializer(user).data
-                    })
+                    success.append(f"Usuário {user.username} já existe e foi adicionado ao curso.")
                 else:
-                    responses.append({
-                        'message': f"User {user.username} already exists and is already in the course.",
-                        'user': UserSerializer(user).data
-                    })
+                    errors.append(f"Usuário {user.username} já está no curso.")
             else:
                 serializer = UserRegisterSerializer(data=data)
                 if serializer.is_valid():
@@ -165,28 +185,38 @@ class CourseRegisterStudentsAPIView(APIView):
                     user.last_name = row['last_name']
                     user.save()
 
-                    token, created = Token.objects.get_or_create(user=user)
+                    #token, created = Token.objects.get_or_create(user=user)
                     course.students.add(user)
-                    print(user)
-                    print(UserSerializer(user).data)
-                    print()
-                    responses.append({
-                        'token': token.key, 
-                        'user': UserSerializer(user).data
-                    })
+                    # responses.append({
+                    #    'token': token.key, 
+                    #    'user': UserSerializer(user).data
+                    # })
+                    success.append(f"Usuário {row['username']} criado e adicionado ao curso.")
                 else:
-                    responses.append({
-                        'error': serializer.errors,
-                        'data': data
-                    })
+                    error_messages = []
+                    for field, messages in serializer.errors.items():
+                        error_messages.append(f"{field}: {', '.join(messages)}")
+                
+                    errors.append(f"Usuário {row['username']} - " + "; ".join(error_messages))
+                    
+        response_data = {
+            "status": "success" if success else "error",
+            "message": f"{len(success)} usuários processados, {len(errors)} erros.",
+            "details": success + errors
+        }        
 
-        return Response(responses)
+        return Response(response_data, status=status.HTTP_201_CREATED if not errors else status.HTTP_400_BAD_REQUEST)
     
 class CourseTeachersAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     def get(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
+        
+        if not course.teachers.filter(id=request.user.id).exists():
+            return Response({'error': 'You do not have permission to view teachers of this course.'}, status=403)
+        
+        
         teachers = course.teachers.all()
 
         data = []
@@ -206,6 +236,12 @@ class CourseReportAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     def get(self, request, course_id=None):
         course = Course.objects.get(pk=course_id)
+        
+        
+        if not course.teachers.filter(id=request.user.id).exists():
+            return Response({'error': 'You do not have permission to view this report.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        
         students = course.students.all()
 
         data = []
@@ -243,7 +279,7 @@ class CourseCreateCopyAPIView(APIView):
         course = Course.objects.get(pk=course_id)
 
         if not course.teachers.filter(id=request.user.id).exists():
-            return Response({'error': 'You do not have permission to copy this course.'}, status=403)
+            return Response({'error': 'You do not have permission to copy this course.'}, status=status.HTTP_403_FORBIDDEN)
 
         # Cria o novo curso
         new_course = Course.objects.create(
