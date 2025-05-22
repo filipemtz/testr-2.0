@@ -6,6 +6,8 @@ from time import sleep
 from django.db.utils import OperationalError
 from django.core.management.base import BaseCommand
 
+from django.db import connection
+
 from backend.models.submission import Submission, SubmissionStatus
 from backend.autojudge.autojudge_runner import AutoJudgeRunner
 
@@ -52,6 +54,9 @@ class Command(BaseCommand):
                 status=SubmissionStatus.WAITING_EVALUATION)
 
         while True:
+
+            # connection is being closed for some reason....
+            connection.ensure_connection()
 
             submissions = Submission.objects.filter(
                 status=SubmissionStatus.WAITING_EVALUATION)

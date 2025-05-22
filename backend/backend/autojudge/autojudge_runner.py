@@ -3,6 +3,7 @@ import json
 import traceback
 from datetime import datetime
 
+import django
 import psycopg2
 from .cpp_judge import CppJudge
 from .base_judge import BaseJudge
@@ -58,7 +59,7 @@ class AutoJudgeRunner:
 
         try:
             submission.save()
-        except psycopg2.errors.UniqueViolation:
+        except (psycopg2.errors.UniqueViolation, django.db.utils.IntegrityError):
             print("** WARNING **: Trying to create a submission when that already exists when updating in the autojudge. I'll pretent nothing happens and try to correct again, but it is important to check what is causing that!!")
             return
 
