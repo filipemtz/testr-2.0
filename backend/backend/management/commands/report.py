@@ -43,21 +43,22 @@ class ReportExporter:
             sheet.title = "Summary"
 
             # write the names of the enrolled students in the first column of the xlsx file
-            enrolls = Enrollment.objects.filter(
-                course=course).order_by('enrolled_at')
+            #enrolls = Enrollment.objects.filter(
+            #    course=course).order_by('enrolled_at')
+            enrolled_students = course.students.all()
 
             sheet.cell(row=1, column=1, value='Id')
             sheet.cell(row=1, column=2, value='Username')
             sheet.cell(row=1, column=3, value='Name')
             student_rows = {}
-            for idx, enroll in enumerate(enrolls):
-                name = f"{enroll.student.first_name} {enroll.student.last_name}"
+            for idx, student in enumerate(enrolled_students):
+                name = f"{student.first_name} {student.last_name}"
                 student_row = idx + 2
-                sheet.cell(row=student_row, column=1, value=enroll.student.id)
+                sheet.cell(row=student_row, column=1, value=student.id)
                 sheet.cell(row=student_row, column=2,
-                           value=enroll.student.username)
+                           value=student.username)
                 sheet.cell(row=student_row, column=3, value=name)
-                student_rows[enroll.student.id] = student_row
+                student_rows[student.id] = student_row
 
             # create dir for each question and name the colums with the question names
             for question_idx, question in enumerate(Question.objects.filter(section__course=course)):
@@ -103,8 +104,9 @@ class ReportExporter:
                             f"{student.first_name} {student.last_name}")
                         submission_name = f"{student_name}_{student.id}_{submission.status}_{submission.file_name}"
                         submission_name = f"{question_dir}/{submission_name}"
-                        with open(submission_name, "wb") as f:
-                            f.write(submission.file)
+                        shutil.copyfile(submission.file.path, submission_name)
+                        #with open(submission_name, "wb") as f:
+                            #f.write(submission.file)
 
                     saved_students.add(student.id)
 
