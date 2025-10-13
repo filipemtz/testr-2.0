@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from accounts.permissions import IsTeacher, ReadOnly
+from accounts.permissions import IsTeacher, IsStudentSafeMethods
 import os
 import zipfile
 import tempfile
@@ -25,7 +25,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsTeacher | ReadOnly]
+    permission_classes = [IsTeacher | IsStudentSafeMethods]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=['get'])
@@ -64,6 +64,11 @@ class QuestionReportAPIView(APIView):
     def get(self, request, question_id=None):
         question = Question.objects.get(pk=question_id)
         students = question.section.course.students.all()
+        
+        user = request.user
+        course = question.section.course
+        if not course.teachers.filter(id=user.id).exists():
+            return Response({"detail": "You do not have permission to view this report."}, status=status.HTTP_403_FORBIDDEN)
 
         data = []
         for student in students:
@@ -150,6 +155,20 @@ class QuestionImportAPIView(APIView):
             return Response(
                 {"error": "Arquivo, nome do arquivo, ID do curso e nome da seção são obrigatórios."},
                 status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        course = request.user.courses.filter(id=course_id).first()
+        if not course:
+            return Response(
+                {"error": "Curso não encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        user = request.user
+        if not course.teachers.filter(id=user.id).exists():
+            return Response(
+                {"error": "Você não tem permissão para importar questões para este curso."},
+                status=status.HTTP_403_FORBIDDEN
             )
 
         # Cria um diretório temporário para extrair o conteúdo do arquivo zip
@@ -271,6 +290,15 @@ class QuestionExportAPIView(APIView):
             question = Question.objects.get(pk=question_id)
             question_name = question.name  # Nome da questão
 
+
+            user = request.user
+            course = question.section.course
+            if not course.teachers.filter(id=user.id).exists():
+                return Response(
+                    {"error": "Você não tem permissão para exportar esta questão."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
             # Cria um diretório temporário para armazenar os arquivos
             with tempfile.TemporaryDirectory() as tmpdirname:
                 # Criação da estrutura de diretórios 'input', 'output' e 'description'

@@ -72,6 +72,11 @@ Copy the `frontend/.env-sample` file to `frontend/.env` and edit variables accor
 
 After that, copy the `backend/.env-sample` file to `backend/.env` and configure variables.
 
+Finally, setup the backend with:
+
+```bash
+python manage.py setup
+```
 
 ## Running the System with Docker
 

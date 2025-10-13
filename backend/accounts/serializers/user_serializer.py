@@ -28,9 +28,12 @@ class UserSerializer(ModelSerializer):
     
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+        groups = validated_data.pop('groups', None)
+        
+        instance = super().update(instance, validated_data)
+        
+        if groups is not None:
+            instance.groups.set(groups)
         
         if password is not None:
             instance.set_password(password)

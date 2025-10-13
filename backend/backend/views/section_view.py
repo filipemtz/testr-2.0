@@ -5,7 +5,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from accounts.permissions import IsTeacher, ReadOnly
+from accounts.permissions import IsTeacher, ReadOnly, IsStudentSafeMethods
 
 class SectionViewSet(viewsets.ModelViewSet):
     """
@@ -13,7 +13,7 @@ class SectionViewSet(viewsets.ModelViewSet):
     """
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
-    permission_classes = [IsTeacher | ReadOnly]
+    permission_classes = [IsTeacher | IsStudentSafeMethods]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     @action(detail=True, methods=['get'])

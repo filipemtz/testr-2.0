@@ -8,7 +8,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.views import APIView
 from django.utils import timezone
 from django.contrib.auth.models import User
-from accounts.permissions import IsTeacher
+from accounts.permissions import IsTeacher, IsStudent
 
 from django.utils import timezone
 
@@ -25,7 +25,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class GetSubmissionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | IsStudent]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def get(self, request):
@@ -40,6 +40,13 @@ class GetSubmissionAPIView(APIView):
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
             return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        course = question.section.course
+        user = request.user
+        is_teacher = course.teachers.filter(id=user.id).exists()
+        is_student = course.students.filter(id=user.id).exists()
+        if not (is_teacher or is_student):
+            return Response({"detail": "You do not have permission to view this submission."}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             submission = Submission.objects.get(question=question, student=student)
@@ -50,10 +57,11 @@ class GetSubmissionAPIView(APIView):
 
 
 class AddSubmissionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | IsStudent]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def post(self, request):
+        print(request.data)
         student = request.user
         question_id = request.data.get('question')
         file = request.data.get('file')
@@ -63,6 +71,13 @@ class AddSubmissionAPIView(APIView):
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
             return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        course = question.section.course
+        user = request.user
+        is_teacher = course.teachers.filter(id=user.id).exists()
+        is_student = course.students.filter(id=user.id).exists()
+        if not (is_teacher or is_student):
+            return Response({"detail": "You do not have permission to submit for this course."}, status=status.HTTP_403_FORBIDDEN)
 
         # Procurar por submissão existente
         submission = Submission.objects.filter(question=question, student=student).first()
@@ -106,7 +121,7 @@ class AddSubmissionAPIView(APIView):
 
 
 class ResetStatusSubmissionAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher | IsStudent]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def post(self, request):
@@ -120,6 +135,13 @@ class ResetStatusSubmissionAPIView(APIView):
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
             return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        user = request.user
+        course = question.section.course
+        is_teacher = course.teachers.filter(id=user.id).exists()
+        is_student = course.students.filter(id=user.id).exists()
+        if not (is_teacher or is_student):
+            return Response({"detail": "You do not have permission to reset submissions for this course."}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             submission: Submission = Submission.objects.get(question=question, student=student)
@@ -136,7 +158,7 @@ class ResetStatusSubmissionAPIView(APIView):
 
 
 class GetAllStudentsSubmissionsAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def get(self, request):
@@ -150,7 +172,10 @@ class GetAllStudentsSubmissionsAPIView(APIView):
         except Question.DoesNotExist:
             return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
 
-
+        user = request.user
+        if not question.section.course.teachers.filter(id=user.id).exists():
+            return Response({"detail": "You do not have permission to get submissions for this course."}, status=status.HTTP_403_FORBIDDEN)
+        
         submissions = Submission.objects.filter(question=question)
 
         # retornar os username e status e o arquivo
@@ -175,11 +200,15 @@ class ResetSubmitionForAllStudentsAPIView(APIView):
 
         if not question_id:
             return Response({"detail": "question_id query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
-
+               
         try:
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
             return Response({"detail": "Question not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        user = request.user
+        if not question.section.course.teachers.filter(id=user.id).exists():
+            return Response({"detail": "You do not have permission to reset submissions for this course."}, status=status.HTTP_403_FORBIDDEN)
 
         submissions = Submission.objects.filter(question=question)
 

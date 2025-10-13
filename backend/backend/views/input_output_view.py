@@ -6,12 +6,12 @@ from ..models.input_output import InputOutput
 from ..serializers import InputOutputSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication
-from accounts.permissions import IsTeacher, ReadOnly
+from accounts.permissions import IsTeacher, IsStudentSafeMethods
 
 class InputOutputViewSet(viewsets.ModelViewSet):
     queryset = InputOutput.objects.all()
     serializer_class = InputOutputSerializer
-    permission_classes = [IsTeacher | ReadOnly]
+    permission_classes = [IsTeacher | IsStudentSafeMethods]
     authentication_classes = [SessionAuthentication, TokenAuthentication] 
     # Retorna apenas os arquivos que o usuário está relacionado por meio dos cursos
     def get_queryset(self):

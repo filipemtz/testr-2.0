@@ -9,6 +9,7 @@ from .cpp_judge import CppJudge
 from .base_judge import BaseJudge
 from .python_judge import PythonJudge
 from .jupyter_judge import JupyterJudge
+from .java_judge import JavaJudge
 
 from backend.models.question import Language
 from backend.models.submission import Submission, SubmissionStatus
@@ -19,6 +20,7 @@ class AutoJudgeRunner:
         Language.CCPP.value: CppJudge,
         Language.PYTHON.value: PythonJudge,
         Language.JUPYTER.value: JupyterJudge,
+        Language.JAVA.value: JavaJudge,
     }
 
     @classmethod
