@@ -44,36 +44,6 @@
   </ng-template>
 </div>
 
-
-<!--Entradas e Saídas-->
-<div style="margin-bottom: 50px;" *ngIf="question.language != 'JP'">
-  <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
-  <div *ngIf="ios.length; else noIO">
-    <div *ngFor="let io of ios; let i = index" class="row my-3">
-      <div class="col">
-        <label class="form-label"
-          ><strong>Entrada {{ i + 1 }}</strong></label
-        >
-        <textarea class="form-control-plaintext border p-2" readonly>{{
-          io.input
-        }}</textarea>
-      </div>
-      <div class="col">
-        <label class="form-label"
-          ><strong>Saída {{ i + 1 }}</strong></label
-        >
-        <textarea class="form-control-plaintext border p-2" readonly>{{
-          io.output
-        }}</textarea>
-      </div>
-    </div>
-  </div>
-  <ng-template #noIO>
-    <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
-  </ng-template>
-</div>
-
-
 <div *ngIf="isProfessor; else student">
   <div style="padding-bottom: 50px">
     <h3 class="fw-bold mb-3">Enviar Resposta</h3>
@@ -124,40 +94,6 @@
     <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
       Reavaliar
     </button>
-  </div>
-
-  <div style="padding-bottom: 50px">
-    <div class="d-flex">
-      <h3 class="fw-bold">Submissões</h3>
-      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i> Reavaliar Todos </button>
-    </div>
-    <br>
-    <div *ngIf="submissionsList.length; else noSubmissions">
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Aluno</th>
-            <th scope="col">Status</th>
-            <th scope="col">Arquivo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let submission of submissionsList">
-            <td>{{ submission.student }}</td>
-            <td>{{submission.status }}</td>
-            <td>
-              <a [href]="apiUrl + '/' + submission.file" download>{{
-                submission.file_name
-              }}</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <ng-template #noSubmissions>
-      <p class="ms-3">Não existem submissões</p>
-    </ng-template>
   </div>
 </div>
 
@@ -214,3 +150,71 @@
     </button>
   </div>
 </ng-template>
+
+
+<!--Entradas e Saídas-->
+<div style="margin-bottom: 50px;" *ngIf="question.language != 'JP'">
+  <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
+  <div *ngIf="ios.length; else noIO">
+    <div *ngFor="let io of ios; let i = index" class="row my-3">
+      <div class="col">
+        <label class="form-label"
+          ><strong>Entrada {{ i + 1 }}</strong></label
+        >
+        <textarea class="form-control-plaintext border p-2" readonly>{{
+          io.input
+        }}</textarea>
+      </div>
+      <div class="col">
+        <label class="form-label"
+          ><strong>Saída {{ i + 1 }}</strong></label
+        >
+        <textarea class="form-control-plaintext border p-2" readonly>{{
+          io.output
+        }}</textarea>
+      </div>
+    </div>
+  </div>
+  <ng-template #noIO>
+    <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
+  </ng-template>
+</div>
+
+
+<div *ngIf="isProfessor">
+  <div style="padding-bottom: 50px">
+    <div class="d-flex">
+      <h3 class="fw-bold">Submissões</h3>
+      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i> Reavaliar Todos </button>
+    </div>
+    <br>
+    <div *ngIf="submissionsList.length; else noSubmissions">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Aluno</th>
+            <th scope="col">Status</th>
+            <th scope="col">Arquivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let submission of submissionsList">
+            <td>{{ submission.student }}</td>
+            <td>{{submission.status }}</td>
+            <td>
+              <a [href]="apiUrl + '/' + submission.file" download>{{
+                submission.file_name
+              }}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noSubmissions>
+      <p class="ms-3">Não existem submissões</p>
+    </ng-template>
+  </div>
+</div>
+
+

@@ -22,6 +22,7 @@
 
 # Backlog
 
+- [ ] programming language not showing for students in the question-details page
 - [ ] What should happen to the courses if all teachers delete their accounts? We remove the course? What about the questions? We don't want to lose the questions.
 - [ ] as teacher, remove all tests when they were auto-generated with problems.
 - [ ] non-functional: safety.
