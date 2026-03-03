@@ -69,7 +69,7 @@ class JavaJudge(BaseJudge):
         program = candidates[0].replace(".java", "")
         program = self._clean_file_names(program, self.test_dir)
 
-        return f"java {program}", True
+        return f"java -Duser.language=en -Duser.region=US {program}", True
 
     def _compile(self):
         compilation_cmd = self._get_compilation_command()
