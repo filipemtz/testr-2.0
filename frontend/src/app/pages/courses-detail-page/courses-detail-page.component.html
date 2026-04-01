@@ -51,6 +51,12 @@
                 <button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1"
                     (click)="enableEditSection(section)"></button>
 
+                <button *ngIf="isProfessor" type="button"
+                    class="btn fa-solid btn-rounded fa-arrow-up text-primary ms-1"></button>
+
+                <button *ngIf="isProfessor" type="button"
+                    class="btn fa-solid btn-rounded fa-arrow-down text-primary ms-1"></button>
+
                 <div *ngIf="isProfessor">
                     <div *ngIf="section.visible; else visibleOff">
                         <a class="btn btn-sm fa-solid fa-eye text-primary"
@@ -75,13 +81,19 @@
                 <div class="ms-1 d-flex justify-content-start align-items-center">
                     <a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                         [routerLink]="['/question', question.id]">{{ question.name }}
-                        <i *ngIf="question.solved" class="bi bi-check-circle-fill text-success"></i>
+                        <!-- <i *ngIf="question.solved" class="bi bi-check-circle-fill text-success"></i> -->
                     </a>
                     <!-- Botões de editar e excluir questão (aparecem apenas se for professor) -->
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"
                         [routerLink]="['/question', question.id, 'edit']">
                         <i class="fa-solid fa-pencil fa-sm"></i>
                     </button>
+
+                    <button *ngIf="isProfessor" type="button"
+                        class="btn fa-solid btn-rounded fa-arrow-up text-primary ms-1"></button>
+
+                    <button *ngIf="isProfessor" type="button"
+                        class="btn fa-solid btn-rounded fa-arrow-down text-primary ms-1"></button>
 
                     <div *ngIf="isProfessor">
                         <div *ngIf="question.visible; else visibleOff">
@@ -108,7 +120,7 @@
             </li>
         </ol>
         <!-- Botão de adicionar questão (aparece apenas se for professor) -->
-        <button *ngIf="isProfessor" class="btn text-primary" (click)="createDefaultQuestion(section.id)">
+        <button *ngIf="isProfessor" class="btn text-primary" (click)="createDefaultQuestion(section)">
             <i class="fa-regular fa-plus"></i>
             Nova Questão
         </button>

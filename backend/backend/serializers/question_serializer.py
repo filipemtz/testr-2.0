@@ -9,16 +9,3 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = "__all__"
-        # [
-        #     "url",
-        #     "id",
-        #     "section",
-        #     "name",
-        #     "description",
-        #     "language",
-        #     "submission_deadline",
-        #     "memory_limit",
-        #     "time_limit_seconds",
-        #     "cpu_limit",
-        #     "visible",
-        # ]

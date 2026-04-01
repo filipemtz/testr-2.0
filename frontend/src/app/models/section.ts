@@ -6,7 +6,8 @@ export interface Section {
     name: string;
     course: number;
     isEditing?: boolean;
-    questions? : Question[];
+    questions?: Question[];
     originalName: string;
     visible: boolean;
+    order: number;
 }

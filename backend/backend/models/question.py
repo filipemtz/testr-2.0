@@ -1,23 +1,24 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from .section import Section
 
+
 class Language(models.TextChoices):
-    CCPP = 'CC', _('C/C++')
-    PYTHON = 'PT', _('Python')
-    JUPYTER = 'JP', _('Jupyter')
-    JAVA = 'JV', _('Java')
+    CCPP = "CC", _("C/C++")
+    PYTHON = "PT", _("Python")
+    JUPYTER = "JP", _("Jupyter")
+    JAVA = "JV", _("Java")
+
 
 class Question(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, default='')
+    description = models.TextField(blank=True, default="")
 
     language = models.TextField(
-        max_length=2,
-        choices=Language.choices,
-        default=Language.PYTHON
+        max_length=2, choices=Language.choices, default=Language.PYTHON
     )
 
     time_limit_seconds = models.FloatField(default=30)
@@ -26,6 +27,7 @@ class Question(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     submission_deadline = models.DateTimeField(default=timezone.now)
     visible = models.BooleanField(default=True)
+    order = models.DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)
 
     def __str__(self):
         return self.name

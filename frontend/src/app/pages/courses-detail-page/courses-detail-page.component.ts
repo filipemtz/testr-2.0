@@ -58,28 +58,7 @@ export class CoursesDetailPageComponent implements OnInit {
 
     selectedFile: File | null = null;
 
-    defaultSection: Section = {
-        id: -1,
-        url: '',
-        name: "Nova Seção",
-        course: -1,
-        originalName: "Nova Seção",
-        visible: true
-    }
 
-    defaultQuestion: Question = {
-        id: -1,
-        url: '',
-        name: "Nova Questão",
-        description: '',
-        language: "PT",
-        submission_deadline: new Date(),
-        memory_limit: 200,
-        time_limit_seconds: 30,
-        cpu_limit: 0.25,
-        section: -1,
-        visible: true
-    };
 
     myNotify: any;
     constructor(
@@ -254,7 +233,17 @@ export class CoursesDetailPageComponent implements OnInit {
     }
 
     createDefaultSection(courseId: number) {
-        const defaultSection: Section = { ...this.defaultSection, course: courseId }
+        // const defaultSection: Section = { ...this.defaultSection, course: courseId }
+        const defaultSection: Section = {
+            id: -1,
+            url: '',
+            name: "Nova Seção",
+            course: courseId,
+            originalName: "Nova Seção",
+            visible: true,
+            order: this.sections.length
+        }
+
         this.sectionService.postSection(defaultSection).subscribe({
             next: section => {
                 this.sections.push(section);
@@ -262,9 +251,24 @@ export class CoursesDetailPageComponent implements OnInit {
         })
     }
 
-    createDefaultQuestion(sectionId: number) {
-        const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
-        this.questionService.postQuestion(defQuestion).subscribe({
+    createDefaultQuestion(section: Section) {
+        // const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
+        const defaultQuestion: Question = {
+            id: -1,
+            url: '',
+            name: "Nova Questão",
+            description: '',
+            language: "PT",
+            submission_deadline: new Date(),
+            memory_limit: 200,
+            time_limit_seconds: 30,
+            cpu_limit: 0.25,
+            section: section.id,
+            visible: true,
+            order: section.questions?.length || 0
+        };
+
+        this.questionService.postQuestion(defaultQuestion).subscribe({
             next: question => {
                 this.router.navigate([`/question/${question.id}/edit`]);
             },

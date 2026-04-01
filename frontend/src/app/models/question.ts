@@ -11,5 +11,5 @@ export interface Question {
     section: number;
     isEditing?: boolean;
     visible: boolean;
-    solved?: boolean;
+    order: number;
 }

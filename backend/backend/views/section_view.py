@@ -29,16 +29,15 @@ class SectionViewSet(viewsets.ModelViewSet):
         section = self.get_object()
 
         if request.user in section.course.teachers.all():
-            questions = section.question_set.all()
+            questions = section.question_set.order_by("order").all()
         else:
-            questions = section.question_set.filter(visible=True)
+            questions = section.question_set.filter(visible=True).order_by("order")
 
         # busca submissoes da questao feitas pelo usuario e marcadas como sucesso
-        solved_subquery = Submission.objects.filter(
-            question=OuterRef("pk"), student=request.user, status="SC"
-        )
-
-        questions = questions.annotate(solved=Exists(solved_subquery))
+        # solved_subquery = Submission.objects.filter(
+        #     question=OuterRef("pk"), student=request.user, status="SC"
+        # )
+        # questions = questions.annotate(solved=Exists(solved_subquery))
 
         serializer = QuestionSerializer(
             questions, many=True, context={"request": request}
