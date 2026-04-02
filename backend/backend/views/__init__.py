@@ -6,6 +6,7 @@ from .course_view import (
     CourseRemoveTeacherAPIView,
     CourseReportAPIView,
     CourseTeachersAPIView,
+    CourseUnrollStudentAPIView,
     CourseViewSet,
 )
 from .input_output_view import InputOutputViewSet

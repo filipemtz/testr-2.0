@@ -6,63 +6,67 @@ import { Section } from '../models/section';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = `${environment.apiUrl}/courses`; // URL base da API para cursos
+    private apiUrl = `${environment.apiUrl}/courses`; // URL base da API para cursos
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
-  createCourse(data: Course): Observable<Course> {
-    return this.http.post<Course>(`${this.apiUrl}/`, data, { withCredentials: true });
-  }
+    createCourse(data: Course): Observable<Course> {
+        return this.http.post<Course>(`${this.apiUrl}/`, data, { withCredentials: true });
+    }
 
-  getCourses(): Observable<{ results: Course[] }> {
-    return this.http.get<{ results: Course[] }>(`${this.apiUrl}/`, { withCredentials: true });
-  }
+    getCourses(): Observable<{ results: Course[] }> {
+        return this.http.get<{ results: Course[] }>(`${this.apiUrl}/`, { withCredentials: true });
+    }
 
-  registerStudentsCSV(body: any, course_id: number){
-    return this.http.post(`${this.apiUrl}/${course_id}/register-students/`, body);
-  }
+    registerStudentsCSV(body: any, course_id: number) {
+        return this.http.post(`${this.apiUrl}/${course_id}/register-students/`, body);
+    }
 
-  getCourse(id: number): Observable<Course> {
-    return this.http.get<Course>(`${this.apiUrl}/${id}/`, { withCredentials: true });
-  }
+    unrollStudent(course_id: number, student_id: number) {
+        return this.http.get(`${this.apiUrl}/${course_id}/unroll/${student_id}/`, { withCredentials: true });
+    }
 
-  getSections(id: number): Observable<{results: Section[]}> {
-      return this.http.get<{results: Section[]}>(`${this.apiUrl}/${id}/sections/`, { withCredentials : true});
-  }
+    getCourse(id: number): Observable<Course> {
+        return this.http.get<Course>(`${this.apiUrl}/${id}/`, { withCredentials: true });
+    }
 
-  updateCourse(url: string, data: Course): Observable<Course> {
-    return this.http.put<Course>(url, data, { withCredentials: true });
-  }
+    getSections(id: number): Observable<{ results: Section[] }> {
+        return this.http.get<{ results: Section[] }>(`${this.apiUrl}/${id}/sections/`, { withCredentials: true });
+    }
 
-  deleteCourse(url: string): Observable<void> {
-    return this.http.delete<void>(url, { withCredentials: true });
-  }
+    updateCourse(url: string, data: Course): Observable<Course> {
+        return this.http.put<Course>(url, data, { withCredentials: true });
+    }
 
-  getReport(course_id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${course_id}/report/`, { withCredentials: true });
-  }
+    deleteCourse(url: string): Observable<void> {
+        return this.http.delete<void>(url, { withCredentials: true });
+    }
 
-  getCourseTeachers(course_id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${course_id}/teachers/`, { withCredentials: true });
-  }
+    getReport(course_id: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${course_id}/report/`, { withCredentials: true });
+    }
 
-  addStudent(course_id: number, username: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${course_id}/add-student/`, { student_username: username });
-  }
+    getCourseTeachers(course_id: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${course_id}/teachers/`, { withCredentials: true });
+    }
 
-  addTeacher(course_id: number, username: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${course_id}/add-teacher/`, { teacher_username: username });
-  }
+    addStudent(course_id: number, username: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${course_id}/add-student/`, { student_username: username });
+    }
 
-  removeTeacher(course_id: number, teacher_id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${course_id}/remove-teacher/`, { teacher_id: teacher_id });
-  }
+    addTeacher(course_id: number, username: string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${course_id}/add-teacher/`, { teacher_username: username });
+    }
 
-  makeACopy(course_id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${course_id}/copy/`, {}, { withCredentials: true });
-  }
+    removeTeacher(course_id: number, teacher_id: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${course_id}/remove-teacher/`, { teacher_id: teacher_id });
+    }
+
+    makeACopy(course_id: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${course_id}/copy/`, {}, { withCredentials: true });
+    }
 
 }

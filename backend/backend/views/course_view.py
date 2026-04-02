@@ -180,6 +180,27 @@ class CourseAddStudentAPIView(APIView):
             )
 
 
+class CourseUnrollStudentAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def get(self, request, course_id, student_id):
+        course = Course.objects.get(pk=course_id)
+        if not course.teachers.filter(id=request.user.id).exists():
+            return Response(
+                {
+                    "message": "You do not have permission to remove students from this course."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        course.students.remove(student_id)
+
+        return Response(
+            {"messsage": "Estudante desmatriculado."}, status=status.HTTP_200_OK
+        )
+
+
 class CourseRegisterStudentsAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]

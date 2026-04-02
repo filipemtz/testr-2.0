@@ -14,6 +14,11 @@ router.register(r"submissions-debug", SubmissionViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path(
+        "courses/<int:course_id>/unroll/<int:student_id>/",
+        CourseUnrollStudentAPIView.as_view(),
+        name="course-registration",
+    ),
+    path(
         "courses/<int:course_id>/register-students/",
         CourseRegisterStudentsAPIView.as_view(),
         name="course-registration",
