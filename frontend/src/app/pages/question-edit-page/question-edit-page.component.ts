@@ -97,7 +97,6 @@ export class QuestionEditPageComponent implements OnInit {
         });
     }
 
-
     confirmEditQuestion(): void {
         if (this.editForm.valid) {
             const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };

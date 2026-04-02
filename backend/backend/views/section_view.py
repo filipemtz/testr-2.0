@@ -4,6 +4,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ..models.section import Section
 from ..models.submission import Submission
@@ -51,3 +52,27 @@ class SectionViewSet(viewsets.ModelViewSet):
             Section.objects.filter(course__teachers=user)
             | Section.objects.filter(course__students=user)
         ).distinct()
+
+
+class SectionSwap(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        """swap the order of the questions in the section"""
+
+        section_id = request.data.get("section_id")
+        other_section_id = request.data.get("other_section_id")
+
+        item = Section.objects.filter(id=section_id).first()
+        other = Section.objects.filter(id=other_section_id).first()
+
+        item.order, other.order = other.order, item.order
+        item.save()
+        other.save()
+
+        serializer = SectionSerializer(
+            [item, other], many=True, context={"request": request}
+        )
+
+        return Response(serializer.data)

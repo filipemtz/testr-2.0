@@ -58,8 +58,6 @@ export class CoursesDetailPageComponent implements OnInit {
 
     selectedFile: File | null = null;
 
-
-
     myNotify: any;
     constructor(
         private route: ActivatedRoute,
@@ -110,7 +108,6 @@ export class CoursesDetailPageComponent implements OnInit {
                     // Recupera um array de questões de uma determinada seção
                     this.sectionService.getQuestions(element.id).subscribe({
                         next: (response: any) => {
-                            console.log(response)
                             element.questions = response;
                         },
                         error: (err) => {
@@ -232,6 +229,53 @@ export class CoursesDetailPageComponent implements OnInit {
             });
     }
 
+    changeSectionOrder(sections: Section[], section_idx: number, other_idx: number): void {
+        const section = sections[section_idx];
+        const otherSection = sections[other_idx];
+        this.sectionService.swapOrder(section, otherSection).subscribe({
+            next: (result) => {
+                // swap locally
+                const temp = section.order;
+                section.order = otherSection.order;
+                otherSection.order = temp;
+
+                if (section) {
+                    this.sections.sort((a, b) => a.order - b.order);
+                }
+            },
+            error: err => {
+                this.pushNotify('Erro!', 'Falha ao trocar a ordem das questões', 'error');
+                console.log(err);
+            }
+        })
+    }
+
+    changeQuestionOrder(questions: Question[], question_idx: number, other_idx: number): void {
+        const question = questions[question_idx];
+        const otherQuestion = questions[other_idx];
+        this.questionService.swapOrder(question, otherQuestion).subscribe({
+            next: (result) => {
+                // swap locally
+                const temp = question.order;
+                question.order = otherQuestion.order;
+                otherQuestion.order = temp;
+
+                // re-sort the list where they belong
+                const section = this.sections.find(s =>
+                    s.questions?.includes(question)
+                );
+
+                if (section) {
+                    section.questions?.sort((a, b) => a.order - b.order);
+                }
+            },
+            error: err => {
+                this.pushNotify('Erro!', 'Falha ao trocar a ordem das questões', 'error');
+                console.log(err);
+            }
+        })
+    }
+
     createDefaultSection(courseId: number) {
         // const defaultSection: Section = { ...this.defaultSection, course: courseId }
         const defaultSection: Section = {
@@ -273,7 +317,8 @@ export class CoursesDetailPageComponent implements OnInit {
                 this.router.navigate([`/question/${question.id}/edit`]);
             },
             error: err => {
-                console.error(err);
+                this.pushNotify('Erro!', 'Falha ao criar questão', 'error');
+                console.log(err);
             }
         });
     }

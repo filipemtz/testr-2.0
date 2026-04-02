@@ -65,6 +65,30 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return base_qs
 
 
+class QuestionSwap(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        """swap the order of the questions in the section"""
+
+        question_id = request.data.get("question_id")
+        other_question_id = request.data.get("other_question_id")
+
+        question = Question.objects.filter(id=question_id).first()
+        other = Question.objects.filter(id=other_question_id).first()
+
+        question.order, other.order = other.order, question.order
+        question.save()
+        other.save()
+
+        serializer = QuestionSerializer(
+            [question, other], many=True, context={"request": request}
+        )
+
+        return Response(serializer.data)
+
+
 class QuestionReportAPIView(APIView):
     permission_classes = [IsTeacher]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
