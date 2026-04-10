@@ -84,7 +84,7 @@
                 <div class="ms-1 d-flex justify-content-start align-items-center">
                     <a class="m-1 link-dark link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                         [routerLink]="['/question', question.id]">{{ question.name }}
-                        <!-- <i *ngIf="question.solved" class="bi bi-check-circle-fill text-success"></i> -->
+                        <i *ngIf="questionIsSolved(question)" class="bi bi-check-circle-fill text-success"></i>
                     </a>
                     <!-- Botões de editar e excluir questão (aparecem apenas se for professor) -->
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"

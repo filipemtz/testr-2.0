@@ -25,5 +25,6 @@ from .submission_view import (
     GetSubmissionAPIView,
     ResetStatusSubmissionAPIView,
     ResetSubmitionForAllStudentsAPIView,
+    SubmissionsFromCourseView,
     SubmissionViewSet,
 )

@@ -6,16 +6,19 @@ import {
     ElementRef,
     HostListener,
 } from '@angular/core';
-
+import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ImportQuestionComponent } from '../../components/import-question/import-question.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
 import { Section } from '../../models/section';
 import { Question } from '../../models/question';
+import { Submission } from '../../models/submission';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
+import { SubmissionService } from '../../services/submission.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -47,6 +50,7 @@ export class CoursesDetailPageComponent implements OnInit {
     @ViewChild('sectionInput') sectionInput!: ElementRef;
     course: Course = {} as Course;
     sections: Section[] = [] as Section[];
+    submissions: Submission[] = [] as Submission[];
 
     addSectionForm: FormGroup;
     addQuestionForm: FormGroup;
@@ -64,6 +68,7 @@ export class CoursesDetailPageComponent implements OnInit {
         private questionService: QuestionService,
         private sectionService: SectionService,
         private courseService: CourseService,
+        private submissionService: SubmissionService,
         private modalService: NgbModal,
         private fb: FormBuilder,
         private router: Router,
@@ -100,37 +105,60 @@ export class CoursesDetailPageComponent implements OnInit {
     }
 
     // Recupera um array de seções de um determinado curso
-    loadSections(courseId: number) {
-        this.courseService.getSections(courseId).subscribe({
-            next: (response: any) => {
-                this.sections = response;
-                this.sections.forEach((element: Section) => {
-                    // Recupera um array de questões de uma determinada seção
-                    this.sectionService.getQuestions(element.id).subscribe({
-                        next: (response: any) => {
-                            element.questions = response;
-                        },
-                        error: (err) => {
-                            console.log(err);
-                            this.pushNotify('Erro!', 'Erro ao carregar as seções', 'error');
-                        }
-                    });
-                });
-            },
+    loadQuestions(sections: Section[]) { // TODO: return questions as part of sections instead of making get requests for each question
+        sections.forEach((element: Section) => {
+            // Recupera um array de questões de uma determinada seção
+            this.sectionService.getQuestions(element.id).subscribe({
+                next: (response: any) => {
+                    element.questions = response;
+                },
+                error: (err) => {
+                    console.log(err);
+                    this.pushNotify('Erro!', 'Erro ao carregar as seções', 'error');
+                }
+            });
+        });
+    }
 
+    loadSubmissions(courseId: number) {
+        this.submissionService.submissionsFromCourse(courseId).subscribe({
+            next: (response: any) => {
+                this.submissions = response;
+            },
+            error: (err) => {
+                console.log(err);
+                this.pushNotify('Erro!', 'Erro ao carregar as submissões', 'error');
+            }
         });
     }
 
     loadCourse() {
         const id = this.route.snapshot.paramMap.get('id');
-        id &&
-            this.courseService.getCourse(+id).subscribe({
-                // id && é uma maneira simplificada de fazer if (id) { ... }, maneiro
-                next: (response) => {
-                    this.course = response;
-                    this.loadSections(this.course.id);
-                },
-            });
+        if (!id) return;
+
+        this.courseService.getCourse(+id).pipe(
+            switchMap(course => {
+                this.course = course;
+                return forkJoin({
+                    submissions: this.submissionService.submissionsFromCourse(course.id),
+                    sections: this.courseService.getSections(course.id)
+                });
+            })
+        ).subscribe({
+            next: ({ submissions, sections }) => {
+                this.submissions = submissions;
+                this.sections = sections;
+                this.loadQuestions(sections);
+            }
+        });
+    }
+
+    questionIsSolved(question: Question): boolean {
+        for (var submission of this.submissions) {
+            if ((submission.question == question.id) && (submission.status === "SC"))
+                return true;
+        }
+        return false;
     }
 
     confirmAddSection(): void {
