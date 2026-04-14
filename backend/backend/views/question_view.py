@@ -57,7 +57,9 @@ class QuestionViewSet(viewsets.ModelViewSet):
         """
         question = self.get_object()
         files = question.questionfile_set.all()
-        files = self._remove_auxiliary_files(question, files)
+
+        if not IsTeacher().has_permission(request, None):
+            files = self._remove_auxiliary_files(question, files)
         serializer = QuestionFileSerializer(
             files, many=True, context={"request": request}
         )
