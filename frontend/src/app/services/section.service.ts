@@ -13,8 +13,8 @@ export class SectionService {
 
     constructor(private http: HttpClient) { }
 
-    getSections(): Observable<{ results: Section[] }> {
-        return this.http.get<{ results: Section[] }>(`${this.apiUrl}/`, { withCredentials: true });
+    getSections(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/`, { withCredentials: true });
     }
 
     getSection(id: number): Observable<Section> {

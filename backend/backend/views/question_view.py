@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import InputOutput, Question, QuestionFile, Section, Submission
+from ..models import InputOutput, Language, Question, QuestionFile, Section, Submission
 from ..serializers import QuestionFileSerializer, QuestionSerializer
 from ..serializers.input_output_serializer import InputOutputSerializer
 
@@ -42,6 +42,14 @@ class QuestionViewSet(viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
+    def _remove_auxiliary_files(self, question: Question, files):
+        result = []
+        for f in files:
+            if (question.language == Language.JUPYTER) and ("_test" in f.file_name):
+                continue
+            result.append(f)
+        return result
+
     @action(detail=True, methods=["get"])
     def files(self, request, pk=None):
         """
@@ -49,6 +57,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         """
         question = self.get_object()
         files = question.questionfile_set.all()
+        files = self._remove_auxiliary_files(question, files)
         serializer = QuestionFileSerializer(
             files, many=True, context={"request": request}
         )

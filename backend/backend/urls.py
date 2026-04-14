@@ -66,7 +66,16 @@ urlpatterns = [
     ),
     path("questions-swap/", QuestionSwap.as_view(), name="question-swap"),
     path("sections-swap/", SectionSwap.as_view(), name="section-swap"),
-    path("submissions/get/", GetSubmissionAPIView.as_view(), name="get-submission"),
+    path(
+        "submissions/get/<int:question_id>",
+        GetSubmissionAPIView.as_view(),
+        name="get-submission",
+    ),
+    path(
+        "submissions/from_course/<int:course_id>",
+        SubmissionsFromCourseView.as_view(),
+        name="get-course-submissions",
+    ),
     path("submissions/add/", AddSubmissionAPIView.as_view(), name="add-submission"),
     path(
         "submissions/reset-status/",

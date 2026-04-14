@@ -34,12 +34,6 @@ class SectionViewSet(viewsets.ModelViewSet):
         else:
             questions = section.question_set.filter(visible=True).order_by("order")
 
-        # busca submissoes da questao feitas pelo usuario e marcadas como sucesso
-        # solved_subquery = Submission.objects.filter(
-        #     question=OuterRef("pk"), student=request.user, status="SC"
-        # )
-        # questions = questions.annotate(solved=Exists(solved_subquery))
-
         serializer = QuestionSerializer(
             questions, many=True, context={"request": request}
         )

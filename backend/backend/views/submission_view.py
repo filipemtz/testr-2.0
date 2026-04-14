@@ -24,10 +24,8 @@ class GetSubmissionAPIView(APIView):
     permission_classes = [IsTeacher | IsStudent]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
-    def get(self, request):
-
+    def get(self, request, question_id):
         student = request.user
-        question_id = request.query_params.get("question_id")
 
         if not question_id:
             return Response(
@@ -60,6 +58,25 @@ class GetSubmissionAPIView(APIView):
             )
 
         return Response(SubmissionSerializer(submission).data)
+
+
+class SubmissionsFromCourseView(APIView):
+    permission_classes = [IsTeacher | IsStudent]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def get(self, request, course_id):
+        student = request.user
+
+        if not course_id:
+            return Response(
+                {"detail": "course id is not informed."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        submissions = Submission.objects.filter(
+            student=student, question__section__course=course_id
+        )
+        return Response(SubmissionSerializer(submissions, many=True).data)
 
 
 class AddSubmissionAPIView(APIView):

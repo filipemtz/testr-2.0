@@ -33,8 +33,8 @@ export class CourseService {
         return this.http.get<Course>(`${this.apiUrl}/${id}/`, { withCredentials: true });
     }
 
-    getSections(id: number): Observable<{ results: Section[] }> {
-        return this.http.get<{ results: Section[] }>(`${this.apiUrl}/${id}/sections/`, { withCredentials: true });
+    getSections(id: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${id}/sections/`, { withCredentials: true });
     }
 
     updateCourse(url: string, data: Course): Observable<Course> {
