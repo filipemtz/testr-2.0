@@ -1,34 +1,32 @@
-import os
-import uuid
 import json
-import time
-import shutil
-
-from glob import glob
-from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple
-from datetime import datetime
-from pathlib import Path
+import os
 import platform
+import queue
+import shutil
+import threading
+import time
+import uuid
+from abc import ABC, abstractmethod
+from datetime import datetime
+from glob import glob
+from multiprocessing import Process, Queue
+from pathlib import Path
+from typing import Any, Dict, Tuple
 
 import django
 import pytest
 from _pytest.reports import CollectReport
-import threading
-from multiprocessing import Process, Queue
-import queue
 
 from .docker_runner import DockerRunner
+from .runner_interface import RunnerInterface
 from .unsafe_runner import UnsafeRunner
 
-from .runner_interface import RunnerInterface
-
-django.setup() # for using multiprocessing
+django.setup()  # for using multiprocessing
 from backend.models.input_output import InputOutput
-from backend.models.submission import Submission
 from backend.models.question import Question
 from backend.models.question_file import QuestionFile
-from backend.utils.io import unzip, safe_load_yaml
+from backend.models.submission import Submission
+from backend.utils.io import safe_load_yaml, unzip
 from decouple import config
 
 
@@ -37,8 +35,8 @@ class PytestReportHook:
         self.report = {}
 
     def pytest_terminal_summary(self, terminalreporter, exitstatus, config):
-        """ hook called after generating the reports for all tests """
-        for result_type in ['passed', 'failed', 'error']:
+        """hook called after generating the reports for all tests"""
+        for result_type in ["passed", "failed", "error"]:
             self.report[result_type] = []
 
             if result_type not in terminalreporter.stats:
@@ -55,7 +53,7 @@ class PytestReportHook:
                         "stop": 0,
                         "outcome": test.outcome,
                         "when": test.when,
-                        "message": str(test.longrepr)
+                        "message": str(test.longrepr),
                     }
                 else:
                     test_report = {
@@ -65,7 +63,7 @@ class PytestReportHook:
                         "stop": test.stop,
                         "outcome": test.outcome,
                         "when": test.when,
-                        "message": ""
+                        "message": "",
                     }
 
                     if not test.longrepr:
@@ -85,6 +83,7 @@ class PytestReportHook:
 #     hook = PytestReportHook()
 #     pytest.main(["-qq", "--tb=no", "-s"], plugins=[hook])
 #     q.put(hook.report)
+
 
 #####################################
 # do_judging with multiprocessing
@@ -121,10 +120,12 @@ class JupyterJudge(ABC):
         # in the end of the evaluation.
         date_format = "%d/%m/%Y %H:%M:%S"
         dt = datetime.now().strftime(date_format)
-        self.report = {"error_msgs": [],
-                       "start_at": dt,
-                       "uuid": self.test_uuid,
-                       "end_at": dt}
+        self.report = {
+            "error_msgs": [],
+            "start_at": dt,
+            "uuid": self.test_uuid,
+            "end_at": dt,
+        }
 
         self._prepare_directory_and_files_for_test(self.test_uuid, submission)
         self._save_question_files(self.question)
@@ -136,11 +137,15 @@ class JupyterJudge(ABC):
 
         # search for ipynb files and check if there is a single one
         paths = glob("**/*ipynb", recursive=True)
+        known = [os.path.basename(p) for p in self.known_question_files]
+        paths = [p for p in paths if os.path.basename(p) not in known]
         print("jupyter notebooks:", paths)
         if len(paths) == 0:
-            self.report['error_msgs'].append('No .ipynb file found in the submission.')
+            self.report["error_msgs"].append("No .ipynb file found in the submission.")
         elif len(paths) > 1:
-            self.report['error_msgs'].append('More than one .ipynb file found in the submission.')
+            self.report["error_msgs"].append(
+                "More than one .ipynb file found in the submission."
+            )
         else:
             ipynb_path = paths[0]
             ipynb_dir = os.path.dirname(ipynb_path)
@@ -154,19 +159,18 @@ class JupyterJudge(ABC):
             # results = q.get()
             # thread.join()
 
-
             q = Queue()
-            thread = Process(target=do_judging, args=(q, ))
+            thread = Process(target=do_judging, args=(q,))
             thread.start()
             results = q.get()
             thread.join()
 
             # transformar o relatorio do pytest no formato esperado pelo restante do sistema
-            for key in ['failed', 'error']:
+            for key in ["failed", "error"]:
                 for test_report in results[key]:
-                    name = test_report['name']
-                    msg = test_report['message']
-                    self.report['error_msgs'].append(f"<b>{name}</b>: {msg}")
+                    name = test_report["name"]
+                    msg = test_report["message"]
+                    self.report["error_msgs"].append(f"<b>{name}</b>: {msg}")
 
         os.chdir(current_dir)
 
@@ -176,19 +180,17 @@ class JupyterJudge(ABC):
 
         return self.report
 
-    def _prepare_directory_and_files_for_test(self,
-                                              test_uuid,
-                                              submission: Submission):
+    def _prepare_directory_and_files_for_test(self, test_uuid, submission: Submission):
 
         # create directory to run the tests
-        self.test_dir = Path(config('AUTOJUDGE_DIRECTORY'))
+        self.test_dir = Path(config("AUTOJUDGE_DIRECTORY"))
         self.test_dir = self.test_dir.joinpath(test_uuid)
         self.test_dir.mkdir(parents=True)
 
         # save the submitted file
         file_name = self.test_dir.joinpath(submission.file_name)
 
-        if platform.system() == 'Windows':
+        if platform.system() == "Windows":
             # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
             shutil.copyfile(submission.file.path, file_name)
         else:
@@ -197,11 +199,10 @@ class JupyterJudge(ABC):
             os.symlink(submission.file.path, file_name)
 
         # unzip file if needed, and then remove the zip file
-        if file_name.suffix == '.zip':
+        if file_name.suffix == ".zip":
             file_name_str = str(file_name)
             unzip(file_name_str, str(self.test_dir))
             os.remove(file_name_str)
-
 
     def _save_question_files(self, question: Question):
         self.known_question_files = []
@@ -210,7 +211,7 @@ class JupyterJudge(ABC):
             file_name = os.path.join(self.test_dir, question_file.file_name)
             self.known_question_files.append(file_name)
 
-            if platform.system() == 'Windows':
+            if platform.system() == "Windows":
                 # windows requer permisao de admin para criar links simbolicos... estudar como resolver.
                 shutil.copyfile(question_file.file.path, file_name)
             else:
@@ -224,4 +225,3 @@ class JupyterJudge(ABC):
         if not self._keep_files:
             print("removing test dir", self.test_dir)
             shutil.rmtree(self.test_dir)
-

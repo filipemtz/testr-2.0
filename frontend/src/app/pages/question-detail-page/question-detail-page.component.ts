@@ -16,218 +16,221 @@ import 'simple-notify/dist/simple-notify.css';
 
 
 @Component({
-  selector: 'app-question-detail-page',
-  standalone: true,
-  imports: [DateFormatPipe, CommonModule],
-  templateUrl: './question-detail-page.component.html',
-  styleUrl: './question-detail-page.component.css',
+    selector: 'app-question-detail-page',
+    standalone: true,
+    imports: [DateFormatPipe, CommonModule],
+    templateUrl: './question-detail-page.component.html',
+    styleUrl: './question-detail-page.component.css',
 })
 export class QuestionDetailPageComponent implements OnInit {
-  private intervalId: any;
-  question: Question = {} as Question;
-  questionFiles: QuestionFile[] = [] as QuestionFile[];
-  ios: InputOutput[] = [] as InputOutput[];
-  submission: any;
+    private intervalId: any;
+    question: Question = {} as Question;
+    questionFiles: QuestionFile[] = [] as QuestionFile[];
+    ios: InputOutput[] = [] as InputOutput[];
+    submission: any;
 
-  selectedFile: File | null = null;
-  apiUrl = `${environment.apiUrl}`;
-  submissionsList: any[] = [];
-  isProfessor: boolean = false;
-  myNotify: any;
+    selectedFile: File | null = null;
+    apiUrl = `${environment.apiUrl}`;
+    submissionsList: any[] = [];
+    isProfessor: boolean = false;
+    myNotify: any;
 
-  constructor(
-    private authService: AuthService,
-    private route: ActivatedRoute,
-    private questionService: QuestionService,
-    private submissionService: SubmissionService,
-    private location: Location
-  ) {}
+    constructor(
+        private authService: AuthService,
+        private route: ActivatedRoute,
+        private questionService: QuestionService,
+        private submissionService: SubmissionService,
+        private location: Location
+    ) { }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    ngOnInit(): void {
+        const id = this.route.snapshot.paramMap.get('id');
 
-    if (id !== null) {
-      this.questionService.getQuestion(+id).subscribe({
-        next: (question: Question) => {
-          this.question = question;
+        if (id !== null) {
+            this.questionService.getQuestion(+id).subscribe({
+                next: (question: Question) => {
+                    this.question = question;
 
-          this.question.description = this.question.description.replace(/\n/g, "<br>");
-          this.question.description = this.question.description.replace(/  /g, "&nbsp;&nbsp;");
+                    this.question.description = this.question.description.replace(/\n/g, "<br>");
+                    this.question.description = this.question.description.replace(/  /g, "&nbsp;&nbsp;");
 
-          this.authService.userInfo().subscribe({
-            next: (response: any) => {
-              this.isProfessor = response.groups.includes('teacher');
-              this.getSubmissionsList();
-            },
-          });
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+                    this.authService.userInfo().subscribe({
+                        next: (response: any) => {
+                            this.isProfessor = response.groups.includes('teacher');
+                            this.getSubmissionsList();
+                        },
+                    });
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
 
-      this.questionService.getQuestionFiles(+id).subscribe({
-        next: (files) => {
-          this.questionFiles = files;
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+            this.questionService.getQuestionFiles(+id).subscribe({
+                next: (files) => {
+                    this.questionFiles = files;
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
 
-      this.questionService.getInputsOutputs(+id).subscribe({
-        next: (ios: any) => {
-          this.ios = ios;
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+            this.questionService.getInputsOutputs(+id).subscribe({
+                next: (ios: any) => {
+                    this.ios = ios;
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
 
-      this.submissionService.getSubmission(+id).subscribe({
-        next: (submission) => {
-          this.submission = submission;
-          this.startSubmissionStatusCheck();
-          //console.log(submission);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-    }
-  }
-
-  resetSubmissionStatus(): void {
-    const questionId = this.question.id;
-
-    this.submissionService.resetSubmission(questionId).subscribe({
-      next: (response) => {
-        console.log('Submission status reset successfully', response);
-        this.getSubmission(questionId);
-      },
-      error: (err) => {
-        console.log('Error resetting submission status', err);
-      },
-    });
-  }
-
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-  }
-
-  onSubmitFile(): void {
-    if (this.selectedFile) {
-      const fileName = this.selectedFile.name;
-      const questionId = this.question.id;
-
-      this.submissionService.addSubmission(questionId, this.selectedFile, fileName).subscribe({
-        next: (response) => {
-          this.selectedFile = null;
-          this.getSubmission(questionId);
-        },
-        error: (err) => {
-          console.log('Error uploading file', err);
+            this.submissionService.getSubmission(+id).subscribe({
+                next: (submission) => {
+                    this.submission = submission;
+                    this.startSubmissionStatusCheck();
+                    //console.log(submission);
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
         }
-      });
     }
-  }
 
-  goBack(): void {
-    this.location.back();
-  }
+    resetSubmissionStatus(): void {
+        const questionId = this.question.id;
 
-  getLanguageName(value: string): string {
-    if (value === 'PT') {
-      return 'Python';
-    } else if (value === 'CC') {
-      return 'C/C++';
+        this.submissionService.resetSubmission(questionId).subscribe({
+            next: (response) => {
+                console.log('Submission status reset successfully', response);
+                this.getSubmission(questionId);
+            },
+            error: (err) => {
+                console.log('Error resetting submission status', err);
+            },
+        });
     }
-    return '';
-  }
 
-  extractErrorMessages(data: string): string[] {
-    if(data){
-      const parsedData = JSON.parse(data);
-
-      if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
-        return parsedData.error_msgs;
-      }
+    onFileSelected(event: any): void {
+        this.selectedFile = event.target.files[0];
     }
-    return [];
-}
 
-  getSubmissionStatus(value: string): string {
-    if (value === 'WE') {
-      return 'Waiting Evaluation';
+    onSubmitFile(): void {
+        if (this.selectedFile) {
+            const fileName = this.selectedFile.name;
+            const questionId = this.question.id;
+
+            this.submissionService.addSubmission(questionId, this.selectedFile, fileName).subscribe({
+                next: (response) => {
+                    this.selectedFile = null;
+                    this.getSubmission(questionId);
+                    if (this.intervalId)
+                        clearInterval(this.intervalId);
+                    this.startSubmissionStatusCheck();
+                },
+                error: (err) => {
+                    this.pushNotify('Error', "Falha ao submeter arquivo ou deadline ultrapassado.", 'error');
+                }
+            });
+        }
     }
-    if (value === 'FL') {
-      return 'Fail';
+
+    goBack(): void {
+        this.location.back();
     }
-    if (value === 'SC') {
-      return 'Success';
+
+    getLanguageName(value: string): string {
+        if (value === 'PT') {
+            return 'Python';
+        } else if (value === 'CC') {
+            return 'C/C++';
+        }
+        return '';
     }
-    return '';
-  }
 
-  getReport(id: number): void {
-    this.questionService.getReport(id).subscribe({
-      next: (response) => {
-        this.submissionsList = response;
-      },
-    });
-  }
+    extractErrorMessages(data: string): string[] {
+        if (data) {
+            const parsedData = JSON.parse(data);
 
-  getSubmissionsList(): void {
-    const questionId = this.question.id;
-    this.getReport(questionId);
-  }
+            if (parsedData.error_msgs && Array.isArray(parsedData.error_msgs)) {
+                return parsedData.error_msgs;
+            }
+        }
+        return [];
+    }
 
-  resetAllSubmissions(): void {
-    const questionId = this.question.id;
+    getSubmissionStatus(value: string): string {
+        if (value === 'WE') {
+            return 'Waiting Evaluation';
+        }
+        if (value === 'FL') {
+            return 'Fail';
+        }
+        if (value === 'SC') {
+            return 'Success';
+        }
+        return '';
+    }
 
-    this.submissionService.resetAllSubmissions(questionId).subscribe({
-      next: (response) => {
-        this.pushNotify('Success!', 'All submissions reset successfully', 'success');
+    getReport(id: number): void {
+        this.questionService.getReport(id).subscribe({
+            next: (response) => {
+                this.submissionsList = response;
+            },
+        });
+    }
+
+    getSubmissionsList(): void {
+        const questionId = this.question.id;
         this.getReport(questionId);
-      },
-      error: (err) => {
-        this.pushNotify('Error!', 'Failed to reset all submissions', 'error');
+    }
 
-      },
-    });
-  }
+    resetAllSubmissions(): void {
+        const questionId = this.question.id;
 
-  pushNotify(title: string, text: string | undefined, status: any) {
-    this.myNotify = new Notify({
-      status: status,
-      title: title,
-      text: text,
-      effect: 'slide',
-      type: 'filled',
-    });
-  }
+        this.submissionService.resetAllSubmissions(questionId).subscribe({
+            next: (response) => {
+                this.pushNotify('Success!', 'All submissions reset successfully', 'success');
+                this.getReport(questionId);
+            },
+            error: (err) => {
+                this.pushNotify('Error!', 'Failed to reset all submissions', 'error');
 
-  getSubmission(question_id: number): void {
-    this.submissionService.getSubmission(question_id).subscribe({
-      next: (submission) => {
-        this.submission = submission;
-      },
-      error: (err) => {
-        console.log('Error getting submission:', err);
-      }
-    });
-  }
+            },
+        });
+    }
 
-  // A cada 30 segundos, verifica o status da submissão
-  startSubmissionStatusCheck(): void {
-    this.intervalId = setInterval(() => {
-      if (this.question) {
-        this.getSubmission(this.question.id);
-      }
-    }, 1000);
-  }
+    pushNotify(title: string, text: string | undefined, status: any) {
+        this.myNotify = new Notify({
+            status: status,
+            title: title,
+            text: text,
+            effect: 'slide',
+            type: 'filled',
+        });
+    }
 
-  ngOnDestroy(): void {
-    clearInterval(this.intervalId);
-  }
+    getSubmission(question_id: number): void {
+        this.submissionService.getSubmission(question_id).subscribe({
+            next: (submission) => {
+                this.submission = submission;
+            },
+            error: (err) => {
+                console.log('Error getting submission:', err);
+            }
+        });
+    }
+
+    // A cada 30 segundos, verifica o status da submissão
+    startSubmissionStatusCheck(): void {
+        this.intervalId = setInterval(() => {
+            if (this.question) {
+                this.getSubmission(this.question.id);
+            }
+        }, 1000);
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.intervalId);
+    }
 }

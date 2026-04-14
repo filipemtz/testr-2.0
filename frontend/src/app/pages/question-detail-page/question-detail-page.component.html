@@ -1,220 +1,200 @@
-
 <h1 class="display-2 text-center mb-4">{{ question.name }}
-  <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success"></i>
+    <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success"></i>
 </h1>
 
 <div style="padding-bottom: 20px">
-  <a
-    class="icon-link icon-link-hover mb-2"
-    style="cursor: pointer"
-    (click)="goBack()"
-  >
-    <i class="bi fa-solid fa-arrow-left"></i>
-    Voltar
-  </a>
+    <a class="icon-link icon-link-hover mb-2" style="cursor: pointer" (click)="goBack()">
+        <i class="bi fa-solid fa-arrow-left"></i>
+        Voltar
+    </a>
 </div>
 
 <!--Informações-->
 <div style="padding-bottom: 50px">
-  <div class="mb-4">
-    <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
-  </div>
-  <div class="mb-4">
-    <strong>Linguagem de Programação:</strong>
-    {{ getLanguageName(question.language) }}
-  </div>
-  <div class="mb-4">
-    <strong>Descrição:</strong>
-    <div [innerHTML]="question.description"></div>
-  </div>
+    <div class="mb-4">
+        <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
+    </div>
+    <div class="mb-4">
+        <strong>Linguagem de Programação:</strong>
+        {{ getLanguageName(question.language) }}
+    </div>
+    <div class="mb-4">
+        <strong>Descrição:</strong>
+        <div [innerHTML]="question.description"></div>
+    </div>
 </div>
 
 <!--Arquivos-->
-<div style="margin-bottom: 50px;" *ngIf="isProfessor || question.language != 'JP'">
-  <h3 class="fw-bold">Arquivos</h3>
-  <div *ngIf="questionFiles.length; else noQuestionFile">
-    <ul class="list-group list-group-flush">
-      <li *ngFor="let file of questionFiles" class="list-group-item">
-        <a [href]="file.file" download>{{ file.file_name }}</a>
-      </li>
-    </ul>
-  </div>
-  <ng-template #noQuestionFile>
-    <p class="ms-3">Não existem arquivos</p>
-  </ng-template>
+<div style="margin-bottom: 50px;">
+    <h3 class="fw-bold">Arquivos</h3>
+    <div *ngIf="questionFiles.length; else noQuestionFile">
+        <ul class="list-group list-group-flush">
+            <li *ngFor="let file of questionFiles" class="list-group-item">
+                <a [href]="file.file" download>{{ file.file_name }}</a>
+            </li>
+        </ul>
+    </div>
+    <ng-template #noQuestionFile>
+        <p class="ms-3">Não existem arquivos</p>
+    </ng-template>
 </div>
 
 <div *ngIf="isProfessor; else student">
-  <div style="padding-bottom: 50px">
-    <h3 class="fw-bold mb-3">Enviar Resposta</h3>
-    <div class="d-flex flex-wrap mb-3">
-      <input
-        #fileInput
-        class="form-control me-2 my-1"
-        type="file"
-        (change)="onFileSelected($event)"
-        style="max-width: 700px"
-      />
-      <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
-        Upload
-      </button>
+    <div style="padding-bottom: 50px">
+        <h3 class="fw-bold mb-3">Enviar Resposta</h3>
+        <div class="d-flex flex-wrap mb-3">
+            <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
+                style="max-width: 700px" />
+            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
+                Upload
+            </button>
+        </div>
     </div>
-  </div>
 
-  <div *ngIf="submission" style="padding-bottom: 50px">
-    <h3 class="fw-bold mb-3">Relatório</h3>
-    <table class="table table-bordered table-striped">
-      <tbody>
-        <tr>
-          <th scope="row" class="col-2">Arquivo</th>
-          <td class="col-10">
-            <a [href]="apiUrl + '/' + submission.file" download>{{
-              submission.file_name
-            }}</a>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Data da Submissão</th>
-          <td class="col-10">{{ submission.created_at | dateFormat }}</td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Status</th>
-          <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Relatório</th>
-          <td class="col-10">
-            <div *ngFor="let v of extractErrorMessages(submission.report_json)">
-              <div [innerHTML]="v" class="mb-4"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
-      Reavaliar
-    </button>
-  </div>
+    <div *ngIf="submission" style="padding-bottom: 50px">
+        <h3 class="fw-bold mb-3">Relatório</h3>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th scope="row" class="col-2">Arquivo</th>
+                    <td class="col-10">
+                        <a [href]="apiUrl + '/' + submission.file" download>{{
+                            submission.file_name
+                            }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Data da Submissão</th>
+                    <td class="col-10">{{ submission.created_at | dateFormat }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Status</th>
+                    <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Relatório</th>
+                    <td class="col-10">
+                        <div *ngFor="let v of extractErrorMessages(submission.report_json)">
+                            <div [innerHTML]="v" class="mb-4"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+            Reavaliar
+        </button>
+    </div>
 </div>
 
 <ng-template #student>
-  <!--Arquivo a ser submetido-->
-  <div style="padding-bottom: 50px">
-    <h3 class="fw-bold mb-3">Enviar Resposta</h3>
-    <div class="d-flex flex-wrap mb-3">
-      <input
-        #fileInput
-        class="form-control me-2 my-1"
-        type="file"
-        (change)="onFileSelected($event)"
-        style="max-width: 700px"
-      />
-      <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
-        Upload
-      </button>
+    <!--Arquivo a ser submetido-->
+    <div style="padding-bottom: 50px">
+        <h3 class="fw-bold mb-3">Enviar Resposta</h3>
+        <div class="d-flex flex-wrap mb-3">
+            <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
+                style="max-width: 700px" />
+            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
+                Upload
+            </button>
+        </div>
     </div>
-  </div>
 
-  <div *ngIf="submission">
-    <h3 class="fw-bold mb-3">Relatório</h3>
-    <table class="table table-bordered table-striped">
-      <tbody>
-        <tr>
-          <th scope="row" class="col-2">Arquivo</th>
-          <td class="col-10">
-            <a [href]="apiUrl + '/' + submission.file" download>{{
-              submission.file_name
-            }}</a>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Data da Submissão</th>
-          <td class="col-10">{{ submission.created_at | dateFormat }}</td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Status</th>
-          <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
-        </tr>
-        <tr>
-          <th scope="row" class="col-2">Relatório</th>
-          <td class="col-10">
-            <div *ngFor="let v of extractErrorMessages(submission.report_json)">
-              <div [innerHTML]="v" class="mb-4"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
-      Reavaliar
-    </button>
-  </div>
+    <div *ngIf="submission">
+        <h3 class="fw-bold mb-3">Relatório</h3>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th scope="row" class="col-2">Arquivo</th>
+                    <td class="col-10">
+                        <a [href]="apiUrl + '/' + submission.file" download>{{
+                            submission.file_name
+                            }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Data da Submissão</th>
+                    <td class="col-10">{{ submission.created_at | dateFormat }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Status</th>
+                    <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="col-2">Relatório</th>
+                    <td class="col-10">
+                        <div *ngFor="let v of extractErrorMessages(submission.report_json)">
+                            <div [innerHTML]="v" class="mb-4"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+            Reavaliar
+        </button>
+    </div>
 </ng-template>
 
 
 <!--Entradas e Saídas-->
 <div style="margin-bottom: 50px;" *ngIf="question.language != 'JP'">
-  <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
-  <div *ngIf="ios.length; else noIO">
-    <div *ngFor="let io of ios; let i = index" class="row my-3">
-      <div class="col">
-        <label class="form-label"
-          ><strong>Entrada {{ i + 1 }}</strong></label
-        >
-        <textarea class="form-control-plaintext border p-2" readonly>{{
+    <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
+    <div *ngIf="ios.length; else noIO">
+        <div *ngFor="let io of ios; let i = index" class="row my-3">
+            <div class="col">
+                <label class="form-label"><strong>Entrada {{ i + 1 }}</strong></label>
+                <textarea class="form-control-plaintext border p-2" readonly>{{
           io.input
         }}</textarea>
-      </div>
-      <div class="col">
-        <label class="form-label"
-          ><strong>Saída {{ i + 1 }}</strong></label
-        >
-        <textarea class="form-control-plaintext border p-2" readonly>{{
+            </div>
+            <div class="col">
+                <label class="form-label"><strong>Saída {{ i + 1 }}</strong></label>
+                <textarea class="form-control-plaintext border p-2" readonly>{{
           io.output
         }}</textarea>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <ng-template #noIO>
-    <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
-  </ng-template>
+    <ng-template #noIO>
+        <p class="ms-3">Não existem entradas/saídas disponíveis.</p>
+    </ng-template>
 </div>
 
 
 <div *ngIf="isProfessor">
-  <div style="padding-bottom: 50px">
-    <div class="d-flex">
-      <h3 class="fw-bold">Submissões</h3>
-      <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i> Reavaliar Todos </button>
-    </div>
-    <br>
-    <div *ngIf="submissionsList.length; else noSubmissions">
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Aluno</th>
-            <th scope="col">Status</th>
-            <th scope="col">Arquivo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let submission of submissionsList">
-            <td>{{ submission.student }}</td>
-            <td>{{submission.status }}</td>
-            <td>
-              <a [href]="apiUrl + '/' + submission.file" download>{{
-                submission.file_name
-              }}</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div style="padding-bottom: 50px">
+        <div class="d-flex">
+            <h3 class="fw-bold">Submissões</h3>
+            <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()"><i class="fa-solid fa-repeat"></i>
+                Reavaliar Todos </button>
+        </div>
+        <br>
+        <div *ngIf="submissionsList.length; else noSubmissions">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Aluno</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Arquivo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let submission of submissionsList">
+                        <td>{{ submission.student }}</td>
+                        <td>{{submission.status }}</td>
+                        <td>
+                            <a [href]="apiUrl + '/' + submission.file" download>{{
+                                submission.file_name
+                                }}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <ng-template #noSubmissions>
-      <p class="ms-3">Não existem submissões</p>
-    </ng-template>
-  </div>
+        <ng-template #noSubmissions>
+            <p class="ms-3">Não existem submissões</p>
+        </ng-template>
+    </div>
 </div>
-
-
