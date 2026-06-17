@@ -10,7 +10,7 @@ import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ImportQuestionComponent } from '../../components/import-question/import-question.component';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Course } from '../../models/course';
+import { Course, CourseStats } from '../../models/course';
 import { Section } from '../../models/section';
 import { Question } from '../../models/question';
 import { Submission } from '../../models/submission';
@@ -51,9 +51,11 @@ export class CoursesDetailPageComponent implements OnInit {
     course: Course = {} as Course;
     sections: Section[] = [] as Section[];
     submissions: Submission[] = [] as Submission[];
+    stats: CourseStats = {} as CourseStats;
 
     addSectionForm: FormGroup;
     addQuestionForm: FormGroup;
+
 
     questionToDelete: Question | null = null;
     sectionToDelete: Section | null = null;
@@ -141,13 +143,15 @@ export class CoursesDetailPageComponent implements OnInit {
                 this.course = course;
                 return forkJoin({
                     submissions: this.submissionService.submissionsFromCourse(course.id),
-                    sections: this.courseService.getSections(course.id)
+                    sections: this.courseService.getSections(course.id),
+                    stats: this.courseService.getStats(course.id)
                 });
             })
         ).subscribe({
-            next: ({ submissions, sections }) => {
+            next: ({ submissions, sections, stats }) => {
                 this.submissions = submissions;
                 this.sections = sections;
+                this.stats = stats;
                 this.loadQuestions(sections);
             }
         });

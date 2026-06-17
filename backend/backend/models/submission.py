@@ -7,14 +7,14 @@ from .question import Question
 
 
 class SubmissionStatus(models.TextChoices):
-    WAITING_EVALUATION = 'WE', _('Waiting Evaluation')
-    FAIL = 'FL', _('Fail')
-    SUCCESS = 'SC', _('Success')
+    WAITING_EVALUATION = "WE", _("Waiting Evaluation")
+    FAIL = "FL", _("Fail")
+    SUCCESS = "SC", _("Success")
 
 
 def upload_file(instance, filename):
-    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")  
-    return f'{instance.question.id}-{instance.student.id}-{timestamp}-{filename}'
+    timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    return f"{instance.question.id}-{instance.student.id}-{timestamp}-{filename}"
 
 
 class Submission(models.Model):
@@ -25,22 +25,23 @@ class Submission(models.Model):
     status = models.TextField(
         max_length=2,
         choices=SubmissionStatus.choices,
-        default=SubmissionStatus.WAITING_EVALUATION
+        default=SubmissionStatus.WAITING_EVALUATION,
     )
     created_at = models.DateTimeField(default=timezone.now)
     report_json = models.TextField(blank=True)
 
     class Meta:
-        ordering = ['-created_at']
-        unique_together = ['question', 'student']  # Garantir unicidade no nível do banco de dados
+        ordering = ["-created_at"]
+        unique_together = [
+            "question",
+            "student",
+        ]  # Garantir unicidade no nível do banco de dados
 
     @classmethod
     def solved_by_user(cls, question: Question, user: User) -> bool:
         """Check if a user has solved a question."""
         succs = Submission.objects.filter(
-            student=user,
-            question=question,
-            status=SubmissionStatus.SUCCESS
+            student=user, question=question, status=SubmissionStatus.SUCCESS
         )
         return succs.count() > 0
 
@@ -48,4 +49,4 @@ class Submission(models.Model):
         return SubmissionStatus(self.status).label
 
     def __str__(self):
-        return f"{self.student.username} - question '{self.question.name}' - file '{self.file_name}'"
+        return f"{self.id} {self.student.username} - question '{self.question.name}' - file '{self.file_name}'"

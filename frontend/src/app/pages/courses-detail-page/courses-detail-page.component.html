@@ -1,6 +1,11 @@
 <div class="d-flex justify-content-center align-items-center">
     <div style="padding-right: 20px">
         <h1 class="display-2">{{ course.name }}</h1>
+        <div *ngIf="stats && stats.rank" class="h3 text-center text-success">
+            <i>Rank: {{ stats.rank }} / {{ stats.total_students }} ({{ stats.n_solved }} / {{
+                stats.n_visible_questions }}
+                solved)</i>
+        </div>
     </div>
     <div>
         <a *ngIf="isProfessor" class="mb-2" [routerLink]="['/course', course.id, 'report']">

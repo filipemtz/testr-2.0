@@ -92,4 +92,9 @@ urlpatterns = [
         ResetSubmitionForAllStudentsAPIView.as_view(),
         name="reset-all-submissions",
     ),
+    path(
+        "courses/<int:course_id>/stats/",
+        submissions_stats,
+        name="course_stats",
+    ),
 ]

@@ -27,4 +27,5 @@ from .submission_view import (
     ResetSubmitionForAllStudentsAPIView,
     SubmissionsFromCourseView,
     SubmissionViewSet,
+    submissions_stats,
 )

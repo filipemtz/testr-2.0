@@ -1,13 +1,12 @@
 from accounts.permissions import IsStudent, IsTeacher
-from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from django.db.models import Count
 
 from ..models import Question, Submission, SubmissionStatus
 from ..serializers import SubmissionSerializer
@@ -289,3 +288,56 @@ class ResetSubmitionForAllStudentsAPIView(APIView):
             submission.save()
 
         return Response({"detail": "Submissions reseted."})
+
+
+@api_view(["GET"])
+def submissions_stats(request, course_id):
+    student_id = request.user.id
+
+    if not course_id:
+        return Response(
+            {"detail": "course id is not informed."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # returns a list in which each element is [student_id, number of solved questions]
+    solved_counts = list(
+        Submission.objects.filter(
+            question__section__course=course_id,
+            status=SubmissionStatus.SUCCESS,
+            question__visible=True,
+        )
+        .values("student")
+        .annotate(total=Count("status"))
+        .order_by("-total")
+        .all()
+    )
+
+    # identify the rank and number of questions solved by the student
+    student_data = [
+        (idx + 1, x)
+        for idx, x in enumerate(solved_counts)
+        if x["student"] == student_id
+    ]
+
+    if len(student_data) != 1:
+        return Response(
+            {"detail": f"invalid student: {student_id}. counts = {solved_counts}"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # extract the student data from the list
+    student_data = student_data[0]
+
+    n_visible_questions = Question.objects.filter(
+        section__course=course_id, visible=True
+    ).count()
+
+    response = {
+        "rank": student_data[0],
+        "n_solved": student_data[1]["total"],
+        "n_visible_questions": n_visible_questions,
+        "total_students": len(solved_counts),
+    }
+
+    return Response(response)
