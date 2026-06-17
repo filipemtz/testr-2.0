@@ -322,7 +322,7 @@ def submissions_stats(request, course_id):
 
     if len(student_data) != 1:
         return Response(
-            {"detail": f"invalid student: {student_id}. counts = {solved_counts}"},
+            {"detail": f"invalid student or zero submissions."},
             status=status.HTTP_400_BAD_REQUEST,
         )
 

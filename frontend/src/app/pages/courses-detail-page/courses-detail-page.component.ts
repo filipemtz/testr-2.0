@@ -134,6 +134,18 @@ export class CoursesDetailPageComponent implements OnInit {
         });
     }
 
+    loadStats(courseId: number) {
+        this.courseService.getStats(courseId).subscribe({
+            next: (stats: any) => {
+                this.stats = stats;
+            },
+            error: (err) => {
+                console.log(err);
+                // keep the default values and do not show stats.
+            }
+        });
+    }
+
     loadCourse() {
         const id = this.route.snapshot.paramMap.get('id');
         if (!id) return;
@@ -144,15 +156,14 @@ export class CoursesDetailPageComponent implements OnInit {
                 return forkJoin({
                     submissions: this.submissionService.submissionsFromCourse(course.id),
                     sections: this.courseService.getSections(course.id),
-                    stats: this.courseService.getStats(course.id)
                 });
             })
         ).subscribe({
-            next: ({ submissions, sections, stats }) => {
+            next: ({ submissions, sections }) => {
                 this.submissions = submissions;
                 this.sections = sections;
-                this.stats = stats;
                 this.loadQuestions(sections);
+                this.loadStats(this.course.id)
             }
         });
     }
