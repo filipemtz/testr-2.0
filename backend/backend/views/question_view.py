@@ -1,3 +1,5 @@
+import datetime
+import json
 import os
 import tempfile
 import zipfile
@@ -12,7 +14,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import InputOutput, Language, Question, QuestionFile, Section, Submission
+from ..models import (
+    Course,
+    InputOutput,
+    Language,
+    Question,
+    QuestionFile,
+    Section,
+    Submission,
+)
 from ..serializers import QuestionFileSerializer, QuestionSerializer
 from ..serializers.input_output_serializer import InputOutputSerializer
 
@@ -350,6 +360,80 @@ class QuestionImportAPIView(APIView):
                 {"message": "Questões importadas com sucesso."},
                 status=status.HTTP_201_CREATED,
             )
+
+
+class QuestionImportFromJsonAPIView(APIView):
+    permission_classes = [IsTeacher]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        file = request.FILES.get("file")
+        file_name = request.data.get("file_name")
+        course_id = request.data.get("course_id")
+
+        if (not file) or (not file_name) or (not course_id):
+            return Response(
+                {
+                    "error": "Arquivo, nome do arquivo, ID do curso seção são obrigatórios."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        course = Course.objects.filter(id=course_id).first()
+
+        if not course:
+            return Response(
+                {"error": "Curso não encontrado."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user = request.user
+        if not course.teachers.filter(id=user.id).exists():
+            return Response(
+                {
+                    "error": "Você não tem permissão para importar questões para este curso."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        # Decode the uploaded file
+        try:
+            data = json.loads(file.read().decode("utf-8"))
+        except json.JSONDecodeError:
+            return Response(
+                {"error": "Invalid JSON file."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        for section_name, questions in data.items():
+            new_section = Section.objects.create(course_id=course_id, name=section_name)
+
+            for question in questions:
+                date = question["deadline"]
+                year, month, day = map(int, date.split("/"))
+
+                # Cria uma nova questão para cada arquivo extraído
+                new_question = Question.objects.create(
+                    section=new_section,
+                    name=question["name"],
+                    description=question["description"],
+                    language=question["language"],
+                    time_limit_seconds=question["time_limit"],
+                    memory_limit=question["memory_limit"],
+                    cpu_limit=question["cpu_limit"],
+                    submission_deadline=datetime.datetime(year, month, day, 23, 59, 59),
+                )
+
+                # Cria objetos InputOutput para cada par de arquivos invisíveis
+                for pair in question["tests"]:
+                    InputOutput.objects.create(
+                        question=new_question,
+                        visible=True,
+                        input=pair["input"],
+                        output=pair["output"],
+                    )
+        return Response(
+            {"message": "Questões importadas com sucesso."},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class QuestionExportAPIView(APIView):

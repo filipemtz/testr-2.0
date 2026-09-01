@@ -14,6 +14,7 @@ from .question_file_view import QuestionFileViewSet
 from .question_view import (
     QuestionExportAPIView,
     QuestionImportAPIView,
+    QuestionImportFromJsonAPIView,
     QuestionReportAPIView,
     QuestionSwap,
     QuestionViewSet,
