@@ -10,6 +10,7 @@ class Language(models.TextChoices):
     PYTHON = "PT", _("Python")
     JUPYTER = "JP", _("Jupyter")
     JAVA = "JV", _("Java")
+    RELAX = "RL", _("Relax")
 
 
 class Question(models.Model):
@@ -36,3 +37,9 @@ class Question(models.Model):
         if timezone.now() < self.submission_deadline:
             return True
         return False
+
+
+class RelaxTestInfo(models.Model):
+    question = models.OneToOneField(Question, on_delete=models.CASCADE)
+    database = models.CharField(max_length=100)
+    correct_query = models.TextField(blank=False)

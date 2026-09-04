@@ -144,6 +144,12 @@ export class QuestionDetailPageComponent implements OnInit {
             return 'Python';
         } else if (value === 'CC') {
             return 'C/C++';
+        } else if (value === 'JV') {
+            return 'Java';
+        } else if (value === 'JP') {
+            return 'Jupyter notebook';
+        } else if (value === 'RL') {
+            return 'Relax';
         }
         return '';
     }

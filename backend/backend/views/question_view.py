@@ -5,15 +5,28 @@ import zipfile
 from accounts.permissions import IsStudentSafeMethods, IsTeacher
 from django.core.files import File
 from django.http import HttpResponse
-from rest_framework import permissions, status, viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import InputOutput, Language, Question, QuestionFile, Section, Submission
-from ..serializers import QuestionFileSerializer, QuestionSerializer
+from ..models import (
+    InputOutput,
+    Language,
+    Question,
+    QuestionFile,
+    RelaxTestInfo,
+    Section,
+    Submission,
+)
+from ..serializers import (
+    QuestionFileSerializer,
+    QuestionSerializer,
+    RelaxTestInfoSerializer,
+)
 from ..serializers.input_output_serializer import InputOutputSerializer
 
 
@@ -26,6 +39,11 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [IsTeacher | IsStudentSafeMethods]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        self._remove_extra_info_on_type_change()
+        return response
 
     @action(detail=True, methods=["get"])
     def inputs_outputs(self, request, pk=None):
@@ -41,6 +59,13 @@ class QuestionViewSet(viewsets.ModelViewSet):
             inputs_outputs, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
+    def _remove_extra_info_on_type_change(self):
+        question: Question = self.get_object()
+        if question.language != Language.RELAX.value:
+            info_query = RelaxTestInfo.objects.filter(question=question)
+            if info_query.count() > 0:
+                info_query.delete()
 
     def _remove_auxiliary_files(self, question: Question, files):
         result = []
@@ -483,3 +508,18 @@ class QuestionExportAPIView(APIView):
 
         except Question.DoesNotExist:
             return Response({"error": "Questão não encontrada."}, status=404)
+
+
+class RelaxTestInfoViewSet(viewsets.ModelViewSet):
+    queryset = RelaxTestInfo.objects.all()
+    serializer_class = RelaxTestInfoSerializer
+    permission_classes = [IsTeacher | IsStudentSafeMethods]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+
+
+class QuestionRelaxTestInfoView(generics.RetrieveAPIView):
+    serializer_class = RelaxTestInfoSerializer
+
+    def get_object(self):
+        question_id = self.kwargs["question_id"]
+        return get_object_or_404(RelaxTestInfo, question_id=question_id)

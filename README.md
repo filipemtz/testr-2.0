@@ -66,6 +66,14 @@ cd ../backend
 python -m pip install -r requirements.txt
 ```
 
+Install pyrelax with the following commands:
+
+```bash
+git clone https://github.com/filipemtz/pyrelax
+cd pyrelax
+python -m pip install .
+```
+
 ## First Time Setup
 
 Copy the `frontend/.env-sample` file to `frontend/.env` and edit variables according to your system.

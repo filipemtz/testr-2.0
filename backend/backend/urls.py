@@ -5,6 +5,7 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register(r"courses", CourseViewSet)
+router.register(r"relax_test_info", RelaxTestInfoViewSet)
 router.register(r"questions", QuestionViewSet)
 router.register(r"sections", SectionViewSet)
 router.register(r"inputs_outputs", InputOutputViewSet)
@@ -96,5 +97,15 @@ urlpatterns = [
         "courses/<int:course_id>/stats/",
         submissions_stats,
         name="course_stats",
+    ),
+    path(
+        "questions/<int:question_id>/relax-test-info/",
+        QuestionRelaxTestInfoView.as_view(),
+        name="question-relax-test-info",
+    ),
+    path(
+        "pyrelax/databases/",
+        PyrelaxDatabasesView.as_view(),
+        name="pyrelax-databases",
     ),
 ]

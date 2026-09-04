@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models.question import Question
+from ..models.question import Question, RelaxTestInfo
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -22,3 +22,9 @@ class QuestionSerializer(serializers.ModelSerializer):
             "visible",
             "order",
         ]
+
+
+class RelaxTestInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RelaxTestInfo
+        fields = "__all__"

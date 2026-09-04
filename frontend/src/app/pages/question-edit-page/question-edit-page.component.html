@@ -1,151 +1,128 @@
-
 <h1 class="display-2 text-center mb-4">Editor de Questão</h1>
-<a
-  class="icon-link icon-link-hover mb-2"
-  style="cursor: pointer"
-  (click)="goBack()"
->
-  <i class="bi fa-solid fa-arrow-left"></i>
-  Voltar
+<a class="icon-link icon-link-hover mb-2" style="cursor: pointer" (click)="goBack()">
+    <i class="bi fa-solid fa-arrow-left"></i>
+    Voltar
 </a>
 <br />
 
 <div>
-  <form [formGroup]="editForm">
-    <div>
-      <label for="name" class="base-form">Nome:</label>
-      <input
-        id="name"
-        type="text"
-        class="form-control"
-        formControlName="name"
-      />
-      <div
-        *ngIf="
+    <form [formGroup]="editForm">
+        <div>
+            <label for="name" class="base-form">Nome:</label>
+            <input id="name" type="text" class="form-control" formControlName="name" />
+            <div *ngIf="
           editForm.get('name')?.invalid &&
           (editForm.get('name')?.dirty || editForm.get('name')?.touched)
-        "
-        class="text-danger"
-      >
-        Nome da questão é obrigatório.
-      </div>
-    </div>
+        " class="text-danger">
+                Nome da questão é obrigatório.
+            </div>
+        </div>
 
-    <div class="mb-3">
-      <label for="description" class="base-form">Descrição:</label>
-      <textarea id="description"
-      type="text"
-      class="form-control"
-      formControlName="description">
+        <div class="mb-3">
+            <label for="description" class="base-form">Descrição:</label>
+            <textarea id="description" type="text" class="form-control" formControlName="description">
 
       </textarea>
 
+        </div>
+
+        <div class="row mb-2">
+
+            <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+                <label for="language" class="base-form">Linguagem:</label>
+                <div class="w-100 d-inline-block position-relative">
+                    <select class="form-control custom-select" id="language" formControlName="language">
+                        <option value="" disabled>Selecione a linguagem</option>
+                        <option value="PT">Python</option>
+                        <option value="CC">C/C++</option>
+                        <option value="JP">Jupyter</option>
+                        <option value="JV">Java</option>
+                        <option value="RL">Relax</option>
+                    </select>
+                    <i class="fas fa-chevron-down custom-arrow"></i>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+                <label for="time_limit_seconds" class="base-form">Tempo Limite (segundos):</label>
+                <input id="time_limit_seconds" type="number" class="form-control custom-select"
+                    formControlName="time_limit_seconds" />
+                <div *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
+                    class="text-danger">
+                    Tempo limite de execução em segundos obrigatório.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+                <label for="memory_limit" class="base-form">Limite de Memória:</label>
+                <input id="memory_limit" type="number" class="form-control custom-select"
+                    formControlName="memory_limit" />
+                <div *ngIf="editForm.get('memory_limit')?.invalid &&
+          (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)" class="text-danger">
+                    Limite de memória obrigatório.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
+                <label for="cpu_limit" class="base-form">Limite de Uso:</label>
+                <input id="cpu_limit" type="number" class="form-control custom-select" formControlName="cpu_limit" />
+                <div *ngIf="editForm.get('cpu_limit')?.errors?.['required']" class="text-danger">
+                    Limite da CPU obrigatório.
+                </div>
+                <div *ngIf="editForm.get('cpu_limit')?.errors?.['cpuLimit']" class="text-danger">
+                    Limite da CPU deve estar entre 0 e 1.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6 mt-2">
+                <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
+                <div class="w-100 d-inline-block position-relative">
+                    <input matInput [matDatepicker]="picker" formControlName="submission_deadline"
+                        class="form-control custom-select" />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"
+                        class="custom-datepicker-toggle"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <button type="button" class="btn btn-success col-2" (click)="confirmEditQuestion()">
+                Salvar
+            </button>
+            <button type="button" class="btn btn-danger col-2 go-back-btn"
+                (click)="openDeleteQuestionModal(deleteQuestionModal)">
+                Deletar
+            </button>
+        </div>
+    </form>
+
+    <div class="mb-5">
+        <app-upload-question-file></app-upload-question-file>
     </div>
 
-
-
-    <div class="row mb-2">
-
-      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
-        <label for="language" class="base-form">Linguagem:</label>
-        <div class="w-100 d-inline-block position-relative">
-          <select class="form-control custom-select" id="language" formControlName="language">
-            <option value="" disabled>Selecione a linguagem</option>
-            <option value="PT">Python</option>
-            <option value="CC">C/C++</option>
-            <option value="JP">Jupyter</option>
-            <option value="JV">Java</option>
-          </select>
-          <i class="fas fa-chevron-down custom-arrow"></i>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
-        <label for="time_limit_seconds" class="base-form">Tempo Limite (segundos):</label>
-        <input id="time_limit_seconds" type="number" class="form-control custom-select" formControlName="time_limit_seconds"/>
-        <div
-          *ngIf="editForm.get('time_limit_seconds')?.invalid && (editForm.get('time_limit_seconds')?.dirty || editForm.get('time_limit_seconds')?.touched)"
-          class="text-danger">
-          Tempo limite de execução em segundos obrigatório.
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
-        <label for="memory_limit" class="base-form">Limite de Memória:</label>
-        <input id="memory_limit" type="number" class="form-control custom-select" formControlName="memory_limit"/>
-        <div *ngIf="editForm.get('memory_limit')?.invalid &&
-          (editForm.get('memory_limit')?.dirty || editForm.get('memory_limit')?.touched)"
-          class="text-danger">
-          Limite de memória obrigatório.
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6">
-        <label for="cpu_limit" class="base-form">Limite de Uso:</label>
-        <input id="cpu_limit" type="number" class="form-control custom-select" formControlName="cpu_limit"/>
-        <div *ngIf="editForm.get('cpu_limit')?.errors?.['required']"
-          class="text-danger">
-          Limite da CPU obrigatório.
-        </div>
-        <div *ngIf="editForm.get('cpu_limit')?.errors?.['cpuLimit']"
-          class="text-danger">
-          Limite da CPU deve estar entre 0 e 1.
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-xs-12 col-sm-6 mt-2">
-        <label for="submission_deadline" class="base-form">Prazo de Entrega:</label>
-        <div class="w-100 d-inline-block position-relative">
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="submission_deadline"
-              class="form-control custom-select"
-            />
-            <mat-datepicker-toggle matIconSuffix [for]="picker" class="custom-datepicker-toggle"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </div>
-      </div>
+    @if (editForm.controls['language'].value === 'RL') {
+    <div class="mb-5">
+        <app-relax-test-info></app-relax-test-info>
     </div>
-
-    <div>
-      <button
-        type="button"
-        class="btn btn-success col-2"
-        (click)="confirmEditQuestion()"
-      >
-        Salvar
-      </button>
-      <button
-        type="button"
-        class="btn btn-danger col-2 go-back-btn"
-        (click)="openDeleteQuestionModal(deleteQuestionModal)"
-      >
-        Deletar
-      </button>
+    } @else {
+    <div class="mt-4 mb-4">
+        <app-input-output></app-input-output>
     </div>
-  </form>
-
-  <div class="mb-5">
-    <app-upload-question-file></app-upload-question-file>
-  </div>
-
-  <div class="mt-4 mb-4">
-    <app-input-output></app-input-output>
-  </div>
+    }
 </div>
 
 <!-- Modal para deletar questão -->
 <ng-template #deleteQuestionModal let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Deletar questão</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		Tem certeza que deseja deletar a questão?
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-		<button type="button" class="btn btn-danger" (click)="deleteQuestion()">Deletar</button>
-	</div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Deletar questão</h4>
+        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        Tem certeza que deseja deletar a questão?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="deleteQuestion()">Deletar</button>
+    </div>
 </ng-template>

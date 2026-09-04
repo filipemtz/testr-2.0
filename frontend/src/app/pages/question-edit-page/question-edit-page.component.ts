@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { QuestionService } from '../../services/question.service';
 import { InputOutputComponent } from '../../components/input-output/input-output.component';
+import { RelaxTestInfoComponent } from '../../components/relax-test-info/relax-test-info.component';
 import { map, Observable, of } from 'rxjs';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,12 +41,13 @@ export const MY_DATE_FORMATS = {
         FormsModule,
         ReactiveFormsModule,
         MatIconModule,
-        InputOutputComponent,
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,
         UploadQuestionFileComponent,
-        NgbDropdownModule
+        NgbDropdownModule,
+        InputOutputComponent,
+        RelaxTestInfoComponent
     ],
     providers: [provideNativeDateAdapter(), { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
@@ -66,6 +68,7 @@ export class QuestionEditPageComponent implements OnInit {
         private location: Location,
         private modalService: NgbModal,
         private fb: FormBuilder) {
+
         this.editForm = this.fb.group({
             name: ['', Validators.required],
             description: [''],
@@ -75,7 +78,6 @@ export class QuestionEditPageComponent implements OnInit {
             cpu_limit: ['', Validators.required, [this.cpuLimitValidator]],
             submission_deadline: ['', Validators.required]
         });
-
     }
 
     ngOnInit(): void {

@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between mb-3">
+    <h2>Dados de Correção</h2>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+
+    <div>
+        <div class="row mb-2">
+            <label for="database" class="base-form">Database:</label>
+            <div class="w-100 d-inline-block position-relative">
+                <select class="form-select form-control custom-select" id="database" formControlName="database">
+                    <option value="" disabled>Selecione o banco de dados</option>
+                    <option *ngFor="let database of available_databases" value="{{ database }}">
+                        {{ database }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <label class="base-form">
+            Correct Query:
+        </label>
+        <textarea class="form-control" formControlName="correct_query"></textarea>
+    </div>
+
+    <div>
+        <button class="btn btn-success col-2" type="submit">Salvar</button>
+    </div>
+
+</form>

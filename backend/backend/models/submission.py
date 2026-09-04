@@ -1,7 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
+from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from .question import Question
 
@@ -10,6 +10,8 @@ class SubmissionStatus(models.TextChoices):
     WAITING_EVALUATION = "WE", _("Waiting Evaluation")
     FAIL = "FL", _("Fail")
     SUCCESS = "SC", _("Success")
+    RUNNING = "RN", _("Running")
+    INTERNAL_ERROR = "IE", _("Internal Error")
 
 
 def upload_file(instance, filename):

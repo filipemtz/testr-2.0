@@ -1,18 +1,18 @@
-
 import json
 import traceback
 from datetime import datetime
 
 import django
 import psycopg2
-from .cpp_judge import CppJudge
-from .base_judge import BaseJudge
-from .python_judge import PythonJudge
-from .jupyter_judge import JupyterJudge
-from .java_judge import JavaJudge
-
+from backend.autojudge.relax_judge import RelaxJudge
 from backend.models.question import Language
 from backend.models.submission import Submission, SubmissionStatus
+
+from .base_judge import BaseJudge
+from .cpp_judge import CppJudge
+from .java_judge import JavaJudge
+from .jupyter_judge import JupyterJudge
+from .python_judge import PythonJudge
 
 
 class AutoJudgeRunner:
@@ -21,14 +21,13 @@ class AutoJudgeRunner:
         Language.PYTHON.value: PythonJudge,
         Language.JUPYTER.value: JupyterJudge,
         Language.JAVA.value: JavaJudge,
+        Language.RELAX.value: RelaxJudge,
     }
 
     @classmethod
-    def evaluate(cls,
-                 submission: Submission,
-                 keep_files: bool = False,
-                 verbose: bool = False
-                 ) -> None:
+    def evaluate(
+        cls, submission: Submission, keep_files: bool = False, verbose: bool = False
+    ) -> None:
 
         judge_class = AutoJudgeRunner.judges[submission.question.language]
 
@@ -37,18 +36,20 @@ class AutoJudgeRunner:
             report = judge.judge(submission, verbose)
         except Exception as e:
             if verbose:
-                print("\n[!! IMPORTANT !!] A submission crashed the autojudge with the following error:")
+                print(
+                    "\n[!! IMPORTANT !!] A submission crashed the autojudge with the following error:"
+                )
                 print(traceback.format_exc())
             date_format = "%d/%m/%Y %H:%M:%S"
             dt = datetime.now().strftime(date_format)
             report = {
-                "error_msgs": [f"The submission crashed the autojudge: {traceback.format_exc()}"],
+                "error_msgs": [
+                    f"The submission crashed the autojudge: {traceback.format_exc()}"
+                ],
                 "start_at": dt,
                 "end_at": dt,
                 "uuid": "",
-                "input_output_test_report": {
-                    "tests_reports": []
-                }
+                "input_output_test_report": {"tests_reports": []},
             }
 
         report_json = json.dumps(report)
@@ -62,14 +63,17 @@ class AutoJudgeRunner:
         try:
             submission.save()
         except (psycopg2.errors.UniqueViolation, django.db.utils.IntegrityError):
-            print("** WARNING **: Trying to create a submission when that already exists when updating in the autojudge. I'll pretent nothing happens and try to correct again, but it is important to check what is causing that!!")
+            print(
+                "** WARNING **: Trying to create a submission when that already exists when updating in the autojudge. I'll pretent nothing happens and try to correct again, but it is important to check what is causing that!!"
+            )
             return
 
         if verbose:
             print("--------------------------")
 
         print(
-            f"Submission {report['uuid']}: {submission} evaluated with {submission.status.label}.")
+            f"Submission {report['uuid']}: {submission} evaluated with {submission.status.label}."
+        )
 
         if verbose:
             print("--------------------------")
