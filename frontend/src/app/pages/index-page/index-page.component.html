@@ -1,77 +1,79 @@
 <div *ngIf="isProfessor; else studentView">
-	<div id="" class="mb-5">
-		<a type="button" class="btn btn-primary" disabled (click)="createDefaultCourse(user.id)" title="novo curso"><i
-				class="fa-regular fa-plus fa-xl me-1"></i> Novo Curso</a>
-	</div>
+    <div id="" class="mb-5">
+        <a type="button" class="btn btn-primary" disabled (click)="createDefaultCourse(user.id)" title="novo curso"><i
+                class="fa-regular fa-plus fa-xl me-1"></i> Novo Curso</a>
+    </div>
 
-	<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-		<div *ngFor="let course of courses" class="col">
-			<div class="card shadow-sm h-100">
-				<div class="card-body h-100">
-					<div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
-						<input #courseInput class="form-control input-inline fs-5 w-50" [(ngModel)]="course.name" />
-						<div class="d-flex justify-content-between align-items-center">
-							<a class="btn btn-sm fa-check fa-solid text-success"
-								(click)="confirmEditInline(course)"></a>
-							<a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
-						</div>
-					</div>
+    <div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+        <div *ngFor="let course of courses" class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body h-100">
+                    <div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
+                        <input #courseInput class="form-control input-inline fs-5 w-50" [(ngModel)]="course.name" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="btn btn-sm fa-check fa-solid text-success"
+                                (click)="confirmEditInline(course)"></a>
+                            <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
+                        </div>
+                    </div>
 
-					<ng-template #viewMode>
-						<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
-							<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
-							<div *ngIf="isProfessor">
-								<span *ngIf="course.visible; else visibleOff">
-									<a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibilityCourse(course)"></a>
-								</span>
-								<ng-template #visibleOff>
-									<a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibilityCourse(course)"></a>
-								</ng-template>
-								<a class="btn btn-sm fa-regular fa-copy text-secondary" (click)="makeACopy(course)"></a>
-								<a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
-								<a class="btn btn-sm fa-solid fa-trash text-danger"
-									(click)="openDeleteModal(course, deleteModal)"></a>
-							</div>
-						</div>
-					</ng-template>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <ng-template #viewMode>
+                        <div class="h-100 d-flex flex-wrap justify-content-between mb-5">
+                            <h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
+                            <div *ngIf="isProfessor">
+                                <span *ngIf="course.visible; else visibleOff">
+                                    <a class="btn btn-sm fa-solid fa-eye text-primary"
+                                        (click)="changeVisibilityCourse(course)"></a>
+                                </span>
+                                <ng-template #visibleOff>
+                                    <a class="btn btn-sm fa-solid fa-eye-slash text-primary"
+                                        (click)="changeVisibilityCourse(course)"></a>
+                                </ng-template>
+                                <a class="btn btn-sm fa-regular fa-copy text-secondary" (click)="makeACopy(course)"></a>
+                                <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
+                                <a class="btn btn-sm fa-solid fa-trash text-danger"
+                                    (click)="openDeleteModal(course, deleteModal)"></a>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <ng-template #studentView>
-	<h2 class="text-center">Cursos</h2>
-	<div class="course-list">
-		<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-			<div *ngFor="let course of courses" class="col">
-				<div *ngIf="course.visible" class="card shadow-sm h-100">
-					<div class="card-body h-100">
-						<div class="h-100 d-flex flex-wrap justify-content-between mb-5">
-							<h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <h2 class="text-center">Cursos</h2>
+    <div class="course-list">
+        <div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            <div *ngFor="let course of courses" class="col">
+                <div *ngIf="course.visible" class="card shadow-sm h-100">
+                    <div class="card-body h-100">
+                        <div class="h-100 d-flex flex-wrap justify-content-between mb-5">
+                            <h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #noCourses>
-	<p class="ms-1">Ainda não existem cursos.</p>
+    <p class="ms-1">Ainda não existem cursos.</p>
 </ng-template>
 
 
 <ng-template #deleteModal let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Deletar curso</h4>
-		<button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		Tem certeza que deseja deletar o curso {{ courseToDelete?.name }}?
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-		<button *ngIf="isProfessor" type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
-	</div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Deletar curso</h4>
+        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        Tem certeza que deseja deletar o curso {{ courseToDelete?.name }}?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
+        <button *ngIf="isProfessor" type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
+    </div>
 </ng-template>

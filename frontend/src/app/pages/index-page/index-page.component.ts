@@ -7,212 +7,112 @@ import { Course } from '../../models/course';
 import Notify from 'simple-notify'
 import 'simple-notify/dist/simple-notify.css'
 import {
-  ReactiveFormsModule,
-  FormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
+    ReactiveFormsModule,
+    FormsModule,
+    FormBuilder,
+    FormGroup,
+    Validators,
 } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-index-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './index-page.component.html',
-  styleUrls: ['./index-page.component.css'],
+    selector: 'app-index-page',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatIconModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
+    templateUrl: './index-page.component.html',
+    styleUrls: ['./index-page.component.css'],
 })
 
 export class IndexPageComponent implements OnInit {
-  @ViewChild('courseInput') courseInput!: ElementRef;
-  editForm: FormGroup;
-  addForm: FormGroup;
+    @ViewChild('courseInput') courseInput!: ElementRef;
 
-  courses: Course[] = [];
-  courseToDelete: Course | null = null;
-  user: any;
-  myNotify: any;
-  isProfessor: boolean = false;
-  teacherList: any[] = [];
+    courses: Course[] = [];
+    user: any;
+    myNotify: any;
+    isProfessor: boolean = false;
 
-  defaultCourse: Course = {
-    id: -1,
-    url: "",
-    name: "Novo Curso",
-    visible: true,
-    teachers: [],
-    students: [],
-    originalName: "Novo Curso"
-  }
+    defaultCourse: Course = Course.getDefaultCourse();
 
-  constructor(
-    private authService: AuthService,
-    private courseService: CourseService,
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-    private fb: FormBuilder,
-  ) {
-    this.editForm = this.fb.group({
-      name: ['', Validators.required],
-    });
-    this.addForm = this.fb.group({
-      name: ['', Validators.required],
-    });
+    constructor(
+        private authService: AuthService,
+        private courseService: CourseService,
+        config: NgbModalConfig,
+        private modalService: NgbModal,
+        private fb: FormBuilder,
+    ) {
+        config.backdrop = 'static';
+        config.keyboard = false;
+    }
 
-    config.backdrop = 'static';
-		config.keyboard = false;
-  }
+    ngOnInit(): void {
+        this.authService.profile().subscribe({
+            next: (response) => {
+                this.user = response;
 
-  ngOnInit(): void {
-    this.authService.profile().subscribe({
-      next: (response) => {
-        this.user = response;
+                this.authService.userInfo().subscribe({
+                    next: (response: any) => {
+                        this.isProfessor = response.groups.includes('teacher');
+                    },
+                });
 
-        this.authService.userInfo().subscribe({
-          next: (response: any) => {
-            this.isProfessor = response.groups.includes('teacher');
-          },
+                this.loadCourses();
+            },
         });
-
-        this.loadCourses();
-      },
-    });
-  }
-
-  loadCourses() {
-    this.courseService.getCourses().subscribe({
-      next: (response) => {
-        this.courses = response.results;
-        //console.log(response.results);
-      },
-      error: (err) => {
-        console.log(err);
-        this.pushNotify('Erro!', 'Erro ao carregar os cursos', 'error');
-      },
-    });
-    //console.log(this.teacherList);
-    this.teacherList = [];
-  }
-
-  openDeleteModal(course: Course, content: TemplateRef<any>) {
-    this.courseToDelete = course;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
-  confirmDelete(): void {
-    if (this.courseToDelete && this.courseToDelete.url) {
-      this.courseService.deleteCourse(this.courseToDelete.url).subscribe({
-        next: () => {
-          this.courses = this.courses.filter(
-            (course) => course.url !== this.courseToDelete!.url,
-          );
-          this.modalService.dismissAll();
-        },
-        error: (err) => {
-          console.error(err);
-          this.pushNotify('Erro!', 'Falha ao deletar curso', 'error');
-        },
-      });
-    }
-  }
-
-  enableEdit(course: Course) {
-    course.isEditing = true;
-    course.originalName = course.name;
-    setTimeout(() => {
-      this.courseInput.nativeElement.focus();
-    });
-  }
-
-  confirmEditInline(course: Course) {
-      const updatedCourse = { ...course };
-      this.courseService.updateCourse(course.url, updatedCourse).subscribe({
-        next: () => {
-          course.isEditing = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.pushNotify('Erro!', 'Falha ao atualizar curso', 'error');
-        },
-      });
     }
 
-  cancelEdit(course: Course) {
-    course.isEditing = false;
-    course.name = course.originalName;
-  }
-
-  resetAddForm(): void{
-    this.addForm.reset();
-  }
-
-  pushNotify(title: string, text: string | undefined, status: any) {
-    this.myNotify = new Notify({
-      status: status,
-      title: title,
-      text: text,
-      effect: 'slide',
-      type: 'filled'
-    })
-  }
-
-  createDefaultCourse(userId: string): void {
-    const defaultCourse: Course = { ...this.defaultCourse}
-    defaultCourse.teachers.push(userId);
-    this.courseService.createCourse(defaultCourse).subscribe({
-      next: course => {
-        this.courses.push(course);
-      }
-    })
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  keyEventListener(event: KeyboardEvent): void {
-    const editingCourse = this.courses.find(course => course.isEditing);
-    if (editingCourse){
-      if (event.key === 'Escape' || event.key === 'Esc') {
-        this.cancelEdit(editingCourse);
-      }
-      else if(event.key === 'Enter'){
-        this.confirmEditInline(editingCourse);
-      }
+    loadCourses() {
+        this.courseService.getCourses().subscribe({
+            next: (response) => {
+                this.courses = response.results;
+            },
+            error: (err) => {
+                console.log(err);
+                this.pushNotify('Erro!', 'Erro ao carregar os cursos', 'error');
+            },
+        });
     }
-  }
 
-  makeACopy(course: Course): void {
-    this.courseService.makeACopy(course.id).subscribe({
-      next: (response) => {
-        this.pushNotify('Sucesso!', 'Cópia do curso feita com sucesso', 'success');
-        this.loadCourses();
-      },
-      error: (err) => {
-        console.error(err);
-        this.pushNotify('Erro!', 'Falha ao fazer cópia do curso', 'error');
-      },
-    });
-  }
+    pushNotify(title: string, text: string | undefined, status: any) {
+        this.myNotify = new Notify({
+            status: status,
+            title: title,
+            text: text,
+            effect: 'slide',
+            type: 'filled'
+        })
+    }
 
-  changeVisibilityCourse(course: Course): void {
-    course.visible = !course.visible;
-    this.courseService.updateCourse(course.url, course).subscribe({
-      next: (response) => {
-        this.loadCourses();
-      },
-      error: (err) => {
-        console.error(err);
-        this.pushNotify('Erro!', 'Falha ao mudar visibilidade do curso', 'error');
-      },
-    });
-  }
+    createDefaultCourse(userId: string): void {
+        const defaultCourse: Course = { ...this.defaultCourse }
+        defaultCourse.teachers.push(userId);
+        this.courseService.createCourse(defaultCourse).subscribe({
+            next: course => {
+                this.courses.push(course);
+            }
+        })
+    }
 
-  close() {
-    this.myNotify.close()
-  }
+    makeACopy(course: Course): void {
+        this.courseService.makeACopy(course.id).subscribe({
+            next: (response) => {
+                this.pushNotify('Sucesso!', 'Cópia do curso feita com sucesso', 'success');
+                this.loadCourses();
+            },
+            error: (err) => {
+                console.error(err);
+                this.pushNotify('Erro!', 'Falha ao fazer cópia do curso', 'error');
+            },
+        });
+    }
+
+    close() {
+        this.myNotify.close()
+    }
 }
