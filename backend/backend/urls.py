@@ -61,6 +61,11 @@ urlpatterns = [
     ),
     path("questions-import/", QuestionImportAPIView.as_view(), name="question-import"),
     path(
+        "questions-import-json/",
+        QuestionImportFromJsonAPIView.as_view(),
+        name="questions-import-json",
+    ),
+    path(
         "questions-export/<int:question_id>/",
         QuestionExportAPIView.as_view(),
         name="question-export",

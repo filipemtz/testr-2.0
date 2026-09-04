@@ -64,8 +64,33 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
             Enviar
         </button>
+        <br>
+        <br>
     </div>
+</div>
 
+<div class="page-section">
+    <h2 class="mt-4 mb-2">Importar Questões (JSON)</h2>
+
+    <small class="form-text text-muted">
+        Envie um arquivo .JSON no formato indicado
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            aqui
+        </button>.
+        Cada seção pode conter várias questões e cada questão
+        pode conter vários casos de teste (pares entrada/saída).
+    </small>
+    <div class="d-flex flex-wrap mb-2">
+        <input type="file" class="form-control me-2 my-1" accept=".json" style="max-width: 700px"
+            (change)="onQuestionJsonSelected($event)" id="json_questoes" />
+        <button class="btn btn-outline-primary my-1" (click)="uploadJsonQuestions()">
+            Enviar
+        </button>
+    </div>
+</div>
+
+<div class="page-section">
+    <h2 class="mt-4 mb-2">Relatório dos Estudantes</h2>
     <div class="d-flex">
         <table class="table table-hover align-middle">
             <thead>
@@ -96,5 +121,53 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Formato do Arquivo JSON
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre>
+<code>
+&#123;
+  "Nome da Seção 1": [
+    &#123;
+      "name": "Título da Questão 1",
+      "description": "Descrição da Questão 1",
+      "language": "CC",   // linguagens podem ser PT (Python), CC (C/C++), JP (Jupyter) ou JV (Java).
+      "time_limit": 3,  // in seconds
+      "memory_limit": 200,  // in MB
+      "cpu_limit": 0.25,   // percentage of max
+      "deadline": "2026/05/09",   // year/month/day
+      "tests": [
+        &#123;
+          "input": "2",
+          "output": "4"
+        &#125;,
+        &#123;
+          "input": "-2",
+          "output": "-4"
+        &#125;,
+        // (...)
+      ]
+    &#125;,
+    // (...)
+  ],
+  // (...)
+&#125;
+</code>
+</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+        </div>
     </div>
 </div>

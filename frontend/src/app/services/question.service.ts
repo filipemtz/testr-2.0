@@ -68,6 +68,12 @@ export class QuestionService {
         return this.http.request(req);
     }
 
+    importQuestionsFromJson(formData: FormData): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}-import-json/`, formData, {
+            withCredentials: true
+        });
+    }
+
     exportQuestion(question_id: number): Observable<any> {
         return this.http.get(`${this.apiUrl}-export/${question_id}/`, { responseType: 'blob', withCredentials: true });
     }

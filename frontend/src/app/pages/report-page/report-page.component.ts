@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Course } from '../../models/course';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course.service';
+import { QuestionService } from '../../services/question.service';
 import { CommonModule } from '@angular/common';
 import Notify from 'simple-notify';
 import 'simple-notify/dist/simple-notify.css';
@@ -20,6 +22,7 @@ export class ReportPageComponent {
 
     course: Course = {} as Course;
     selectedFile: File | null = null;
+    selectedQuestionJsonFile: File | null = null;
 
     myNotify: any;
     enrolledStudents: any[] = [];
@@ -30,6 +33,7 @@ export class ReportPageComponent {
     constructor(
         private route: ActivatedRoute,
         private courseService: CourseService,
+        private questionService: QuestionService,
     ) { }
 
     ngOnInit(): void {
@@ -162,9 +166,31 @@ export class ReportPageComponent {
         });
     }
 
+    uploadJsonQuestions() {
+        if (!this.selectedQuestionJsonFile) {
+            this.pushNotify('Erro!', 'Selecione um arquivo!', 'warning');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', this.selectedQuestionJsonFile);
+        formData.append('file_name', this.selectedQuestionJsonFile.name);
+        formData.append('course_id', this.course.id.toString());
+
+        this.questionService.importQuestionsFromJson(formData).subscribe({
+            next: (response) => {
+                console.log('HTTP SUCCESS', response);
+                this.pushNotify('Sucesso!', 'Upload com sucesso das questões!', 'success');
+            },
+            error: (err: any) => {
+                this.pushNotify('Falha!', 'Erro ao carregar questões!', 'error');
+            },
+        });
+    }
+
     unrollStudent(course: Course, student: any, student_idx: number) {
         this.courseService.unrollStudent(course.id, student.id).subscribe({
-            next: () => {
+            next: (response: any) => {
                 this.report.splice(student_idx, 1);
                 this.pushNotify('Sucesso!', "Estudante removido.", 'success');
             },
@@ -181,6 +207,13 @@ export class ReportPageComponent {
         }
     }
 
+    onQuestionJsonSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            this.selectedQuestionJsonFile = input.files[0];
+        }
+    }
+
     pushNotify(title: string, text: string | undefined, status: any) {
         this.myNotify = new Notify({
             status: status,
@@ -191,6 +224,4 @@ export class ReportPageComponent {
             speed: 1500,
         });
     }
-
-
 }
