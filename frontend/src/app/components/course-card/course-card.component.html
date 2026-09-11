@@ -2,11 +2,14 @@
     <div class="card shadow-sm h-100">
         <div class="card-body h-100">
 
-            <div *ngIf="course.isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
-                <input #courseInput class="form-control input-inline fs-5 w-50" [(ngModel)]="course.name" />
+            <div *ngIf="isEditing; else viewMode" class="d-flex flex-wrap justify-content-between">
+                <form [formGroup]="editForm">
+                    <input #courseInput formControlName="name" type="text"
+                        class="form-control input-inline fs-5 w-50" />
+                </form>
                 <div class="d-flex justify-content-between align-items-center">
-                    <a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline(course)"></a>
-                    <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit(course)"></a>
+                    <a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline()"></a>
+                    <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEdit()"></a>
                 </div>
             </div>
 
@@ -22,10 +25,10 @@
                             <a class="btn btn-sm fa-solid fa-eye-slash text-primary"
                                 (click)="changeVisibilityCourse(course)"></a>
                         </ng-template>
-                        <a class="btn btn-sm fa-regular fa-copy text-secondary" (click)="makeACopy(course)"></a>
-                        <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit(course)"></a>
-                        <a class="btn btn-sm fa-solid fa-trash text-danger"
-                            (click)="openDeleteModal(course, deleteModal)"></a>
+                        <a class="btn btn-sm fa-regular fa-copy text-secondary"
+                            (click)="copyRequested.emit(course)"></a>
+                        <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit()"></a>
+                        <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="openDeleteModal(deleteModal)"></a>
                     </div>
                 </div>
             </ng-template>
@@ -54,6 +57,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-        <button *ngIf="isProfessor" type="button" class="btn btn-danger" (click)="confirmDelete()">Deletar</button>
+        <button *ngIf="isProfessor" type="button" class="btn btn-danger"
+            (click)="deleteRequested.emit(course)">Deletar</button>
     </div>
 </ng-template>

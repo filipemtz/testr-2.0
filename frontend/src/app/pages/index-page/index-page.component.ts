@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
+import { CourseCardComponent } from '../../components/course-card/course-card.component';
 import Notify from 'simple-notify'
 import 'simple-notify/dist/simple-notify.css'
 import {
@@ -11,10 +12,11 @@ import {
     FormsModule,
     FormBuilder,
     FormGroup,
-    Validators,
+    Validators
 } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
+import { notify_error, notify_success } from '../../utils/notifications';
 
 @Component({
     selector: 'app-index-page',
@@ -25,14 +27,14 @@ import { MatIconModule } from '@angular/material/icon';
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
+        CourseCardComponent
     ],
     templateUrl: './index-page.component.html',
     styleUrls: ['./index-page.component.css'],
 })
 
 export class IndexPageComponent implements OnInit {
-    @ViewChild('courseInput') courseInput!: ElementRef;
-
+    // @ViewChild('courseInput') courseInput!: ElementRef;
     courses: Course[] = [];
     user: any;
     myNotify: any;
@@ -61,7 +63,6 @@ export class IndexPageComponent implements OnInit {
                         this.isProfessor = response.groups.includes('teacher');
                     },
                 });
-
                 this.loadCourses();
             },
         });
@@ -74,19 +75,12 @@ export class IndexPageComponent implements OnInit {
             },
             error: (err) => {
                 console.log(err);
-                this.pushNotify('Erro!', 'Erro ao carregar os cursos', 'error');
+                this.myNotify = notify_error('Erro ao carregar os cursos');
             },
         });
     }
 
-    pushNotify(title: string, text: string | undefined, status: any) {
-        this.myNotify = new Notify({
-            status: status,
-            title: title,
-            text: text,
-            effect: 'slide',
-            type: 'filled'
-        })
+    editCourse(course: Course) {
     }
 
     createDefaultCourse(userId: string): void {
@@ -99,17 +93,33 @@ export class IndexPageComponent implements OnInit {
         })
     }
 
-    makeACopy(course: Course): void {
+    copyCourse(course: Course): void {
         this.courseService.makeACopy(course.id).subscribe({
             next: (response) => {
-                this.pushNotify('Sucesso!', 'Cópia do curso feita com sucesso', 'success');
                 this.loadCourses();
+                this.myNotify = notify_success('Cópia do curso feita com sucesso');
             },
             error: (err) => {
                 console.error(err);
-                this.pushNotify('Erro!', 'Falha ao fazer cópia do curso', 'error');
+                this.myNotify = notify_error('Falha ao fazer cópia do curso');
             },
         });
+    }
+
+    deleteCourse(course: Course) {
+        if (course && course.url) {
+            this.courseService.deleteCourse(course.url).subscribe({
+                next: () => {
+                    this.courses = this.courses.filter(x => x.id !== course.id);
+                    notify_success('Curso removido');
+                    this.modalService.dismissAll();
+                },
+                error: (err) => {
+                    console.error(err);
+                    notify_error('Falha ao deletar curso');
+                },
+            });
+        }
     }
 
     close() {
