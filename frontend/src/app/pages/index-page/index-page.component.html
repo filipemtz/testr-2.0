@@ -1,22 +1,15 @@
-<div *ngIf="isProfessor; else studentView">
-    <div id="" class="mb-5">
-        <a type="button" class="btn btn-primary" disabled (click)="createDefaultCourse(user.id)" title="novo curso"><i
-                class="fa-regular fa-plus fa-xl me-1"></i> Novo Curso</a>
-    </div>
+<h2 class="text-center">Cursos</h2>
 
-    <div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-        <app-course-card *ngFor="let course of courses" [course]="course" [isProfessor]="isProfessor"
-            (deleteRequested)="deleteCourse($event)" (editRequested)="editCourse($event)"
-            (copyRequested)="copyCourse($event)" />
-    </div>
+<div *ngIf="isProfessor" class="mb-5">
+    <a type="button" class="btn btn-primary" disabled (click)="createDefaultCourse(user.id)" title="novo curso"><i
+            class="fa-regular fa-plus fa-xl me-1"></i> Novo Curso</a>
 </div>
 
-<ng-template #studentView>
-    <h2 class="text-center">Cursos</h2>
-    <div class="course-list">
-        <app-course-card *ngFor="let course of courses" [course]="course" />
-    </div>
-</ng-template>
+<div *ngIf="courses.length > 0; else noCourses" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3 course-list">
+    <app-course-card *ngFor="let course of courses" [course]="course" [isProfessor]="isProfessor"
+        (deleteRequested)="deleteCourse($event)" (editRequested)="editCourse($event.course, $event.card)"
+        (copyRequested)="copyCourse($event)" />
+</div>
 
 <ng-template #noCourses>
     <p class="ms-1">Ainda não existem cursos.</p>

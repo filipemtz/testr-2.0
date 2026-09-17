@@ -80,7 +80,18 @@ export class IndexPageComponent implements OnInit {
         });
     }
 
-    editCourse(course: Course) {
+    editCourse(course: Course, card: CourseCardComponent) {
+        this.courseService.updateCourse(course.url, course).subscribe({
+            next: () => {
+                card.isEditing = false;
+                card.course = course;
+                notify_success("Curso atualizado.");
+            },
+            error: (err) => {
+                console.error(err);
+                notify_error("Falha ao atualizar curso.");
+            },
+        });
     }
 
     createDefaultCourse(userId: string): void {
@@ -105,6 +116,7 @@ export class IndexPageComponent implements OnInit {
             },
         });
     }
+
 
     deleteCourse(course: Course) {
         if (course && course.url) {
