@@ -80,15 +80,25 @@ class RelaxJudge:
 
         result_match = False
         if (student_result is not None) and (teacher_result is not None):
-            result_match = (
-                teacher_result.sort_values(teacher_result.columns.tolist())
-                .reset_index(drop=True)
-                .equals(
-                    student_result.sort_values(
-                        student_result.columns.tolist()
-                    ).reset_index(drop=True)
+            teacher = teacher_result.copy()
+            student = student_result.copy()
+
+            teacher.columns = range(teacher.shape[1])
+            student.columns = range(student.shape[1])
+
+            if teacher_result.shape[1] != student_result.shape[1]:
+                result_match = False
+            else:
+
+                result_match = (
+                    teacher.sort_values(teacher.columns.tolist())
+                    .reset_index(drop=True)
+                    .equals(
+                        student.sort_values(student.columns.tolist()).reset_index(
+                            drop=True
+                        )
+                    )
                 )
-            )
 
         if not result_match:
             self.report["error_msgs"].append("Query result is incorrect.")
