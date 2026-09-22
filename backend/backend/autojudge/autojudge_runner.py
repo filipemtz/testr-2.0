@@ -35,13 +35,9 @@ class AutoJudgeRunner:
         try:
             report = judge.judge(submission, verbose)
         except Exception as e:
-            if verbose:
-                print(
-                    "\n[!! IMPORTANT !!] A submission crashed the autojudge with the following error:"
-                )
-                print(traceback.format_exc())
             date_format = "%d/%m/%Y %H:%M:%S"
             dt = datetime.now().strftime(date_format)
+
             report = {
                 "error_msgs": [
                     f"The submission crashed the autojudge: {traceback.format_exc()}"
@@ -51,6 +47,11 @@ class AutoJudgeRunner:
                 "uuid": "",
                 "input_output_test_report": {"tests_reports": []},
             }
+            if verbose:
+                print(
+                    "\n[!! IMPORTANT !!] A submission crashed the autojudge with the following error:"
+                )
+                print(traceback.format_exc())
 
         report_json = json.dumps(report)
         submission.report_json = report_json
