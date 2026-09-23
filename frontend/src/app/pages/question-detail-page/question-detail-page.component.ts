@@ -112,27 +112,24 @@ export class QuestionDetailPageComponent implements OnInit {
     }
 
     onFileSelected(event: any): void {
-        this.selectedFile = event.target.files[0];
-    }
+        const selectedFile = event.target.files[0];
 
-    onSubmitFile(): void {
-        if (this.selectedFile) {
-            const fileName = this.selectedFile.name;
-            const questionId = this.question.id;
+        const fileName = selectedFile.name;
+        const questionId = this.question.id;
 
-            this.submissionService.addSubmission(questionId, this.selectedFile, fileName).subscribe({
-                next: (response) => {
-                    this.selectedFile = null;
-                    this.getSubmission(questionId);
-                    if (this.intervalId)
-                        clearInterval(this.intervalId);
-                    this.startSubmissionStatusCheck();
-                },
-                error: (err) => {
-                    this.pushNotify('Error', "Falha ao submeter arquivo ou deadline ultrapassado.", 'error');
-                }
-            });
-        }
+        this.submissionService.addSubmission(questionId, selectedFile, fileName).subscribe({
+            next: (response) => {
+                this.selectedFile = null;
+                this.getSubmission(questionId);
+                if (this.intervalId)
+                    clearInterval(this.intervalId);
+                this.startSubmissionStatusCheck();
+            },
+            error: (err) => {
+                this.pushNotify('Error', "Falha ao submeter arquivo ou deadline ultrapassado.", 'error');
+            }
+        });
+
     }
 
     goBack(): void {

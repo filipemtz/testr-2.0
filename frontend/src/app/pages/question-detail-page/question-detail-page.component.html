@@ -45,9 +45,6 @@
         <div class="d-flex flex-wrap mb-3">
             <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
                 style="max-width: 700px" />
-            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
-                Upload
-            </button>
         </div>
     </div>
 
@@ -94,9 +91,6 @@
         <div class="d-flex flex-wrap mb-3">
             <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
                 style="max-width: 700px" />
-            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
-                Upload
-            </button>
         </div>
     </div>
 
@@ -130,7 +124,7 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+        <button *ngIf="isProfessor" class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
             Reavaliar
         </button>
     </div>
