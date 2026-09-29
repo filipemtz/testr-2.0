@@ -4,7 +4,6 @@ from datetime import datetime
 
 import django
 import psycopg2
-from backend.autojudge.relax_judge import RelaxJudge
 from backend.models.question import Language
 from backend.models.submission import Submission, SubmissionStatus
 
@@ -13,6 +12,8 @@ from .cpp_judge import CppJudge
 from .java_judge import JavaJudge
 from .jupyter_judge import JupyterJudge
 from .python_judge import PythonJudge
+from .relax_judge import RelaxJudge
+from .sql_judge import SQLJudge
 
 
 class AutoJudgeRunner:
@@ -22,6 +23,7 @@ class AutoJudgeRunner:
         Language.JUPYTER.value: JupyterJudge,
         Language.JAVA.value: JavaJudge,
         Language.RELAX.value: RelaxJudge,
+        Language.SQL.value: SQLJudge,
     }
 
     @classmethod

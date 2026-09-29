@@ -5,7 +5,7 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register(r"courses", CourseViewSet)
-router.register(r"relax_test_info", RelaxTestInfoViewSet)
+router.register(r"db_test_info", DbTestInfoViewSet)
 router.register(r"questions", QuestionViewSet)
 router.register(r"sections", SectionViewSet)
 router.register(r"inputs_outputs", InputOutputViewSet)
@@ -105,7 +105,7 @@ urlpatterns = [
     ),
     path(
         "questions/<int:question_id>/relax-test-info/",
-        QuestionRelaxTestInfoView.as_view(),
+        QuestionDbTestInfoView.as_view(),
         name="question-relax-test-info",
     ),
     path(

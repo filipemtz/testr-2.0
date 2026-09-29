@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models.question import Question, RelaxTestInfo
+from ..models.question import DbTestInfo, Question
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         ]
 
 
-class RelaxTestInfoSerializer(serializers.ModelSerializer):
+class DbTestInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RelaxTestInfo
+        model = DbTestInfo
         fields = "__all__"

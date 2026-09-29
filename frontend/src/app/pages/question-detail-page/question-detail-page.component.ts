@@ -147,6 +147,8 @@ export class QuestionDetailPageComponent implements OnInit {
             return 'Jupyter notebook';
         } else if (value === 'RL') {
             return 'Relax';
+        } else if (value === 'SQ') {
+            return 'SQL';
         }
         return '';
     }

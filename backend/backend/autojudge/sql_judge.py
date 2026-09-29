@@ -3,13 +3,13 @@ import uuid
 from datetime import datetime
 from typing import Any
 
+import duckdb
 from backend.models.question import DbTestInfo
 from backend.models.submission import Submission
 from pyrelax.data import databases
-from pyrelax.engine import execute_query
 
 
-class RelaxJudge:
+class SQLJudge:
     def __init__(self, keep_files: bool):
         self._keep_files = keep_files
 
@@ -45,16 +45,16 @@ class RelaxJudge:
             )
             return
 
-        relax_info = DbTestInfo.objects.filter(question=self.question)
-        if relax_info.count() == 0:
+        test_info = DbTestInfo.objects.filter(question=self.question)
+        if test_info.count() == 0:
             self.report["error_msgs"].append(
                 "Relax information missing for the question."
             )
             return
         else:
-            relax_info = relax_info.first()
+            test_info = test_info.first()
 
-        if relax_info.database not in databases:
+        if test_info.database not in databases:
             self.report["error_msgs"].append("Invalid database.")
             return
 
@@ -62,21 +62,23 @@ class RelaxJudge:
         # JUDGING
         ##########################
         student_query = submission.file.read().decode("utf-8")
-        tables = databases[relax_info.database]
-
         student_result = teacher_result = None
 
+        db_conn = self._setup_db(test_info)
+
         try:
-            student_result = execute_query(student_query, tables)
+            student_result = db_conn.sql(student_query).df()
         except Exception as e:
             self.report["error_msgs"].append("Error in student query: " + e.__repr__())
             print(traceback.format_exc())
 
         try:
-            teacher_result = execute_query(relax_info.correct_query, tables)
+            teacher_result = db_conn.sql(test_info.correct_query).df()
         except Exception as e:
             self.report["error_msgs"].append("Error in teacher query: " + e.__repr__())
             print(traceback.format_exc())
+
+        db_conn.close()
 
         result_match = self._df_match(student_result, teacher_result)
 
@@ -86,6 +88,13 @@ class RelaxJudge:
         self.report["end_at"] = datetime.now().strftime(date_format)
 
         return self.report
+
+    def _setup_db(self, test_info):
+        tables = databases[test_info.database]
+        db_conn = duckdb.connect(database=":memory:")
+        for name, df in tables.items():
+            db_conn.register(name, df)
+        return db_conn
 
     def _df_match(self, student_result, teacher_result):
         result_match = False
@@ -112,5 +121,4 @@ class RelaxJudge:
                         )
                     )
                 )
-
         return result_match

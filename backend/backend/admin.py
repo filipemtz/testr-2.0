@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from .models.course import Course
 from .models.input_output import InputOutput
-from .models.question import Question, RelaxTestInfo
+from .models.question import DbTestInfo, Question
 from .models.question_file import QuestionFile
 from .models.section import Section
 from .models.submission import Submission
@@ -14,4 +14,4 @@ admin.site.register(Question)
 admin.site.register(InputOutput)
 admin.site.register(QuestionFile)
 admin.site.register(Submission)
-admin.site.register(RelaxTestInfo)
+admin.site.register(DbTestInfo)

@@ -1,4 +1,4 @@
-export class RelaxTestInfo {
+export class DbTestInfo {
     id: number | null;
     question: number;
     database: string;

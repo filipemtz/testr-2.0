@@ -38,6 +38,7 @@
                         <option value="JP">Jupyter</option>
                         <option value="JV">Java</option>
                         <option value="RL">Relax</option>
+                        <option value="SQ">SQL</option>
                     </select>
                     <i class="fas fa-chevron-down custom-arrow"></i>
                 </div>
@@ -101,9 +102,9 @@
         <app-upload-question-file></app-upload-question-file>
     </div>
 
-    @if (editForm.controls['language'].value === 'RL') {
+    @if (['RL', 'SQ'].indexOf(editForm.controls['language'].value) >= 0) {
     <div class="mb-5">
-        <app-relax-test-info></app-relax-test-info>
+        <app-db-test-info></app-db-test-info>
     </div>
     } @else {
     <div class="mt-4 mb-4">

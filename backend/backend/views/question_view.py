@@ -17,18 +17,18 @@ from rest_framework.views import APIView
 
 from ..models import (
     Course,
+    DbTestInfo,
     InputOutput,
     Language,
     Question,
     QuestionFile,
-    RelaxTestInfo,
     Section,
     Submission,
 )
 from ..serializers import (
+    DbTestInfoSerializer,
     QuestionFileSerializer,
     QuestionSerializer,
-    RelaxTestInfoSerializer,
 )
 from ..serializers.input_output_serializer import InputOutputSerializer
 
@@ -66,7 +66,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     def _remove_extra_info_on_type_change(self):
         question: Question = self.get_object()
         if question.language != Language.RELAX.value:
-            info_query = RelaxTestInfo.objects.filter(question=question)
+            info_query = DbTestInfo.objects.filter(question=question)
             if info_query.count() > 0:
                 info_query.delete()
 
@@ -587,16 +587,16 @@ class QuestionExportAPIView(APIView):
             return Response({"error": "Questão não encontrada."}, status=404)
 
 
-class RelaxTestInfoViewSet(viewsets.ModelViewSet):
-    queryset = RelaxTestInfo.objects.all()
-    serializer_class = RelaxTestInfoSerializer
+class DbTestInfoViewSet(viewsets.ModelViewSet):
+    queryset = DbTestInfo.objects.all()
+    serializer_class = DbTestInfoSerializer
     permission_classes = [IsTeacher | IsStudentSafeMethods]
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
 
-class QuestionRelaxTestInfoView(generics.RetrieveAPIView):
-    serializer_class = RelaxTestInfoSerializer
+class QuestionDbTestInfoView(generics.RetrieveAPIView):
+    serializer_class = DbTestInfoSerializer
 
     def get_object(self):
         question_id = self.kwargs["question_id"]
-        return get_object_or_404(RelaxTestInfo, question_id=question_id)
+        return get_object_or_404(DbTestInfo, question_id=question_id)

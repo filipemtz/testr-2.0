@@ -2,21 +2,21 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { RelaxTestInfo } from '../../models/relax_test_info';
-import { RelaxTestInfoService } from '../../services/relax-test-info.service';
+import { DbTestInfo } from '../../models/db_test_info';
+import { DbTestInfoService as DbTestInfoService } from '../../services/db-test-info.service';
 import Notify from 'simple-notify';
 import { FormsModule, Validators } from '@angular/forms';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-relax-test-info',
+    selector: 'app-db-test-info',
     standalone: true,
     imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
-    templateUrl: './relax-test-info.component.html',
-    styleUrl: './relax-test-info.component.css'
+    templateUrl: './db-test-info.component.html',
+    styleUrl: './db-test-info.component.css'
 })
-export class RelaxTestInfoComponent {
+export class DbTestInfoComponent {
     questionId: number = -1;
     relaxTestInfoId: number = -1;
     notification: any;
@@ -33,7 +33,7 @@ export class RelaxTestInfoComponent {
 
     constructor(
         private route: ActivatedRoute,
-        private relaxService: RelaxTestInfoService,
+        private dbTestService: DbTestInfoService,
         private form_builder: FormBuilder
     ) { }
 
@@ -42,7 +42,7 @@ export class RelaxTestInfoComponent {
 
         if (id !== null) {
             this.questionId = +id;
-            this.relaxService.get(this.questionId).subscribe({
+            this.dbTestService.get(this.questionId).subscribe({
                 next: (data: any) => {
                     this.form.patchValue(data);
                     this.infoExists = true;
@@ -57,8 +57,8 @@ export class RelaxTestInfoComponent {
 
     save(): void {
         if (this.form.valid) {
-            let data: RelaxTestInfo = {
-                ...new RelaxTestInfo(),
+            let data: DbTestInfo = {
+                ...new DbTestInfo(),
                 ...this.form.getRawValue(),
                 question: this.questionId
             };
@@ -74,8 +74,8 @@ export class RelaxTestInfoComponent {
         this.form.markAllAsTouched();
     }
 
-    _create_new(data: RelaxTestInfo): void {
-        this.relaxService.post(data).subscribe({
+    _create_new(data: DbTestInfo): void {
+        this.dbTestService.post(data).subscribe({
             next: (data: any) => {
                 console.log("resultado:" + data);
                 this.form.patchValue(data);
@@ -102,12 +102,12 @@ export class RelaxTestInfoComponent {
     }
 
     _read_available_databases(): void {
-        this.relaxService.databases().subscribe(databases => this.available_databases = databases);
+        this.dbTestService.databases().subscribe(databases => this.available_databases = databases);
     }
 
-    _edit(data: RelaxTestInfo): void {
+    _edit(data: DbTestInfo): void {
         console.log("edit: " + JSON.stringify(data));
-        this.relaxService.edit(data).subscribe({
+        this.dbTestService.edit(data).subscribe({
             next: (data: any) => {
                 console.log("resultado:" + data);
                 this.form.patchValue(data);
