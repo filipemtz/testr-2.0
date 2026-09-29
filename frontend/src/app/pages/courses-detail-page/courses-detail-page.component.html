@@ -27,7 +27,7 @@
     </button>
 
     <!-- Botão de importar questões (aparece apenas se for professor) -->
-    <button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="openImportQuestionModal(importQuestionModal)">
+    <button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="import_question_modal_visible = true;">
         <i class="fa-solid fa-file-import"></i>
         Importar Questões <br>
         <i>[Formato BOCA]</i>
@@ -78,7 +78,7 @@
                 </div>
 
                 <button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1"
-                    (click)="openDeleteSectionModal(section, deleteSectionModal)"></button>
+                    (click)="sectionToDelete = section"></button>
             </div>
         </ng-template>
         <!-- Questões da seção -->
@@ -118,7 +118,7 @@
                     </div>
 
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-danger ms-1"
-                        (click)="openDeleteQuestionModal(question, deleteQuestionModal)">
+                        (click)="questionToDelete = question">
                         <i class="fa-solid fa-trash fa-sm"></i>
                     </button>
 
@@ -147,83 +147,46 @@
     <p class="ms-3 mt-3">Não existem questões disponíveis.</p>
 </ng-template>
 
-<!-- Modal para adicionar nova seção -->
-<ng-template #addSectionModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Criar nova seção</h4>
-        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"
-            (click)="resetAddSectionForm()"></button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="addSectionForm">
-            <div class="mb-3">
-                <label for="name">Nome</label>
-                <input id="name" type="text" class="form-control" formControlName="name" />
-                <div *ngIf="
-            addSectionForm.get('name')?.invalid &&
-            (addSectionForm.get('name')?.dirty ||
-              addSectionForm.get('name')?.touched)
-          " class="text-danger">
-                    O nome da seção é obrigatório.
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="modal.dismiss()" (click)="resetAddSectionForm()">
-            Cancelar
-        </button>
-        <button type="button" class="btn btn-primary" (click)="confirmAddSection()">
-            Criar
-        </button>
-    </div>
-</ng-template>
-
 <!-- Modal para deletar seção -->
-<ng-template #deleteSectionModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Deletar seção</h4>
-        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
+<c-modal id="deleteSectionModal" [visible]="!!sectionToDelete" (visibleChange)="!$event && sectionToDelete = null;">
+    <c-modal-header>
+        <h5 cModalTitle>Deletar seção</h5>
+        <button (click)="sectionToDelete = null" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
         Tem certeza que deseja deletar a seção {{ sectionToDelete?.name }}?
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">
-            Cancelar
-        </button>
-        <button type="button" class="btn btn-danger" (click)="confirmDeleteSection()">
-            Deletar
-        </button>
-    </div>
-</ng-template>
+    </c-modal-body>
+    <c-modal-footer>
+        <button (click)="sectionToDelete = null" cButton color="secondary">Cancelar</button>
+        <button (click)="confirmDeleteSection()" cButton color="danger">Deletar</button>
+    </c-modal-footer>
+</c-modal>
+
 
 <!-- Modal para deletar questão -->
-<ng-template #deleteQuestionModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Deletar questão</h4>
-        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">Tem certeza que deseja deletar a questão?</div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">
-            Cancelar
-        </button>
-        <button type="button" class="btn btn-danger" (click)="confirmDeleteQuestion()">
-            Deletar
-        </button>
-    </div>
-</ng-template>
+<c-modal id="deleteQuestionModal" [visible]="!!questionToDelete" (visibleChange)="!$event && questionToDelete = null;">
+    <c-modal-header>
+        <h5 cModalTitle>Deletar questão</h5>
+        <button (click)="questionToDelete = null" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+        Tem certeza que deseja deletar a questão?
+    </c-modal-body>
+    <c-modal-footer>
+        <button (click)="questionToDelete = null" cButton color="secondary">Cancelar</button>
+        <button (click)="confirmDeleteQuestion()" cButton color="danger">Deletar</button>
+    </c-modal-footer>
+</c-modal>
+
 
 <!-- Modal para importar questões -->
-<ng-template #importQuestionModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">
-            <i class="fa-solid fa-file-import"></i> Importar questões
-        </h4>
-        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
+<c-modal id="importQuestionModal" [visible]="import_question_modal_visible"
+    (visibleChange)="!$event && import_question_modal_visible = true;">
+    <c-modal-header>
+        <h5 cModalTitle><i class="fa-solid fa-file-import"></i> Importar questões</h5>
+        <button (click)="import_question_modal_visible = false;" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
         <app-import-question [courseId]="course.id"></app-import-question>
-    </div>
-</ng-template>
+    </c-modal-body>
+</c-modal>

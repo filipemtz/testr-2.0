@@ -90,8 +90,7 @@
             <button type="button" class="btn btn-success col-2" (click)="confirmEditQuestion()">
                 Salvar
             </button>
-            <button type="button" class="btn btn-danger col-2 go-back-btn"
-                (click)="openDeleteQuestionModal(deleteQuestionModal)">
+            <button type="button" class="btn btn-danger col-2 go-back-btn" (click)="delete_modal_visible = true">
                 Deletar
             </button>
         </div>
@@ -113,16 +112,17 @@
 </div>
 
 <!-- Modal para deletar questão -->
-<ng-template #deleteQuestionModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Deletar questão</h4>
-        <button type="button" class="btn-close" aria-label="Fechar" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
+<c-modal id="deleteQuestionModal" [visible]="delete_modal_visible"
+    (visibleChange)="!$event && delete_modal_visible = false;">
+    <c-modal-header>
+        <h5 cModalTitle>Deletar questão</h5>
+        <button (click)="delete_modal_visible = false" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
         Tem certeza que deseja deletar a questão?
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancelar</button>
-        <button type="button" class="btn btn-danger" (click)="deleteQuestion()">Deletar</button>
-    </div>
-</ng-template>
+    </c-modal-body>
+    <c-modal-footer>
+        <button (click)="delete_modal_visible = false" cButton color="secondary">Cancelar</button>
+        <button (click)="deleteQuestion()" cButton color="danger">Deletar</button>
+    </c-modal-footer>
+</c-modal>

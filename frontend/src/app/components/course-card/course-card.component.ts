@@ -1,6 +1,15 @@
-import { Component, Input, ElementRef, ViewChild, TemplateRef, HostListener, inject, Output, EventEmitter } from '@angular/core';
+import { signal, Component, Input, ElementRef, ViewChild, TemplateRef, HostListener, inject, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+    ButtonCloseDirective,
+    ButtonDirective,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalFooterComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective
+} from '@coreui/angular';
+
 import { Course } from '../../models/course';
 import { RouterModule } from '@angular/router';
 import {
@@ -14,12 +23,20 @@ import {
 
 @Component({
     selector: 'app-course-card',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        ModalComponent,
+        ModalHeaderComponent,
+        ModalTitleDirective,
+        ButtonCloseDirective,
+        ModalBodyComponent,
+        ModalFooterComponent,
+        ButtonDirective
     ],
     templateUrl: './course-card.component.html',
     styleUrl: './course-card.component.css'
@@ -27,6 +44,7 @@ import {
 export class CourseCardComponent {
 
     isEditing: boolean = false;
+    readonly visible = signal(false);
 
     @Input() isProfessor: boolean = false;
     @Input() course: Course = Course.getDefaultCourse();
@@ -35,25 +53,18 @@ export class CourseCardComponent {
     @Output() copyRequested = new EventEmitter<Course>();
     @ViewChild('courseInput') courseInput!: ElementRef;
 
+
     private fb = inject(FormBuilder);  // must be initialized first
     editForm: FormGroup = this.fb.group({
         name: ['', Validators.required],
     });
 
-
-    constructor(
-        config: NgbModalConfig,
-        private modalService: NgbModal,
-    ) {
-        config.backdrop = 'static';
-        config.keyboard = false;
+    constructor() {
     }
 
-
-    openDeleteModal(content: TemplateRef<any>) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+    toogleDeleteModal() {
+        this.visible.update((value) => !value);
     }
-
 
     enableEdit() {
         this.editForm.patchValue({ name: this.course.name });

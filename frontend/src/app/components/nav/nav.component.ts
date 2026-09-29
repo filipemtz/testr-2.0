@@ -1,100 +1,64 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
-  selector: 'app-nav',
-  standalone: true,
-  imports: [RouterModule, CommonModule, NgbDropdownModule, NgbDropdown],
-  templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css',
+    selector: 'app-nav',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true,
+    imports: [
+        RouterModule,
+        CommonModule,
+    ],
+    templateUrl: './nav.component.html',
+    styleUrl: './nav.component.css',
 })
 export class NavComponent implements OnInit {
-  authenticated = false;
-  user: any = {
-    username: '',
-  };
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+    authenticated = false;
+    user: any = {
+        username: '',
+    };
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+    ) { }
 
-  /*
-  sidebarItems = [
-    {
-      id: 'multi',
-      label: 'Multi Level',
-      icon: 'fas fa-layer-group',
-      dropdown: true,
-      sublinks: [
-        {
-          id: 'link1',
-          label: 'Link 1',
-          link: '/multi/link1'
-        },
-        {
-          id: 'link2',
-          label: 'Link 2',
-          link: '/multi/link2'
+    ngOnInit(): void {
+        this.authenticated = localStorage.getItem('authenticated') === 'true';
+        if (this.authenticated) {
+            this.authService.profile().subscribe({
+                next: (res: any) => {
+                    this.user = res;
+                },
+            });
         }
-      ]
-    },
-    {
-      id: 'admin',
-      label: 'Admin',
-      icon: 'fas fa-user-tie',
-      link: '/admin'
-    },
-    {
-      id: 'student',
-      label: 'Student',
-      icon: 'fas fa-user-graduate',
-      link: '/student'
-    },
-    {
-      id: 'teacher',
-      label: 'Teacher',
-      icon: 'fas fa-user-tie',
-      link: '/teacher'
+        // AuthService.authEmitter.subscribe((authenticated) => {
+        //   this.authenticated = authenticated;
+        //   console.log('olaaaa');
+        // });
     }
-  ];*/
 
-  ngOnInit(): void {
-    this.authenticated = localStorage.getItem('authenticated') === 'true';
-    if (this.authenticated) {
-      this.authService.profile().subscribe({
-        next: (res: any) => {
-          this.user = res;
-        },
-      });
-    }
-    // AuthService.authEmitter.subscribe((authenticated) => {
-    //   this.authenticated = authenticated;
-    //   console.log('olaaaa');
-    // });
-  }
+    logout() {
+        this.authService.logout().subscribe({
+            next: () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('authenticated');
+                localStorage.removeItem('user');
+                this.authenticated = false;
 
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('authenticated');
-        localStorage.removeItem('user');
-        this.authenticated = false;
-
-        // remover todos os cookies
-        document.cookie.split(';').forEach(function (c) {
-          document.cookie = c
-            .replace(/^ +/, '')
-            .replace(
-              /=.*/,
-              '=;expires=' + new Date().toUTCString() + ';path=/',
-            );
+                // remover todos os cookies
+                document.cookie.split(';').forEach(function (c) {
+                    document.cookie = c
+                        .replace(/^ +/, '')
+                        .replace(
+                            /=.*/,
+                            '=;expires=' + new Date().toUTCString() + ';path=/',
+                        );
+                });
+                // AuthService.authEmitter.emit(false);
+                this.router.navigate(['/accounts/login']);
+            },
         });
-        // AuthService.authEmitter.emit(false);
-        this.router.navigate(['/accounts/login']);
-      },
-    });
-  }
+    }
 }

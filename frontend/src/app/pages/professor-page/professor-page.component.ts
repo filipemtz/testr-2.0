@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-professor-page',
-  standalone: true,
-  imports: [],
-  templateUrl: './professor-page.component.html',
-  styleUrl: './professor-page.component.css'
+    selector: 'app-professor-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true,
+    imports: [],
+    templateUrl: './professor-page.component.html',
+    styleUrl: './professor-page.component.css'
 })
 export class ProfessorPageComponent {
 

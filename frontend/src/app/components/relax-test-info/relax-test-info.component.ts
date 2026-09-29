@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { RelaxTestInfo } from '../../models/relax_test_info';
@@ -11,6 +11,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-relax-test-info',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
     templateUrl: './relax-test-info.component.html',

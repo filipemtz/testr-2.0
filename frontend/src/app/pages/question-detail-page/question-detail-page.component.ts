@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Question } from '../../models/question';
 import { QuestionService } from '../../services/question.service';
@@ -12,11 +12,11 @@ import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../models/input-output';
 import { environment } from '../../../environments/environment';
 import Notify from 'simple-notify';
-import 'simple-notify/dist/simple-notify.css';
 
 
 @Component({
     selector: 'app-question-detail-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [DateFormatPipe, CommonModule],
     templateUrl: './question-detail-page.component.html',

@@ -12,7 +12,7 @@ export class Course {
     public static getDefaultCourse(): Course {
         let course: Course = new Course();
 
-        course.id = -1;
+        course.id = 0;
         course.url = "";
         course.name = "Novo Curso";
         course.visible = true;
@@ -23,7 +23,6 @@ export class Course {
         return course;
     }
 }
-
 
 export class CourseStats {
     public rank: number = 0;

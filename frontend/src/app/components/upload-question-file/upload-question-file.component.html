@@ -1,68 +1,41 @@
 <h2>Gerenciar arquivos</h2>
 
 <div class="d-flex flex-wrap mb-3">
-  <input
-    type="file"
-    class="form-control me-2 my-1"
-    style="max-width: 700px"
-    multiple
-    (change)="selectFiles($event)"
-  />
-  <button
-    class="btn btn-success my-1"
-    [disabled]="!selectedFiles"
-    (click)="uploadFiles()"
-  >
-    Upload
-  </button>
+    <input type="file" class="form-control me-2 my-1" style="max-width: 700px" multiple
+        (change)="selectFiles($event)" />
+    <button class="btn btn-success my-1" [disabled]="!selectedFiles" (click)="uploadFiles()">
+        Upload
+    </button>
 </div>
 
 <div *ngIf="progressInfos.length">
-  <button
-  type="button"
-  class="btn-close"
-  aria-label="Close"
-  (click)="clearProgressInfos()"
-></button>
-  <div *ngFor="let progressInfo of progressInfos" class="mb-2" >
-    <span>{{ progressInfo.fileName }}</span>
-    <span class="me-2">{{ progressInfo.value }}%</span>
-    <ngb-progressbar class="mb-3" [showValue]="true" type="info" [value]="progressInfo.value" [max]="100" />
-  </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="clearProgressInfos()"></button>
+    <div *ngFor="let progressInfo of progressInfos" class="mb-2">
+        <span>{{ progressInfo.fileName }}</span>
+        <span class="me-2">{{ progressInfo.value }}%</span>
+        <c-progress [height]="20" [value]="progressInfo.value" [animated]="true" variant="striped" />
+    </div>
 </div>
 
 <div *ngIf="message.length" class="alert alert-secondary my-3" role="alert">
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="clearMessages()"
-  ></button>
-  <ul *ngFor="let msg of message; let i = index">
-    <li>{{ msg }}</li>
-  </ul>
+    <button type="button" class="btn-close" aria-label="Close" (click)="clearMessages()"></button>
+    <ul *ngFor="let msg of message; let i = index">
+        <li>{{ msg }}</li>
+    </ul>
 </div>
 
 <h3>Lista de arquivos</h3>
 <div *ngIf="fileInfos.length; else noFilesTemplate">
-  <ul class="list-group list-group-flush">
-    <li
-    *ngFor="let file of fileInfos"
-      class="list-group-item d-flex justify-content-start align-items-center"
-    >
-      <i class="fa-regular fa-file me-2"></i>
-      <div class="fw-bold">{{ file.file_name }}</div>
-      <button
-        type="button"
-        class="btn btn-sm fa-solid fa-trash text-danger ms-2"
-        (click)="deleteFile(file.id)"
-      ></button>
-    </li>
-  </ul>
+    <ul class="list-group list-group-flush">
+        <li *ngFor="let file of fileInfos" class="list-group-item d-flex justify-content-start align-items-center">
+            <i class="fa-regular fa-file me-2"></i>
+            <div class="fw-bold">{{ file.file_name }}</div>
+            <button type="button" class="btn btn-sm fa-solid fa-trash text-danger ms-2"
+                (click)="deleteFile(file.id)"></button>
+        </li>
+    </ul>
 </div>
 
 <ng-template #noFilesTemplate>
-  <p>Não existem arquivos para serem exibidos.</p>
+    <p>Não existem arquivos para serem exibidos.</p>
 </ng-template>
-
-

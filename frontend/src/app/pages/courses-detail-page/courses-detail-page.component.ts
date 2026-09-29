@@ -5,6 +5,7 @@ import {
     ViewChild,
     ElementRef,
     HostListener,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -19,7 +20,16 @@ import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
 import { SubmissionService } from '../../services/submission.service';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+    ButtonCloseDirective,
+    ButtonDirective,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalFooterComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective
+} from '@coreui/angular';
+
 import { MatIconModule } from '@angular/material/icon';
 import {
     FormBuilder,
@@ -29,10 +39,11 @@ import {
     Validators,
 } from '@angular/forms';
 import Notify from 'simple-notify';
-import 'simple-notify/dist/simple-notify.css';
+
 import { AuthService } from '../../services/auth.service';
 @Component({
     selector: 'app-courses-detail-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [
         CommonModule,
@@ -41,6 +52,13 @@ import { AuthService } from '../../services/auth.service';
         FormsModule,
         ReactiveFormsModule,
         ImportQuestionComponent,
+        ModalComponent,
+        ModalHeaderComponent,
+        ModalTitleDirective,
+        ButtonCloseDirective,
+        ModalBodyComponent,
+        ModalFooterComponent,
+        ButtonDirective,
     ],
     templateUrl: './courses-detail-page.component.html',
     styleUrls: ['./courses-detail-page.component.css'],
@@ -52,16 +70,14 @@ export class CoursesDetailPageComponent implements OnInit {
     sections: Section[] = [] as Section[];
     submissions: Submission[] = [] as Submission[];
     stats: CourseStats = {} as CourseStats;
+    import_question_modal_visible: boolean = false;
 
     addSectionForm: FormGroup;
     addQuestionForm: FormGroup;
 
-
     questionToDelete: Question | null = null;
     sectionToDelete: Section | null = null;
-
     sectionToEdit: Section | null = null;
-
     selectedFile: File | null = null;
 
     myNotify: any;
@@ -71,10 +87,8 @@ export class CoursesDetailPageComponent implements OnInit {
         private sectionService: SectionService,
         private courseService: CourseService,
         private submissionService: SubmissionService,
-        private modalService: NgbModal,
         private fb: FormBuilder,
         private router: Router,
-        config: NgbModalConfig,
         private authService: AuthService,
     ) {
         this.addSectionForm = this.fb.group({
@@ -90,9 +104,6 @@ export class CoursesDetailPageComponent implements OnInit {
             cpu_limit: ['', Validators.required],
             submission_deadline: ['', Validators.required],
         });
-
-        config.backdrop = 'static';
-        config.keyboard = false;
     }
 
     isProfessor: boolean = false;
@@ -176,34 +187,6 @@ export class CoursesDetailPageComponent implements OnInit {
         return false;
     }
 
-    confirmAddSection(): void {
-        if (this.addSectionForm.valid) {
-            const newSection: Section = {
-                course: this.course.id,
-                ...this.addSectionForm.value,
-            };
-
-            this.sectionService.postSection(newSection).subscribe({
-                next: (section) => {
-                    this.addSectionForm.reset();
-                    this.sections.push(section);
-                    this.modalService.dismissAll();
-                },
-                error: (err) => {
-                    console.error(err);
-                    this.pushNotify('Erro!', 'Falha ao adicionar uma seção', 'error');
-                },
-            });
-        } else {
-            console.log('invalid form');
-        }
-    }
-
-    openDeleteSectionModal(section: Section, content: TemplateRef<any>) {
-        this.sectionToDelete = section;
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-    }
-
     confirmDeleteSection(): void {
         this.sectionService
             .deleteSection(this.sectionToDelete?.url ?? '')
@@ -212,18 +195,13 @@ export class CoursesDetailPageComponent implements OnInit {
                     this.sections = this.sections.filter(
                         (section) => section.url !== this.sectionToDelete!.url,
                     );
-                    this.modalService.dismissAll();
+                    this.questionToDelete = null;
                 },
                 error: (err) => {
                     console.error(err);
                     this.pushNotify('Error!', 'Falha ao deletar uma seção', 'error');
                 }
             });
-    }
-
-    openDeleteQuestionModal(question: Question, content: TemplateRef<any>) {
-        this.questionToDelete = question;
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
     }
 
     enableEditSection(section: Section) {
@@ -263,7 +241,7 @@ export class CoursesDetailPageComponent implements OnInit {
                         );
                         return section;
                     });
-                    this.modalService.dismissAll();
+                    this.questionToDelete = null;
                 },
                 error: (err) => {
                     console.error(err);
@@ -391,10 +369,6 @@ export class CoursesDetailPageComponent implements OnInit {
         }
     }
 
-    resetAddSectionForm(): void {
-        this.addSectionForm.reset();
-    }
-
     onFileSelected(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
@@ -422,9 +396,6 @@ export class CoursesDetailPageComponent implements OnInit {
         });
     }
 
-    openImportQuestionModal(content: TemplateRef<any>) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-    }
 
     downloadQuestion(question: Question) {
         this.questionService.exportQuestion(question.id).subscribe({
@@ -445,6 +416,5 @@ export class CoursesDetailPageComponent implements OnInit {
                 this.pushNotify('Error!', 'Falha ao exportar a questão', 'error');
             },
         });
-
     }
 }

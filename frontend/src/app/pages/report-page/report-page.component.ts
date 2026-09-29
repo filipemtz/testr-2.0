@@ -1,19 +1,38 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Course } from '../../models/course';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CourseService } from '../../services/course.service';
 import { QuestionService } from '../../services/question.service';
 import { CommonModule } from '@angular/common';
-import Notify from 'simple-notify';
-import 'simple-notify/dist/simple-notify.css';
+import { notify_error, notify_success } from '../../utils/notifications';
+
+import {
+    ButtonCloseDirective,
+    ButtonDirective,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalFooterComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective
+} from '@coreui/angular';
+
 
 @Component({
     selector: 'app-report-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [
         CommonModule,
-        RouterModule],
+        RouterModule,
+        ModalComponent,
+        ModalHeaderComponent,
+        ModalTitleDirective,
+        ButtonCloseDirective,
+        ModalBodyComponent,
+        ModalFooterComponent,
+        ButtonDirective,
+    ],
     templateUrl: './report-page.component.html',
     styleUrl: './report-page.component.css'
 })
@@ -24,11 +43,11 @@ export class ReportPageComponent {
     selectedFile: File | null = null;
     selectedQuestionJsonFile: File | null = null;
 
-    myNotify: any;
     enrolledStudents: any[] = [];
     report: any;
     teachers: any;
     loading: boolean = false;
+    jsonModalVisible: boolean = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -71,7 +90,7 @@ export class ReportPageComponent {
 
     removeTeacher(id: number) {
         if (this.course.teachers.length <= 1) {
-            this.pushNotify('Erro!', 'Todo curso deve ter pelo menos um professor!', 'error');
+            notify_error('Todo curso deve ter pelo menos um professor!');
             return;
         }
         this.courseService.removeTeacher(this.course.id, id).subscribe({
@@ -79,14 +98,14 @@ export class ReportPageComponent {
                 this.loadCourseTeachers();
             },
             error: (error) => {
-                this.pushNotify('Erro!', 'Problema ao remover o professor!', 'error');
+                notify_error('Problema ao remover o professor!');
             }
         });
     }
 
     addTeacher(username: string) {
         if (username.length < 1) {
-            this.pushNotify('Erro!', 'Barra de pesquisa vazia! Digite o nome do professor', 'error');
+            notify_error('Barra de pesquisa vazia! Digite o nome do professor');
             return;
         }
         this.courseService.addTeacher(this.course.id, username).subscribe({
@@ -94,14 +113,14 @@ export class ReportPageComponent {
                 this.loadCourseTeachers();
             },
             error: (error) => {
-                this.pushNotify('Erro!', error.error.error, 'error');
+                notify_error(error.error.error);
             },
         })
     }
 
     addStudent(username: string) {
         if (username.length < 1) {
-            this.pushNotify('Erro!', 'Barra de pesquisa vazia! Digite o nome do aluno', 'error');
+            notify_error('Barra de pesquisa vazia! Digite o nome do aluno');
             return;
         }
         this.courseService.addStudent(this.course.id, username).subscribe({
@@ -111,21 +130,21 @@ export class ReportPageComponent {
                 if (response?.message) {
                     mensagem = response.message;
                 }
-                this.pushNotify('Sucesso!', mensagem, 'success');
+                notify_success(mensagem);
             },
             error: (error) => {
                 let mensagem = "Erro ao adicionar aluno!";
                 if (error.error?.error) {
                     mensagem = error.error.error;
                 }
-                this.pushNotify('Erro!', mensagem, 'error');
+                notify_error(mensagem);
             }
         })
     }
 
     uploadCSV() {
         if (!this.selectedFile) {
-            this.pushNotify('Erro!', 'Selecione um arquivo csv!', 'warning');
+            notify_error('Selecione um arquivo csv!');
             return;
         }
 
@@ -142,7 +161,7 @@ export class ReportPageComponent {
                     mensagem = response.message;
                 }
 
-                this.pushNotify('Sucesso!', mensagem, 'success');
+                notify_success(mensagem);
                 this.loading = false;
             },
             error: err => {
@@ -157,10 +176,10 @@ export class ReportPageComponent {
                 }
 
                 if (detalhes) {
-                    this.pushNotify('Detalhes:', detalhes, 'error');
+                    notify_error(detalhes);
                 }
 
-                this.pushNotify('Erro!', mensagem, 'error');
+                notify_error(mensagem);
                 this.loading = false;
             },
         });
@@ -168,7 +187,7 @@ export class ReportPageComponent {
 
     uploadJsonQuestions() {
         if (!this.selectedQuestionJsonFile) {
-            this.pushNotify('Erro!', 'Selecione um arquivo!', 'warning');
+            notify_error('Selecione um arquivo!');
             return;
         }
 
@@ -180,10 +199,10 @@ export class ReportPageComponent {
         this.questionService.importQuestionsFromJson(formData).subscribe({
             next: (response) => {
                 console.log('HTTP SUCCESS', response);
-                this.pushNotify('Sucesso!', 'Upload com sucesso das questões!', 'success');
+                notify_success('Upload com sucesso das questões!');
             },
             error: (err: any) => {
-                this.pushNotify('Falha!', 'Erro ao carregar questões!', 'error');
+                notify_error('Erro ao carregar questões!');
             },
         });
     }
@@ -192,10 +211,10 @@ export class ReportPageComponent {
         this.courseService.unrollStudent(course.id, student.id).subscribe({
             next: (response: any) => {
                 this.report.splice(student_idx, 1);
-                this.pushNotify('Sucesso!', "Estudante removido.", 'success');
+                notify_success("Estudante removido.");
             },
             error: err => {
-                this.pushNotify('Erro!', "Falha ao remover estudante.", 'error');
+                notify_error("Falha ao remover estudante.");
             },
         });
     }
@@ -212,16 +231,5 @@ export class ReportPageComponent {
         if (input.files && input.files.length > 0) {
             this.selectedQuestionJsonFile = input.files[0];
         }
-    }
-
-    pushNotify(title: string, text: string | undefined, status: any) {
-        this.myNotify = new Notify({
-            status: status,
-            title: title,
-            text: text,
-            effect: 'slide',
-            type: 'filled',
-            speed: 1500,
-        });
     }
 }

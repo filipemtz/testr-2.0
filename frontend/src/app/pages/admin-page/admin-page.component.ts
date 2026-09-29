@@ -1,93 +1,102 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { signal, Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+    ButtonCloseDirective,
+    ButtonDirective,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalFooterComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective
+} from '@coreui/angular';
 
 @Component({
-  selector: 'app-admin-page',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './admin-page.component.html',
-  styleUrls: ['./admin-page.component.css']
+    selector: 'app-admin-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ModalComponent,
+        ModalHeaderComponent,
+        ModalTitleDirective,
+        ButtonCloseDirective,
+        ModalBodyComponent,
+        ModalFooterComponent,
+        ButtonDirective
+    ],
+    templateUrl: './admin-page.component.html',
+    styleUrls: ['./admin-page.component.css']
 })
 export class AdminPageComponent implements OnInit {
-  users = [] as any[];
-  editForm: FormGroup;
-  selectedUser: any;
-  userToDelete: any;
+    users = [] as any[];
+    editForm: FormGroup;
 
-  constructor(private adminService: AdminService, private fb: FormBuilder, private modalService: NgbModal) {
-    this.editForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
-    });
-  }
+    readonly userToEdit = signal<any | null>(null);
+    readonly userToDelete = signal<any | null>(null);
 
-  ngOnInit(): void {
-    this.loadUsers();
-  }
-
-  // Método para carregar usuários
-  loadUsers(): void {
-    this.adminService.getUsers().subscribe({
-      next: response => {
-        this.users = response.results;
-      },
-      error: err => {
-        console.error(err);
-      }
-    });
-  }
-
-  // Método para abrir o modal de deleção
-  openDeleteModal(user: any, content: TemplateRef<any>) {
-    this.userToDelete = user;
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
-  // Método para abrir o modal de edição e preencher o formulário com os dados do usuário
-  onEdit(user: any, content: TemplateRef<any>): void {
-    this.selectedUser = user;
-    this.editForm.patchValue(user);
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-  }
-
-  // Método para salvar as alterações do usuário
-  onSave(): void {
-    if (this.editForm.valid) {
-      const updatedUser = { ...this.selectedUser, ...this.editForm.value };
-
-      this.adminService.editUser(this.selectedUser.id, updatedUser).subscribe({
-        next: () => {
-          this.resetForm();
-          this.users = this.users.map(user => user.id === updatedUser.id ? updatedUser : user);
-        },
-        error: err => {
-          console.error(err);
-        }
-      });
+    constructor(
+        private adminService: AdminService,
+        private fb: FormBuilder) {
+        this.editForm = this.fb.group({
+            username: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]]
+        });
     }
-  }
 
-  // Método para confirmar a deleção do usuário
-  confirmDelete(): void {
-    console.log(this.userToDelete);
-    this.adminService.deleteUser(this.userToDelete.id).subscribe({
-      next: () => {
-        this.users = this.users.filter(user => user.id !== this.userToDelete.id);
-        this.modalService.dismissAll();
-      },
-      error: err => {
-        console.error(err);
-      }
-    });
-  }
+    ngOnInit(): void {
+        this.loadUsers();
+    }
 
-  // Método para resetar o formulário e limpar o usuário selecionado
-  resetForm(): void {
-    this.selectedUser = null;
-    this.editForm.reset();
-    this.modalService.dismissAll();
-  }
+    // Método para carregar usuários
+    loadUsers(): void {
+        this.adminService.getUsers().subscribe({
+            next: response => {
+                this.users = response.results;
+            },
+            error: err => {
+                console.error(err);
+            }
+        });
+    }
+
+    openEdit(user: any): void {
+        this.editForm.patchValue(user);
+        this.userToEdit.set(user);
+    }
+
+    closeEdit(): void {
+        this.userToEdit.set(null);
+        this.editForm.reset();
+    }
+
+    onSave(): void {
+        const user = this.userToEdit();
+        if (!user || this.editForm.invalid) return;
+
+        const updated = { ...user, ...this.editForm.value };
+        this.adminService.editUser(user.id, updated).subscribe({
+            next: () => {
+                this.users = this.users.map(u => u.id === updated.id ? updated : u);
+                this.closeEdit();
+            },
+            error: console.error
+        });
+    }
+
+    confirmDelete(): void {
+        const user = this.userToDelete();
+        if (!user) return;
+
+        this.adminService.deleteUser(user.id).subscribe({
+            next: () => {
+                this.users = this.users.filter(u => u.id !== user.id);
+                this.userToDelete.set(null);
+            },
+            error: console.error
+        });
+    }
 }

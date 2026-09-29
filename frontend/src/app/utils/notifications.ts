@@ -1,5 +1,5 @@
 import Notify from 'simple-notify'
-import 'simple-notify/dist/simple-notify.css'
+//import 'simple-notify/dist/simple-notify.css'
 
 export function push_notify(title: string, text: string | undefined, status: any) {
     return new Notify({

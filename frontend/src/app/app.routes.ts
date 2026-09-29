@@ -20,76 +20,89 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { ForbiddenPageComponent } from './pages/forbidden/forbidden.component';
 import { CanActivateTeacherOrStudent } from './guards/teacher-or-student.guard';
 export const routes: Routes = [
-  {
-    path: '',
-    component: MainLayoutComponent,
-    canActivate: [authenticatedGuard],
-    children: [
-      {
+    {
         path: '',
-        component: IndexPageComponent,
-        canActivate: [CanActivateTeacherOrStudent]
-      },
-      { 
-        path: 'course/:id', 
-        component: CoursesDetailPageComponent
-      },
-      {
-        path: 'course/:id/report', 
-        component: ReportPageComponent
-      },
-      { 
-        path: 'question/:id', 
-        component: QuestionDetailPageComponent
-        
-      },
-      { 
-        path: 'question/:questionId/edit', 
-        component: QuestionEditPageComponent,
-        canActivate: [CanActivateTeacher]
-      },
-      {
-        path: 'admin',
-        component: AdminPageComponent,
-        canActivate: [CanActivateAdmin] 
-      },
-      {
-        path: 'student',
-        component: StudentPageComponent,
-        canActivate: [CanActivateStudent]
-      },
-      {
-        path: 'teacher',
-        component: ProfessorPageComponent,
-        canActivate: [CanActivateTeacher]
-      },
-      {
-        path: 'profile',
-        component: UserProfileComponent
-      }
-    ]
-  },
-  {
-    path: 'accounts',
-    component: LoginLayoutComponent,
-    children: [
-      {
-        path: 'login',
-        component: LoginPageComponent
-      },
-      {
-        path: 'register',
-        component: RegisterPageComponent
-      },
-    ]
-  },
-  {
-    path: 'forbidden',
-    component: ForbiddenPageComponent
-  },
-  {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full'
-  }
+        component: MainLayoutComponent,
+        canActivate: [authenticatedGuard],
+        children: [
+            {
+                path: '',
+                component: IndexPageComponent,
+                canActivate: [CanActivateTeacherOrStudent]
+            },
+            {
+                path: 'coreui/',
+                loadComponent: () => import('./layouts').then(m => m.DefaultLayoutComponent),
+                data: {
+                    title: 'Home'
+                },
+                children: [
+                    {
+                        path: 'simple',
+                        loadChildren: () => import('./pages/simple/routes').then((m) => m.routes)
+                    },
+                ]
+            },
+            {
+                path: 'course/:id',
+                component: CoursesDetailPageComponent
+            },
+            {
+                path: 'course/:id/report',
+                component: ReportPageComponent
+            },
+            {
+                path: 'question/:id',
+                component: QuestionDetailPageComponent
+
+            },
+            {
+                path: 'question/:questionId/edit',
+                component: QuestionEditPageComponent,
+                canActivate: [CanActivateTeacher]
+            },
+            {
+                path: 'admin',
+                component: AdminPageComponent,
+                canActivate: [CanActivateAdmin]
+            },
+            {
+                path: 'student',
+                component: StudentPageComponent,
+                canActivate: [CanActivateStudent]
+            },
+            {
+                path: 'teacher',
+                component: ProfessorPageComponent,
+                canActivate: [CanActivateTeacher]
+            },
+            {
+                path: 'profile',
+                component: UserProfileComponent
+            }
+        ]
+    },
+    {
+        path: 'accounts',
+        component: LoginLayoutComponent,
+        children: [
+            {
+                path: 'login',
+                component: LoginPageComponent
+            },
+            {
+                path: 'register',
+                component: RegisterPageComponent
+            },
+        ]
+    },
+    {
+        path: 'forbidden',
+        component: ForbiddenPageComponent
+    },
+    {
+        path: '**',
+        redirectTo: '',
+        pathMatch: 'full'
+    }
 ];

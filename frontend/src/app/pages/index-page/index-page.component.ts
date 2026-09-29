@@ -1,25 +1,26 @@
-import { Component, ElementRef, ViewChild, OnInit, TemplateRef, HostListener } from '@angular/core';
+import { signal, Component, ElementRef, ViewChild, OnInit, TemplateRef, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
 import { CourseCardComponent } from '../../components/course-card/course-card.component';
-import Notify from 'simple-notify'
-import 'simple-notify/dist/simple-notify.css'
+
+import {
+    ButtonDirective,
+} from '@coreui/angular';
+
 import {
     ReactiveFormsModule,
     FormsModule,
-    FormBuilder,
-    FormGroup,
-    Validators
 } from '@angular/forms';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+
 import { MatIconModule } from '@angular/material/icon';
 import { notify_error, notify_success } from '../../utils/notifications';
 
 @Component({
     selector: 'app-index-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [
         CommonModule,
@@ -27,7 +28,8 @@ import { notify_error, notify_success } from '../../utils/notifications';
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        CourseCardComponent
+        CourseCardComponent,
+        ButtonDirective
     ],
     templateUrl: './index-page.component.html',
     styleUrls: ['./index-page.component.css'],
@@ -36,42 +38,38 @@ import { notify_error, notify_success } from '../../utils/notifications';
 export class IndexPageComponent implements OnInit {
     // @ViewChild('courseInput') courseInput!: ElementRef;
     courses: Course[] = [];
-    user: any;
+    user: any | null = null;
     myNotify: any;
-    isProfessor: boolean = false;
-
+    isProfessor = signal(false);
     defaultCourse: Course = Course.getDefaultCourse();
 
     constructor(
         private authService: AuthService,
         private courseService: CourseService,
-        config: NgbModalConfig,
-        private modalService: NgbModal,
-        private fb: FormBuilder,
-    ) {
-        config.backdrop = 'static';
-        config.keyboard = false;
-    }
+    ) { }
 
     ngOnInit(): void {
+        // TODO: these API calls are unnecessary are all over the place
         this.authService.profile().subscribe({
             next: (response) => {
                 this.user = response;
-
+                // TODO: these API calls are unnecessary are all over the place (also in other components)
                 this.authService.userInfo().subscribe({
-                    next: (response: any) => {
-                        this.isProfessor = response.groups.includes('teacher');
-                    },
+                    next: (userInfo: any) => {
+                        this.isProfessor.set(userInfo.groups.includes('teacher'));
+                        this.loadCourses();
+                    }
                 });
-                this.loadCourses();
             },
         });
     }
 
     loadCourses() {
+        console.log("load courses called.");
         this.courseService.getCourses().subscribe({
             next: (response) => {
                 this.courses = response.results;
+                console.log(this.courses);
             },
             error: (err) => {
                 console.log(err);
@@ -94,12 +92,23 @@ export class IndexPageComponent implements OnInit {
         });
     }
 
-    createDefaultCourse(userId: string): void {
+    createDefaultCourse(): void {
+        if (this.user == null) {
+            notify_error("User information not found.");
+            return;
+        }
+
+        console.log("called createDefaultCourse");
+        console.log(this.user);
         const defaultCourse: Course = { ...this.defaultCourse }
-        defaultCourse.teachers.push(userId);
+        defaultCourse.teachers.push(this.user.id);
         this.courseService.createCourse(defaultCourse).subscribe({
             next: course => {
                 this.courses.push(course);
+            },
+            error: (err) => {
+                console.log(err);
+                notify_error("Falha ao criar curso.");
             }
         })
     }
@@ -117,14 +126,12 @@ export class IndexPageComponent implements OnInit {
         });
     }
 
-
     deleteCourse(course: Course) {
         if (course && course.url) {
             this.courseService.deleteCourse(course.url).subscribe({
                 next: () => {
                     this.courses = this.courses.filter(x => x.id !== course.id);
                     notify_success('Curso removido');
-                    this.modalService.dismissAll();
                 },
                 error: (err) => {
                     console.error(err);

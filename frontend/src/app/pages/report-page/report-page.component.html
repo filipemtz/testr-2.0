@@ -74,9 +74,7 @@
 
     <small class="form-text text-muted">
         Envie um arquivo .JSON no formato indicado
-        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            aqui
-        </button>.
+        <button cButton (click)="jsonModalVisible=true" size="sm" color="primary" shape="rounded-pill">aqui</button>.
         Cada seção pode conter várias questões e cada questão
         pode conter vários casos de teste (pares entrada/saída).
     </small>
@@ -125,49 +123,44 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Formato do Arquivo JSON
-                </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <pre>
-<code>
-&#123;
-  "Nome da Seção 1": [
-    &#123;
-      "name": "Título da Questão 1",
-      "description": "Descrição da Questão 1",
-      "language": "CC",   // linguagens podem ser PT (Python), CC (C/C++), JP (Jupyter) ou JV (Java).
-      "time_limit": 3,  // in seconds
-      "memory_limit": 200,  // in MB
-      "cpu_limit": 0.25,   // percentage of max
-      "deadline": "2026/05/09",   // year/month/day
-      "tests": [
+<c-modal id="jsonFormatModal" [visible]="jsonModalVisible" (visibleChange)="!$event && jsonModalVisible = false">
+    <c-modal-header>
+        <h5 cModalTitle>Formato do Arquivo JSON</h5>
+        <button (click)="jsonModalVisible = false" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+        <pre>
+        <code>
         &#123;
-          "input": "2",
-          "output": "4"
-        &#125;,
-        &#123;
-          "input": "-2",
-          "output": "-4"
-        &#125;,
+        "Nome da Seção 1": [
+            &#123;
+            "name": "Título da Questão 1",
+            "description": "Descrição da Questão 1",
+            "language": "CC",   // linguagens podem ser PT (Python), CC (C/C++), JP (Jupyter) ou JV (Java).
+            "time_limit": 3,  // in seconds
+            "memory_limit": 200,  // in MB
+            "cpu_limit": 0.25,   // percentage of max
+            "deadline": "2026/05/09",   // year/month/day
+            "tests": [
+                &#123;
+                "input": "2",
+                "output": "4"
+                &#125;,
+                &#123;
+                "input": "-2",
+                "output": "-4"
+                &#125;,
+                // (...)
+            ]
+            &#125;,
+            // (...)
+        ],
         // (...)
-      ]
-    &#125;,
-    // (...)
-  ],
-  // (...)
-&#125;
-</code>
-</pre>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div>
-        </div>
-    </div>
-</div>
+        &#125;
+        </code>
+        </pre>
+    </c-modal-body>
+    <c-modal-footer>
+        <button (click)="jsonModalVisible = false" cButton color="primary">Understood</button>
+    </c-modal-footer>
+</c-modal>

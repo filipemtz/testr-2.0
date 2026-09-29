@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -13,12 +13,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { UploadQuestionFileComponent } from '../../components/upload-question-file/upload-question-file.component';
-import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-import Notify from 'simple-notify';
-import 'simple-notify/dist/simple-notify.css';
+import {
+    ButtonCloseDirective,
+    ButtonDirective,
+    ModalBodyComponent,
+    ModalComponent,
+    ModalFooterComponent,
+    ModalHeaderComponent,
+    ModalTitleDirective
+} from '@coreui/angular';
+import { FormSelectDirective } from '@coreui/angular';
 
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { Question } from '../../models/question';
+import { notify_error, notify_success } from '../../utils/notifications';
 
 export const MY_DATE_FORMATS = {
     parse: {
@@ -34,6 +42,7 @@ export const MY_DATE_FORMATS = {
 
 @Component({
     selector: 'app-question-edit-page',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [
         CommonModule,
@@ -45,9 +54,17 @@ export const MY_DATE_FORMATS = {
         MatInputModule,
         MatDatepickerModule,
         UploadQuestionFileComponent,
-        NgbDropdownModule,
+        FormSelectDirective,
         InputOutputComponent,
-        RelaxTestInfoComponent
+        RelaxTestInfoComponent,
+        ModalComponent,
+        ModalHeaderComponent,
+        ModalTitleDirective,
+        ButtonCloseDirective,
+        ModalBodyComponent,
+        ModalFooterComponent,
+        ButtonDirective,
+
     ],
     providers: [provideNativeDateAdapter(), { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
@@ -58,7 +75,8 @@ export const MY_DATE_FORMATS = {
 
 export class QuestionEditPageComponent implements OnInit {
     editForm: FormGroup;
-    selectedQuestion: any;
+    question: Question | null = null;
+    delete_modal_visible: boolean = false;
     erros: any[] = []
     myNotify: any;
 
@@ -66,7 +84,6 @@ export class QuestionEditPageComponent implements OnInit {
         private questionService: QuestionService,
         private route: ActivatedRoute,
         private location: Location,
-        private modalService: NgbModal,
         private fb: FormBuilder) {
 
         this.editForm = this.fb.group({
@@ -87,7 +104,7 @@ export class QuestionEditPageComponent implements OnInit {
                     const id = params['questionId'];
                     this.questionService.getQuestion(id).subscribe({
                         next: response => {
-                            this.selectedQuestion = response;
+                            this.question = response;
                             this.editForm.patchValue(response);
                         },
                         error: err => {
@@ -100,15 +117,15 @@ export class QuestionEditPageComponent implements OnInit {
     }
 
     confirmEditQuestion(): void {
-        if (this.editForm.valid) {
-            const updatedQuestion = { ...this.selectedQuestion, ...this.editForm.value };
-            this.questionService.editQuestion(this.selectedQuestion.url, updatedQuestion).subscribe({
+        if (this.question && this.editForm.valid) {
+            const updatedQuestion = { ...this.question, ...this.editForm.value };
+            this.questionService.editQuestion(this.question.url, updatedQuestion).subscribe({
                 next: () => {
-                    this.pushNotify('Sucesso!', 'Questão editada com sucesso', 'success');
+                    notify_success('Questão editada com sucesso');
                 },
                 error: (err: any) => {
                     console.log(err);
-                    this.pushNotify("Error", "Falha ao atualizar a questão", "error");
+                    notify_error("Falha ao atualizar a questão");
                 }
             });
         }
@@ -117,17 +134,15 @@ export class QuestionEditPageComponent implements OnInit {
         }
     }
 
-    openDeleteQuestionModal(content: TemplateRef<any>) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
-    }
-
     deleteQuestion(): void {
-        this.questionService.deleteQuestion(this.selectedQuestion.url).subscribe({
-            next: () => {
-                this.modalService.dismissAll();
-                this.goBack();
-            }
-        })
+        if (this.question) {
+            this.questionService.deleteQuestion(this.question.url).subscribe({
+                next: () => {
+                    this.question = null;
+                    this.goBack();
+                }
+            });
+        }
     }
 
     cpuLimitValidator(control: AbstractControl): Observable<ValidationErrors | null> {
@@ -140,20 +155,5 @@ export class QuestionEditPageComponent implements OnInit {
 
     goBack(): void {
         this.location.back();
-    }
-
-    resetForm(): void {
-        this.selectedQuestion = null;
-        this.editForm.reset();
-    }
-
-    pushNotify(title: string, text: string | undefined, status: any) {
-        this.myNotify = new Notify({
-            status: status,
-            title: title,
-            text: text,
-            effect: 'slide',
-            type: 'filled',
-        });
     }
 }

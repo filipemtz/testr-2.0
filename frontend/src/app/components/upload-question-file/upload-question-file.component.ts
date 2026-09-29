@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { QuestionFileService } from '../../services/question-file.service';
 import { QuestionService } from '../../services/question.service';
 import { QuestionFile } from '../../models/question-file';
@@ -6,11 +6,16 @@ import { CommonModule } from '@angular/common';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProgressComponent } from '@coreui/angular';
+
 @Component({
     selector: 'app-upload-question-file',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
-    imports: [CommonModule, NgbProgressbarModule],
+    imports: [
+        CommonModule,
+        ProgressComponent
+    ],
     templateUrl: './upload-question-file.component.html',
     styleUrls: ['./upload-question-file.component.css'],
 })
@@ -22,11 +27,13 @@ export class UploadQuestionFileComponent implements OnInit {
 
     fileInfos: QuestionFile[] = [];
 
+
     constructor(
         private questionFileService: QuestionFileService,
         private questionService: QuestionService,
         private route: ActivatedRoute
     ) { }
+
 
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
@@ -40,6 +47,7 @@ export class UploadQuestionFileComponent implements OnInit {
         });
     }
 
+
     deleteFile(fileId: number): void {
         this.questionFileService.deleteFile(fileId).subscribe({
             next: () => {
@@ -52,11 +60,13 @@ export class UploadQuestionFileComponent implements OnInit {
         });
     }
 
+
     selectFiles(event: any): void {
         this.message = [];
         this.progressInfos = [];
         this.selectedFiles = event.target.files;
     }
+
 
     uploadFiles(): void {
         if (this.selectedFiles) {
@@ -65,6 +75,7 @@ export class UploadQuestionFileComponent implements OnInit {
             }
         }
     }
+
 
     upload(idx: number, file: File): void {
         this.progressInfos[idx] = { value: 0, fileName: file.name };
@@ -104,9 +115,11 @@ export class UploadQuestionFileComponent implements OnInit {
         }
     }
 
+
     clearMessages() {
         this.message = [];
     }
+
 
     clearProgressInfos() {
         this.progressInfos = [] as any;
