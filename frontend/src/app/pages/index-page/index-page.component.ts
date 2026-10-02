@@ -65,11 +65,9 @@ export class IndexPageComponent implements OnInit {
     }
 
     loadCourses() {
-        console.log("load courses called.");
         this.courseService.getCourses().subscribe({
             next: (response) => {
                 this.courses = response.results;
-                console.log(this.courses);
             },
             error: (err) => {
                 console.log(err);
@@ -98,8 +96,6 @@ export class IndexPageComponent implements OnInit {
             return;
         }
 
-        console.log("called createDefaultCourse");
-        console.log(this.user);
         const defaultCourse: Course = { ...this.defaultCourse }
         defaultCourse.teachers.push(this.user.id);
         this.courseService.createCourse(defaultCourse).subscribe({

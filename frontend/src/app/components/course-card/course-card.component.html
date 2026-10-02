@@ -8,8 +8,8 @@
                         class="form-control input-inline fs-5 w-50" />
                 </form>
                 <div class="d-flex justify-content-between align-items-center">
-                    <a class="btn btn-sm fa-check fa-solid text-success" (click)="confirmEditInline()"></a>
-                    <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="isEditing = false"></a>
+                    <a class="btn btn-sm bi bi-check-lg text-success" (click)="confirmEditInline()"></a>
+                    <a class="btn btn-sm bi bi-x-lg text-danger" (click)="isEditing = false"></a>
                 </div>
             </div>
 
@@ -18,17 +18,16 @@
                     <h5 class="card-title" [routerLink]="['/course', course.id]">{{ course.name }}</h5>
                     <div *ngIf="isProfessor">
                         <span *ngIf="course.visible; else visibleOff">
-                            <a class="btn btn-sm fa-solid fa-eye text-primary"
+                            <a class="btn btn-sm bi bi-eye-fill text-primary"
                                 (click)="changeVisibilityCourse(course)"></a>
                         </span>
                         <ng-template #visibleOff>
-                            <a class="btn btn-sm fa-solid fa-eye-slash text-primary"
+                            <a class="btn btn-sm bi bi-eye-slash-fill text-primary"
                                 (click)="changeVisibilityCourse(course)"></a>
                         </ng-template>
-                        <a class="btn btn-sm fa-regular fa-copy text-secondary"
-                            (click)="copyRequested.emit(course)"></a>
-                        <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="enableEdit()"></a>
-                        <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="toogleDeleteModal()"></a>
+                        <a class="btn btn-sm bi bi-copy text-primary" (click)="copyRequested.emit(course)"></a>
+                        <a class="btn btn-sm bi bi-pencil-fill text-primary" (click)="enableEdit()"></a>
+                        <a class="btn btn-sm bi bi-trash-fill text-danger" (click)="toogleDeleteModal()"></a>
                     </div>
                 </div>
             </ng-template>

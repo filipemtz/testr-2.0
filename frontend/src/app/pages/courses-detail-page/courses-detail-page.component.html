@@ -9,26 +9,26 @@
     </div>
     <div>
         <a *ngIf="isProfessor" class="mb-2" [routerLink]="['/course', course.id, 'report']">
-            <i class="display-6 fa fa-cog"></i>
+            <i class="bi bi-gear-fill"></i>
         </a>
     </div>
 </div>
 
 <a class="icon-link icon-link-hover mb-2" [routerLink]="['/']">
-    <i class="bi fa-solid fa-arrow-left"></i>
+    <i class="bi bi-arrow-left-circle"></i>
     Voltar
 </a>
 
 <div class="d-flex justify-content-between">
     <!-- Botão de adicionar seção (aparece apenas se for professor) -->
     <button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="createDefaultSection(course.id)">
-        <i class="fa-regular fa-plus"></i>
+        <i class="bi bi-plus-lg"></i>
         Nova Seção
     </button>
 
     <!-- Botão de importar questões (aparece apenas se for professor) -->
-    <button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="import_question_modal_visible = true;">
-        <i class="fa-solid fa-file-import"></i>
+    <button *ngIf="isProfessor" class="btn text-primary mb-2" (click)="import_question_modal_visible.set(true)">
+        <i class="bi bi-upload"></i>
         Importar Questões <br>
         <i>[Formato BOCA]</i>
     </button>
@@ -43,9 +43,9 @@
             <input #sectionInput class="form-control form-control-lg fw-semibold w-50 me-2 mb-1"
                 [(ngModel)]="section.name" />
             <div class="d-flex align-items-center">
-                <button type="button" class="btn btn-rounded fa-check fa-solid text-success ms-1"
+                <button type="button" class="btn btn-rounded bi bi-check-lg text-success ms-1"
                     (click)="confirmEditSection(section)"></button>
-                <button type="button" class="btn btn-rounded fa-solid fa-xmark text-danger ms-1"
+                <button type="button" class="btn btn-rounded bi bi-x-lg text-danger ms-1"
                     (click)="cancelEditSection(section)"></button>
             </div>
         </div>
@@ -54,30 +54,30 @@
             <div class="d-flex justify-content-start align-items-center">
                 <h4>{{ i + 1 }}. {{ section.name }}</h4>
                 <!-- Botões de editar e excluir seção (aparecem apenas se for professor) -->
-                <button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-pencil text-primary ms-1"
+                <button *ngIf="isProfessor" type="button" class="btn bi bi-pencil-fill text-primary ms-1"
                     (click)="enableEditSection(section)"></button>
 
                 <button *ngIf="isProfessor && !isFirstSection" type="button"
                     (click)="changeSectionOrder(sections!, i, i-1)"
-                    class="btn fa-solid btn-rounded fa-arrow-up text-primary ms-1"></button>
+                    class="btn btn-rounded bi bi-arrow-up text-primary ms-1"></button>
 
                 <button *ngIf="isProfessor && !isLastSection" type="button"
                     (click)="changeSectionOrder(sections!, i, i+1)"
-                    class="btn fa-solid btn-rounded fa-arrow-down text-primary ms-1"></button>
+                    class="btn btn-rounded bi bi-arrow-down text-primary ms-1"></button>
 
                 <div *ngIf="isProfessor">
                     <div *ngIf="section.visible; else visibleOff">
-                        <a class="btn btn-sm fa-solid fa-eye text-primary"
+                        <a class="btn btn-sm bi bi-eye-fill text-primary"
                             (click)="changeVisibilitySection(section)"></a>
                     </div>
 
                     <ng-template #visibleOff>
-                        <a class="btn btn-sm fa-solid fa-eye-slash text-primary"
+                        <a class="btn btn-sm bi bi-eye-slash-fill text-primary"
                             (click)="changeVisibilitySection(section)"></a>
                     </ng-template>
                 </div>
 
-                <button *ngIf="isProfessor" type="button" class="btn fa-solid btn-rounded fa-trash text-danger ms-1"
+                <button *ngIf="isProfessor" type="button" class="btn btn-rounded bi bi-trash-fill text-danger ms-1"
                     (click)="sectionToDelete = section"></button>
             </div>
         </ng-template>
@@ -94,44 +94,44 @@
                     <!-- Botões de editar e excluir questão (aparecem apenas se for professor) -->
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"
                         [routerLink]="['/question', question.id, 'edit']">
-                        <i class="fa-solid fa-pencil fa-sm"></i>
+                        <i class="bi bi-pencil-fill"></i>
                     </button>
 
                     <button *ngIf="isProfessor && !isFirstQuestion" type="button"
                         (click)="changeQuestionOrder(section.questions!, question_idx, question_idx-1)"
-                        class="btn fa-solid btn-rounded fa-arrow-up text-primary ms-1"></button>
+                        class="btn btn-rounded bi bi-arrow-up text-primary ms-1"></button>
 
                     <button *ngIf="isProfessor && !isLastQuestion" type="button"
                         (click)="changeQuestionOrder(section.questions!, question_idx, question_idx+1)"
-                        class="btn fa-solid btn-rounded fa-arrow-down text-primary ms-1"></button>
+                        class="btn btn-rounded bi bi-arrow-down text-primary ms-1"></button>
 
                     <div *ngIf="isProfessor">
                         <div *ngIf="question.visible; else visibleOff">
-                            <a class="btn btn-sm fa-solid fa-eye text-primary"
+                            <a class="btn btn-sm bi bi-eye-fill text-primary"
                                 (click)="changeVisibilityQuestion(question)"></a>
                         </div>
 
                         <ng-template #visibleOff>
-                            <a class="btn btn-sm fa-solid fa-eye-slash text-primary"
+                            <a class="btn btn-sm bi bi-eye-slash-fill text-primary"
                                 (click)="changeVisibilityQuestion(question)"></a>
                         </ng-template>
                     </div>
 
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-danger ms-1"
                         (click)="questionToDelete = question">
-                        <i class="fa-solid fa-trash fa-sm"></i>
+                        <i class="bi bi-trash-fill"></i>
                     </button>
 
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"
                         (click)="downloadQuestion(question)">
-                        <i class="fa-solid fa-download fa-sm"></i>
+                        <i class="bi bi-download"></i>
                     </button>
                 </div>
             </li>
         </ol>
         <!-- Botão de adicionar questão (aparece apenas se for professor) -->
         <button *ngIf="isProfessor" class="btn text-primary" (click)="createDefaultQuestion(section)">
-            <i class="fa-regular fa-plus"></i>
+            <i class="bi bi-plus-lg"></i>
             Nova Questão
         </button>
     </li>
@@ -180,11 +180,13 @@
 
 
 <!-- Modal para importar questões -->
-<c-modal id="importQuestionModal" [visible]="import_question_modal_visible"
-    (visibleChange)="!$event && import_question_modal_visible = true;">
+<c-modal id="importQuestionModal" [visible]="import_question_modal_visible()">
     <c-modal-header>
-        <h5 cModalTitle><i class="fa-solid fa-file-import"></i> Importar questões</h5>
-        <button (click)="import_question_modal_visible = false;" cButtonClose></button>
+        <h5 cModalTitle>
+            <i class="bi bi-upload"></i>
+            Importar questões
+        </h5>
+        <button (click)="import_question_modal_visible.set(false);" cButtonClose></button>
     </c-modal-header>
     <c-modal-body>
         <app-import-question [courseId]="course.id"></app-import-question>

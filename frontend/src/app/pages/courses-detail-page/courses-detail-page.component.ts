@@ -1,11 +1,11 @@
 import {
     Component,
     OnInit,
-    TemplateRef,
     ViewChild,
     ElementRef,
     HostListener,
     ChangeDetectionStrategy,
+    signal,
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -38,9 +38,10 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import Notify from 'simple-notify';
 
 import { AuthService } from '../../services/auth.service';
+import { notify_error } from '../../utils/notifications';
+
 @Component({
     selector: 'app-courses-detail-page',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -70,7 +71,7 @@ export class CoursesDetailPageComponent implements OnInit {
     sections: Section[] = [] as Section[];
     submissions: Submission[] = [] as Submission[];
     stats: CourseStats = {} as CourseStats;
-    import_question_modal_visible: boolean = false;
+    import_question_modal_visible = signal(false);
 
     addSectionForm: FormGroup;
     addQuestionForm: FormGroup;
@@ -127,7 +128,7 @@ export class CoursesDetailPageComponent implements OnInit {
                 },
                 error: (err) => {
                     console.log(err);
-                    this.pushNotify('Erro!', 'Erro ao carregar as seções', 'error');
+                    notify_error('Erro ao carregar as seções');
                 }
             });
         });
@@ -140,7 +141,7 @@ export class CoursesDetailPageComponent implements OnInit {
             },
             error: (err) => {
                 console.log(err);
-                this.pushNotify('Erro!', 'Erro ao carregar as submissões', 'error');
+                notify_error('Erro ao carregar as submissões');
             }
         });
     }
@@ -195,11 +196,11 @@ export class CoursesDetailPageComponent implements OnInit {
                     this.sections = this.sections.filter(
                         (section) => section.url !== this.sectionToDelete!.url,
                     );
-                    this.questionToDelete = null;
+                    this.sectionToDelete = null;
                 },
                 error: (err) => {
                     console.error(err);
-                    this.pushNotify('Error!', 'Falha ao deletar uma seção', 'error');
+                    notify_error('Falha ao deletar uma seção');
                 }
             });
     }
@@ -220,7 +221,7 @@ export class CoursesDetailPageComponent implements OnInit {
             },
             error: (err) => {
                 console.error(err);
-                this.pushNotify('Erro!', 'Falha ao editar uma seção', 'error');
+                notify_error('Falha ao editar uma seção');
             },
         });
     }
@@ -245,7 +246,7 @@ export class CoursesDetailPageComponent implements OnInit {
                 },
                 error: (err) => {
                     console.error(err);
-                    this.pushNotify('Erro!', 'Falha ao deletar uma questão', 'error');
+                    notify_error('Falha ao deletar uma questão');
                 }
             });
     }
@@ -265,7 +266,7 @@ export class CoursesDetailPageComponent implements OnInit {
                 }
             },
             error: err => {
-                this.pushNotify('Erro!', 'Falha ao trocar a ordem das questões', 'error');
+                notify_error('Falha ao trocar a ordem das questões');
                 console.log(err);
             }
         })
@@ -291,7 +292,7 @@ export class CoursesDetailPageComponent implements OnInit {
                 }
             },
             error: err => {
-                this.pushNotify('Erro!', 'Falha ao trocar a ordem das questões', 'error');
+                notify_error('Falha ao trocar a ordem das questões');
                 console.log(err);
             }
         })
@@ -338,7 +339,7 @@ export class CoursesDetailPageComponent implements OnInit {
                 this.router.navigate([`/question/${question.id}/edit`]);
             },
             error: err => {
-                this.pushNotify('Erro!', 'Falha ao criar questão', 'error');
+                notify_error('Falha ao criar questão');
                 console.log(err);
             }
         });
@@ -351,7 +352,7 @@ export class CoursesDetailPageComponent implements OnInit {
             },
             error: (err) => {
                 console.error(err);
-                this.pushNotify('Erro!', 'Falha ao editar uma questão', 'error');
+                notify_error('Falha ao editar uma questão');
             },
         });
     }
@@ -386,17 +387,6 @@ export class CoursesDetailPageComponent implements OnInit {
         this.putQuestion(question);
     }
 
-    pushNotify(title: string, text: string | undefined, status: any) {
-        this.myNotify = new Notify({
-            status: status,
-            title: title,
-            text: text,
-            effect: 'slide',
-            type: 'filled',
-        });
-    }
-
-
     downloadQuestion(question: Question) {
         this.questionService.exportQuestion(question.id).subscribe({
             next: (response) => {
@@ -413,7 +403,7 @@ export class CoursesDetailPageComponent implements OnInit {
             },
             error: (err) => {
                 console.error(err);
-                this.pushNotify('Error!', 'Falha ao exportar a questão', 'error');
+                notify_error('Falha ao exportar a questão');
             },
         });
     }

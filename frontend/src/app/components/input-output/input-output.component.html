@@ -1,55 +1,57 @@
-
 <div class="d-flex justify-content-between mb-3">
     <h2>Entradas e Saídas</h2>
 </div>
 
 <div *ngIf="inputs_outputs.length > 0; else noIO">
     <div *ngFor="let io of inputs_outputs; index as i" class="d-flex mb-3 mt-2">
-        <div class="d-flex" *ngIf="io.isEditing; else readMode">
+        <div class="d-flex flex-row" *ngIf="io.isEditing; else readMode">
 
-            <div class="flex-column d-flex me-3">
+            <div class="p-2">
                 <label for="input" class="fw-bold ">Input {{ i+1 }}</label>
                 <textarea id="input" class="input-output-textarea" [(ngModel)]="io.input"></textarea>
             </div>
 
-            <div class="flex-column d-flex ms-3">
+            <div class="p-2">
                 <label for="output" class="fw-bold">Output {{ i+1 }}</label>
                 <textarea id="output" class="input-output-textarea" [(ngModel)]="io.output"></textarea>
             </div>
 
-
-            <div class="d-flex flex-column justify-content-between">
-                <a class="btn btn-sm fa-solid fa-check text-success" (click)="updateInputOutput(io)"></a>
+            <div class="p-2">
+                <div class=" flex-column justify-content-between">
+                    <a class="btn btn-sm bi bi-check-lg text-success" (click)="updateInputOutput(io)"></a>
                     <div *ngIf="io.visible; else visibleOff">
-                        <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(io)"></a>
+                        <a class="btn btn-sm bi bi-eye-fill text-primary" (click)="changeVisibility(io)"></a>
                     </div>
-                <a class="btn btn-sm fa-solid fa-xmark text-danger" (click)="cancelEditIO(io)"></a>
+                    <a class="btn btn-sm bi bi-x-lg text-danger" (click)="cancelEditIO(io)"></a>
+                </div>
             </div>
         </div>
 
         <ng-template #readMode>
-            <div class="flex-column d-flex me-3">
+            <div class="p-2">
                 <label for="input" class="fw-bold ">Input {{ i+1 }}</label>
                 <textarea readonly id="input" class="input-output-textarea border-0" [(ngModel)]="io.input"></textarea>
             </div>
 
-            <div class="flex-column d-flex ms-3">
+            <div class="p-2">
                 <label for="output" class="fw-bold">Output {{ i+1 }}</label>
-                <textarea  id="output" readonly class="input-output-textarea  border-0" [(ngModel)]="io.output"></textarea>
+                <textarea id="output" readonly class="input-output-textarea  border-0"
+                    [(ngModel)]="io.output"></textarea>
             </div>
 
-            <div class="d-flex flex-column justify-content-between">
-                <a class="btn btn-sm fa-solid fa-pencil text-primary" (click)="editIO(io)"></a>
-                <div *ngIf="io.visible; else visibleOff">
-                    <a class="btn btn-sm fa-solid fa-eye text-primary" (click)="changeVisibility(io)"></a>
+            <div class="ml-auto p-2">
+                <div class="flex-column justify-content-between">
+                    <a class="btn btn-sm bi bi-pencil-fill text-primary" (click)="editIO(io)"></a>
+                    <div *ngIf="io.visible; else visibleOff">
+                        <a class="btn btn-sm bi bi-eye-fill text-primary" (click)="changeVisibility(io)"></a>
+                    </div>
+                    <a class="btn btn-sm bi bi-trash-fill text-danger" (click)="deleteInputOutput(io.url, io)"></a>
                 </div>
-                <a class="btn btn-sm fa-solid fa-trash text-danger" (click)="deleteInputOutput(io.url, io)"></a>
-
             </div>
         </ng-template>
 
-        <ng-template #visibleOff >
-            <a class="btn btn-sm fa-solid fa-eye-slash text-primary" (click)="changeVisibility(io)"></a>
+        <ng-template #visibleOff>
+            <a class="btn btn-sm bi bi-eye-slash-fill text-primary" (click)="changeVisibility(io)"></a>
         </ng-template>
     </div>
 </div>
@@ -60,9 +62,7 @@
 
 <div class="d-flex justify-content-between mb-3">
     <button class="btn btn-primary" (click)="createInputOutput()">
-        <i class="fa-regular fa-plus"></i>
+        <i class="bi bi-plus-lg"></i>
         Nova Entrada/Saída
     </button>
 </div>
-
-
