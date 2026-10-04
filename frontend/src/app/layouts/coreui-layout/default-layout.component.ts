@@ -3,6 +3,9 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
 import { IconDirective } from '@coreui/icons-angular';
+import { IconSetService } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
+
 import {
     ContainerComponent,
     ShadowOnScrollDirective,
@@ -50,4 +53,8 @@ function isOverflown(element: HTMLElement) {
 })
 export class DefaultLayoutComponent {
     public navItems = [...navItems];
+
+    constructor(public iconSet: IconSetService) {
+        iconSet.icons = { ...freeSet };
+    }
 }

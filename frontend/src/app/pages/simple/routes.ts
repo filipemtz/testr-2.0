@@ -5,9 +5,6 @@ export const routes: Routes = [
     {
         path: '',
         loadComponent: () => import('./simple.component').then(m => m.SimpleExampleCoreUI),
-        data: {
-            title: $localize`Dashboard`
-        }
     }
 ];
 

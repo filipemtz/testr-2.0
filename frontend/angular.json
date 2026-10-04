@@ -5,7 +5,14 @@
     "projects": {
         "frontend": {
             "projectType": "application",
-            "schematics": {},
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                },
+                "@schematics/angular:application": {
+                    "strict": true
+                }
+            },
             "root": "",
             "sourceRoot": "src",
             "prefix": "app",
@@ -27,7 +34,8 @@
                         "styles": [
                             "node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "src/styles.css",
-                            "src/my-theme.scss"
+                            "src/my-theme.scss",
+                            "src/scss/styles.scss"
                         ],
                         "scripts": [
                             "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
