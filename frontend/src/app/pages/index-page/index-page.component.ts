@@ -5,6 +5,9 @@ import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
 import { CourseCardComponent } from '../../components/course-card/course-card.component';
+import { CourseListComponent } from '../../components/course-card-novo/course-list.component';
+import { CourseDetailComponent } from '../../components/course-card-novo/course-detail.component';
+
 
 import {
     ButtonDirective,
@@ -29,7 +32,9 @@ import { notify_error, notify_success } from '../../utils/notifications';
         FormsModule,
         ReactiveFormsModule,
         CourseCardComponent,
-        ButtonDirective
+        ButtonDirective,
+        CourseListComponent,
+        CourseDetailComponent
     ],
     templateUrl: './index-page.component.html',
     styleUrls: ['./index-page.component.css'],
