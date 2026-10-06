@@ -5,8 +5,8 @@ import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
 import { CourseCardComponent } from '../../components/course-card/course-card.component';
-import { CourseListComponent } from '../../components/course-card-novo/course-list.component';
-import { CourseDetailComponent } from '../../components/course-card-novo/course-detail.component';
+import { CourseListComponent } from '../../components/course-card-list/course-list.component';
+import { CourseDetailComponent } from '../../components/claude-components/course-detail.component';
 
 
 import {
@@ -20,6 +20,7 @@ import {
 
 import { MatIconModule } from '@angular/material/icon';
 import { notify_error, notify_success } from '../../utils/notifications';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm-modal.component';
 
 @Component({
     selector: 'app-index-page',
@@ -34,7 +35,8 @@ import { notify_error, notify_success } from '../../utils/notifications';
         CourseCardComponent,
         ButtonDirective,
         CourseListComponent,
-        CourseDetailComponent
+        CourseDetailComponent,
+        ConfirmModalComponent
     ],
     templateUrl: './index-page.component.html',
     styleUrls: ['./index-page.component.css'],
