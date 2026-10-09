@@ -1,5 +1,5 @@
 <h1 class="display-2 text-center mb-4">{{ question.name }}
-    <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success"></i>
+    <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success h1"></i>
 </h1>
 
 <div style="padding-bottom: 20px">
@@ -43,9 +43,9 @@
     <div style="padding-bottom: 50px">
         <h3 class="fw-bold mb-3">Enviar Resposta</h3>
         <div class="d-flex flex-wrap mb-3">
-            <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
+            <input #fileInput class="form-control" type="file" (change)="onFileSelected($event)"
                 style="max-width: 700px" />
-            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
+            <button class="btn btn-success" (click)="onSubmitFile(); fileInput.value = ''">
                 Upload
             </button>
         </div>
@@ -67,7 +67,7 @@
                     <th scope="row" class="col-2">Data da Submissão</th>
                     <td class="col-10">{{ submission.created_at | dateFormat }}</td>
                 </tr>
-                <tr>
+                <tr cTableColor='success'>
                     <th scope="row" class="col-2">Status</th>
                     <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
                 </tr>
@@ -102,12 +102,12 @@
 
     <div *ngIf="submission">
         <h3 class="fw-bold mb-3">Relatório</h3>
-        <table class="table table-bordered table-striped">
+        <table cTable>
             <tbody>
                 <tr>
                     <th scope="row" class="col-2">Arquivo</th>
                     <td class="col-10">
-                        <a [href]="apiUrl + '/' + submission.file" download>{{
+                        <a [href]="apiUrl + ' /' + submission.file" download>{{
                             submission.file_name
                             }}</a>
                     </td>

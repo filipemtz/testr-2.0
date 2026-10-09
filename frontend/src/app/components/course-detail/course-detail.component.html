@@ -1,0 +1,116 @@
+@if (course; as c) {
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <button cButton color="secondary" variant="outline" size="sm" (click)="back()">← All courses</button>
+</div>
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div>
+        <h3 class="mb-1">{{ c.name }}</h3>
+        <div class="mb-2 d-flex gap-2">
+            <c-badge color="primary" shape="rounded-pill">{{ c.program }}</c-badge>
+            <c-badge color="secondary" shape="rounded-pill">{{ c.semester }}</c-badge>
+        </div>
+        <div class="text-body-secondary">Descrição do Curso</div>
+    </div>
+    @if (store.viewAsProfessor()) {
+    <div class="d-flex gap-2">
+        <button cButton color="primary" variant="outline" [routerLink]="['/course', course.id, 'report']">Edit
+            course</button>
+    </div>
+    }
+</div>
+
+<c-card class="mb-3">
+    <c-card-body>
+        <div class="d-flex justify-content-between mb-2">
+            <strong>Your progress</strong>
+            <span>rank: {{ stats.rank }} / {{ stats.total_students }} · {{ percent_done() }}% · {{ stats.n_solved }} of
+                {{ stats.n_visible_questions }} activities</span>
+        </div>
+        <c-progress [attr.aria-label]="'Course progress ' + percent_done() + '%'">
+            <c-progress-bar color="success" [value]="percent_done()" />
+        </c-progress>
+    </c-card-body>
+</c-card>
+
+<c-accordion [alwaysOpen]="true">
+    @for (s of sections; track s.id; let section_idx = $index) {
+    @if (s.visible || store.viewAsProfessor()) {
+    <c-accordion-item #item="cAccordionItem" [visible]="true">
+        <ng-template cTemplateId="accordionHeaderTemplate">
+            <button cAccordionButton type="button" (click)="item.toggleItem()" [collapsed]="!item.visible">
+                <span class="larger" [class.text-body-secondary]="!s.visible" [class.fst-italic]="!s.visible">{{ s.name
+                    }}</span>
+            </button>
+        </ng-template>
+        <ng-template cTemplateId="accordionBodyTemplate">
+            <div class="accordion-body">
+                @for (q of s.questions; track q.id; let question_idx = $index, isFirstQuestion = $first,
+                isLastQuestion = $last) {
+                @if (q.visible || store.viewAsProfessor()) {
+                <app-activity-item [question]="q" [done]="questionIsSolved(q)" [editable]="store.viewAsProfessor()"
+                    (editClick)="log('edit')" (removeClick)="delete_question($event);"
+                    (moveUpClick)="changeQuestionOrder(s.questions!, question_idx, question_idx - 1);"
+                    (moveDownClick)="changeQuestionOrder(s.questions!, question_idx, question_idx + 1);"
+                    (toggleVisibilityClick)="changeVisibilityQuestion($event);"
+                    (downloadClick)="downloadQuestion($event);" />
+                }
+                } @empty {
+                <div class="text-body-secondary py-3">This section does not have questions yet.</div>
+                }
+                @if (store.viewAsProfessor()) {
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button cButton size="sm" color="primary" variant="outline" (click)="createDefaultQuestion(s)">+ Add
+                        question</button>
+                    <button cButton size="sm" color="secondary" variant="outline" (click)="open_edit_modal(s)">Rename
+                        section</button>
+                    @if (s.visible) {
+                    <button cButton size="sm" color="primary" variant="outline" (click)="changeVisibilitySection(s)"><i
+                            class=" bi bi-eye-fill "></i></button>
+                    } @else {
+                    <button cButton size="sm" color="primary" variant="outline" (click)="changeVisibilitySection(s)"><i
+                            class=" bi bi-eye-slash-fill "></i></button>
+                    }
+                    <button cButton size="sm" color="primary" variant="outline"
+                        (click)="changeSectionOrder(sections!, section_idx, section_idx-1)"><i
+                            class="bi bi-arrow-up"></i></button>
+                    <button cButton size="sm" color="primary" variant="outline"
+                        (click)="changeSectionOrder(sections!, section_idx, section_idx+1)"><i
+                            class="bi bi-arrow-down"></i></button>
+                    <button cButton size="sm" color="danger" variant="outline" (click)="removeSection(s)">Delete
+                        section</button>
+                </div>
+                }
+            </div>
+        </ng-template>
+    </c-accordion-item>
+    }
+    }
+    @empty {
+    <div>The course does not contains sections yet.</div>
+    }
+</c-accordion>
+
+@if (store.viewAsProfessor()) {
+<button cButton color="primary" class="mt-3" (click)="createDefaultSection(c.id)">+ Add section</button>
+
+<c-modal [visible]="edit_modal_visible()" (visibleChange)="!$event && close_edit_modal()" alignment="center">
+    <c-modal-header>
+        <h5 cModalTitle>Editar Seção</h5>
+        <button cButtonClose (click)="close_edit_modal()"></button>
+    </c-modal-header>
+    <c-modal-body>
+        <form [formGroup]="editForm">
+            <label>Section name:</label>
+            <input formControlName="name" type="text" class="form-control" />
+        </form>
+    </c-modal-body>
+    <c-modal-footer>
+        <button cButton color="secondary" (click)="close_edit_modal()">Cancel</button>
+        <button cButton color="success" (click)="update_section()">Save</button>
+    </c-modal-footer>
+</c-modal>
+}
+} @else {
+<div class="text-center text-body-secondary py-5">Course not found.</div>
+}

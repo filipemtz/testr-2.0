@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject, input, output } from '@angular/core';
 import { BadgeComponent, CardBodyComponent, CardFooterComponent, CardComponent, ProgressBarComponent, ProgressComponent, ButtonDirective } from '@coreui/angular';
 import { Course } from '../../models/course';
-import { Role } from '../claude-components/mooc.store';
+import { Role } from '../../services/testr.store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //import { Course, Role } from './mooc.store';
 import { RouterLink } from '@angular/router';

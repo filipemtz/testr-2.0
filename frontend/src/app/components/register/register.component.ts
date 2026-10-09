@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
+    FormsModule,
     ReactiveFormsModule,
     FormBuilder,
     FormGroup,
@@ -16,6 +17,25 @@ import { Router, RouterLink } from '@angular/router';
 
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { handleError } from '../../utils/handleError';
+
+import {
+    ButtonDirective,
+    ColComponent,
+    FormCheckComponent,
+    FormCheckInputDirective,
+    FormCheckLabelDirective,
+    FormControlDirective,
+    FormDirective,
+    FormFeedbackComponent,
+    FormLabelDirective,
+    FormSelectDirective,
+    GutterDirective,
+    InputGroupComponent,
+    InputGroupTextDirective,
+    RowDirective
+} from '@coreui/angular';
+
+
 @Component({
     selector: 'app-register',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -29,6 +49,21 @@ import { handleError } from '../../utils/handleError';
         MatCardModule,
         MatRadioModule,
         RouterLink,
+        FormsModule,
+        FormDirective,
+        RowDirective,
+        GutterDirective,
+        ColComponent,
+        FormLabelDirective,
+        FormControlDirective,
+        FormFeedbackComponent,
+        InputGroupComponent,
+        InputGroupTextDirective,
+        FormSelectDirective,
+        FormCheckComponent,
+        FormCheckInputDirective,
+        FormCheckLabelDirective,
+        ButtonDirective,
     ],
     templateUrl: './register.component.html',
     styleUrl: './register.component.css',

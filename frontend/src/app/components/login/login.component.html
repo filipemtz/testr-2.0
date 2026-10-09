@@ -1,44 +1,51 @@
 <!-- Título do formulário -->
 <div class="form-title">
-  Faça Login no Seu Perfil
+    Faça Login no Seu Perfil
 </div>
 
 <div class="form">
-  <!-- Formulário de login -->
-  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Formulário de login -->
+    <form cForm [formGroup]="form" (ngSubmit)="submit()">
 
-    <!-- Campo de e-mail -->
-    <mat-form-field appearance="outline">
-      <mat-label>Nome de Usuário</mat-label>
-      <input matInput formControlName="username" required />
-      <mat-icon matSuffix>person</mat-icon> <!-- Ícone de pessoa -->
-      <!-- Exibir mensagem de erro se o campo de username for inválido -->
-      <mat-error *ngIf="form.get('username')?.invalid && (form.get('username')?.dirty || form.get('username')?.touched)">
-        O nome de usuário é obrigatório.
-      </mat-error>
-    </mat-form-field>
+        <div>
+            <c-input-group class="mb-4">
+                <input cFormControl id="username" required type="text" value="Mark" Name="username"
+                    formControlName="username" placeholder="Nome de Usuário" autofocus />
+                <span cInputGroupText><i class="bi bi-person-fill"></i></span>
+            </c-input-group>
+            <!-- Exibir mensagem de erro se o campo de username for inválido -->
+            <c-form-feedback
+                [valid]="form.get('username')?.invalid && (form.get('username')?.dirty || form.get('username')?.touched)">
+                O nome de usuário é obrigatório.
+            </c-form-feedback>
+        </div>
 
-    <!-- Campo de senha -->
-    <mat-form-field appearance="outline">
-      <mat-label>Senha</mat-label>
-      <input matInput type="password" formControlName="password" required>
-      <mat-icon matSuffix>lock</mat-icon> <!-- Ícone de cadeado -->
-      <!-- Exibir mensagem de erro se o campo de senha for inválido -->
-      <mat-error *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)">
-        A senha é obrigatória.
-      </mat-error>
-    </mat-form-field>
+        <!-- Campo de senha -->
+        <div>
+            <c-input-group class="mb-4">
+                <input cFormControl id="password" type="password" formControlName="password" required
+                    placeholder="Senha">
+                <span cInputGroupText><i class="bi bi-lock-fill"></i></span>
+            </c-input-group>
 
-    <!-- Botão de login -->
-    <button id="login-button" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-      <mat-icon>login</mat-icon> <!-- Ícone de login -->
-      Logar
-    </button>
+            <c-form-feedback
+                [valid]="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)">
+                A senha é obrigatória.
+            </c-form-feedback>
+        </div>
 
-    <!-- Link para a página de cadastro -->
-    <div class="text-center">
-      <a routerLink="/accounts/register">Novo Aqui? Cadastre-se!</a>
-    </div>
+        <!-- Botão de login -->
+        <div class="mb-4">
+            <button cButton class="me-1" color="primary" id="login-button" type="submit" [disabled]="form.invalid">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Logar
+            </button>
+        </div>
 
-  </form>
+        <!-- Link para a página de cadastro -->
+        <div class="text-center">
+            <a routerLink="/accounts/register">Novo Aqui? Cadastre-se!</a>
+        </div>
+
+    </form>
 </div>

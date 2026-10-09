@@ -12,13 +12,13 @@ import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../models/input-output';
 import { environment } from '../../../environments/environment';
 import Notify from 'simple-notify';
-
+import { TableColorDirective, TableDirective } from '@coreui/angular';
 
 @Component({
     selector: 'app-question-detail-page',
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
-    imports: [DateFormatPipe, CommonModule],
+    imports: [DateFormatPipe, CommonModule, TableColorDirective, TableDirective],
     templateUrl: './question-detail-page.component.html',
     styleUrl: './question-detail-page.component.css',
 })

@@ -1,0 +1,42 @@
+<c-card class="mooc-card" tabindex="0" role="button" [routerLink]="['/course', course().id]">
+    <c-card-body class="d-flex flex-column">
+        <!-- Fixed slots: items keep their position even when a value is empty -->
+        <div class="meta d-flex justify-content-between align-items-center mb-4">
+            <span><c-badge color="primary" shape="rounded-pill">{{ course().program }}</c-badge></span>
+            <span><c-badge color="secondary" shape="rounded-pill">{{ course().semester }}</c-badge></span>
+        </div>
+        <h5 class="title clamp mb-0" [title]="course().name" [class.course-hidden]="!course().visible">
+            {{ course().name }}
+        </h5>
+        <span>
+            <p class="desc clamp text-body-secondary mt-2 mb-0" title="Course description will come here">Course
+                description will come here.</p>
+        </span>
+        <div class="mt-auto pt-3">
+            <small class="text-body-secondary">
+                m sections · n activities
+            </small>
+            @if (!isProfessor()) {
+            <c-progress thin class="mt-2" [attr.aria-label]="'Progress ' + progress() + '%'">
+                <c-progress-bar color="success" [value]="progress()" />
+            </c-progress>
+            <small class="text-body-secondary">{{ progress() }}% completed</small>
+            } @else {
+            <div class="small text-primary mt-2">Click to edit this course</div>
+            }
+        </div>
+    </c-card-body>
+    <c-card-footer (click)="$event.stopPropagation()" class="d-flex justify-content-end">
+        @if (isProfessor()) {
+        <button cButton shape="rounded-pill" cButton color="primary" variant="ghost" title="toggle course visibility"
+            (click)="toogleCourseVisibility()">@if (course().visible) { <i class="larger bi bi-eye-fill"></i> } @else {
+            <i class="larger bi-eye-slash-fill"></i> }</button>
+        <button cButton shape="rounded-pill" cButton color="primary" variant="ghost" (click)="edit()"><i
+                class="larger bi bi-pencil-fill"></i></button>
+        <button cButton shape="rounded-pill" cButton color="primary" variant="ghost"
+            (click)="copyRequested.emit(course())"><i class="larger bi bi-copy"></i></button>
+        <button cButton shape="rounded-pill" cButton color="primary" variant="ghost"
+            (click)="deleteRequested.emit(course())"><i class="larger bi bi-trash-fill"></i></button>
+        }
+    </c-card-footer>
+</c-card>

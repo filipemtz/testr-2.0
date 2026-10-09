@@ -1,73 +1,84 @@
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
-    Component,
+    AccordionButtonDirective, AccordionComponent, AccordionItemComponent, BadgeComponent, ButtonDirective,
+    CardBodyComponent, CardComponent, ProgressBarComponent, ProgressComponent, TemplateIdDirective,
+} from '@coreui/angular';
+import { ActivityItemComponent } from './../activity-item/activity-item.component';
+import { EntityFormModalComponent } from './../claude-components/entity-form-modal.component';
+
+import { FormField } from './../claude-components/mooc.forms';
+import { TestrStore } from '../../services/testr.store';
+
+import {
     OnInit,
     ViewChild,
     ElementRef,
-    HostListener,
     ChangeDetectionStrategy,
-    signal,
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ImportQuestionComponent } from '../../components/import-question/import-question.component';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Course, CourseStats } from '../../models/course';
 import { Section } from '../../models/section';
 import { Question } from '../../models/question';
 import { Submission } from '../../models/submission';
-import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
 import { SubmissionService } from '../../services/submission.service';
-import {
-    ButtonCloseDirective,
-    ButtonDirective,
-    ModalBodyComponent,
-    ModalComponent,
-    ModalFooterComponent,
-    ModalHeaderComponent,
-    ModalTitleDirective
-} from '@coreui/angular';
 
-import { MatIconModule } from '@angular/material/icon';
+
 import {
+    FormsModule,
     FormBuilder,
     FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
     Validators,
+    ReactiveFormsModule,
 } from '@angular/forms';
 
 import { AuthService } from '../../services/auth.service';
-import { notify_error } from '../../utils/notifications';
-import { CourseDetailComponent } from '../../components/course-detail/course-detail.component';
+import { notify_error, notify_success } from '../../utils/notifications';
+import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
+import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
+
+interface Dialog {
+    title: string;
+    fields: FormField[];
+    value: Record<string, unknown>;
+    onSave: (v: Record<string, unknown>) => void;
+}
+const str = (v: unknown) => String(v ?? '').trim();
+
 
 @Component({
-    selector: 'app-courses-detail-page',
+    selector: 'app-course-detail',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true,
     imports: [
-        CommonModule,
-        RouterModule,
-        MatIconModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ImportQuestionComponent,
+        AccordionComponent,
+        AccordionItemComponent,
+        AccordionButtonDirective,
+        TemplateIdDirective,
+        BadgeComponent,
+        ButtonDirective,
+        CardComponent,
+        CardBodyComponent,
+        ProgressComponent,
+        ProgressBarComponent,
+        ActivityItemComponent,
+        EntityFormModalComponent,
+        RouterLink,
         ModalComponent,
         ModalHeaderComponent,
-        ModalTitleDirective,
-        ButtonCloseDirective,
         ModalBodyComponent,
         ModalFooterComponent,
-        ButtonDirective,
-        CourseDetailComponent
+        ButtonCloseDirective,
+        FormsModule,
+        ReactiveFormsModule,
     ],
-    templateUrl: './courses-detail-page.component.html',
-    styleUrls: ['./courses-detail-page.component.css'],
+    templateUrl: './course-detail.component.html',
 })
-
-export class CoursesDetailPageComponent implements OnInit {
+export class CourseDetailComponent implements OnInit {
+    protected readonly store = inject(TestrStore);
     @ViewChild('sectionInput') sectionInput!: ElementRef;
     course: Course = {} as Course;
     sections: Section[] = [] as Section[];
@@ -83,20 +94,26 @@ export class CoursesDetailPageComponent implements OnInit {
     sectionToEdit: Section | null = null;
     selectedFile: File | null = null;
 
-    myNotify: any;
+    private confirm_modal = inject(ConfirmModalService);
+    protected readonly edit_modal_visible = signal(false);
+    private fb = inject(FormBuilder);  // must be initialized first
+    editForm: FormGroup = this.fb.group({
+        name: ['', Validators.required],
+    });
+
     constructor(
         private route: ActivatedRoute,
         private questionService: QuestionService,
         private sectionService: SectionService,
         private courseService: CourseService,
         private submissionService: SubmissionService,
-        private fb: FormBuilder,
         private router: Router,
         private authService: AuthService,
     ) {
         this.addSectionForm = this.fb.group({
             name: ['', Validators.required],
         });
+
 
         this.addQuestionForm = this.fb.group({
             name: ['', Validators.required],
@@ -160,6 +177,12 @@ export class CoursesDetailPageComponent implements OnInit {
         });
     }
 
+    percent_done() {
+        if (!this.stats)
+            return 0;
+        return Math.round(100 * (this.stats.n_solved / this.stats.n_solved));
+    }
+
     loadCourse() {
         const id = this.route.snapshot.paramMap.get('id');
         if (!id) return;
@@ -190,70 +213,96 @@ export class CoursesDetailPageComponent implements OnInit {
         return false;
     }
 
-    confirmDeleteSection(): void {
-        this.sectionService
-            .deleteSection(this.sectionToDelete?.url ?? '')
-            .subscribe({
-                next: () => {
-                    this.sections = this.sections.filter(
-                        (section) => section.url !== this.sectionToDelete!.url,
-                    );
-                    this.sectionToDelete = null;
-                },
-                error: (err) => {
-                    console.error(err);
-                    notify_error('Falha ao deletar uma seção');
-                }
-            });
+    async removeSection(sectionToDelete: Section) {
+        if (!(await this.confirm_modal.delete(sectionToDelete.name)))
+            return;
+
+        if (sectionToDelete && sectionToDelete.url) {
+            this.sectionService
+                .deleteSection(sectionToDelete.url)
+                .subscribe({
+                    next: () => {
+                        this.sections = this.sections.filter(
+                            (section) => section.url !== sectionToDelete.url,
+                        );
+                        notify_success('Seção removida.');
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        notify_error('Falha ao deletar a seção.');
+                    }
+                });
+        }
     }
 
-    enableEditSection(section: Section) {
-        section.isEditing = true;
-        section.originalName = section.name;
-        setTimeout(() => {
-            this.sectionInput.nativeElement.focus();
-        });
+    section_to_edit: Section | null = null;
+
+    open_edit_modal(section: Section) {
+        this.section_to_edit = (section);
+        this.editForm.patchValue({ name: section.name });
+        this.edit_modal_visible.set(true);
     }
 
-    confirmEditSection(section: Section) {
-        const updatedSection = { ...section, name: section.name };
-        this.sectionService.editSection(section.url, updatedSection).subscribe({
+    close_edit_modal() {
+        this.section_to_edit = (null);
+        this.edit_modal_visible.set(false);
+    }
+
+    save_section_update(url: string, section: Section) {
+        this.sectionService.editSection(section.url, section).subscribe({
             next: () => {
-                section.isEditing = false;
+                notify_success("Seção atualizada.");
+                this.sections = this.sections.map(s => (s.id === section.id ? section : s));
             },
             error: (err) => {
                 console.error(err);
-                notify_error('Falha ao editar uma seção');
+                notify_error('Falha ao editar a seção');
             },
         });
+
+        this.close_edit_modal();
     }
 
-    cancelEditSection(section: Section) {
-        section.isEditing = false;
-        section.name = section.originalName;
+    update_section() {
+        if (this.section_to_edit) {
+            const section: Section = {
+                ...this.section_to_edit,
+                name: this.editForm.getRawValue().name,
+            };
+
+            this.save_section_update(section.url, section);
+        }
     }
 
-    confirmDeleteQuestion(): void {
-        this.questionService
-            .deleteQuestion(this.questionToDelete?.url ?? '')
-            .subscribe({
-                next: () => {
-                    this.sections = this.sections.map((section) => {
-                        section.questions = section.questions?.filter(
-                            (question) => question.url !== this.questionToDelete!.url,
-                        );
-                        return section;
-                    });
-                    this.questionToDelete = null;
-                },
-                error: (err) => {
-                    console.error(err);
-                    notify_error('Falha ao deletar uma questão');
-                }
-            });
+    async delete_question(questionToDelete: Question) {
+        if (!(await this.confirm_modal.delete(questionToDelete.name)))
+            return;
+
+        if (questionToDelete && questionToDelete.url) {
+            this.questionService
+                .deleteQuestion(questionToDelete?.url ?? '')
+                .subscribe({
+                    next: () => {
+                        this.sections = this.sections.map((section) => {
+                            section.questions = section.questions?.filter(
+                                (question) => question.url !== questionToDelete!.url,
+                            );
+                            return section;
+                        });
+                        notify_success('Questão removida.');
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        notify_error('Falha ao deletar a questão');
+                    }
+                });
+        }
     }
 
     changeSectionOrder(sections: Section[], section_idx: number, other_idx: number): void {
+        if (other_idx < 0 || other_idx >= sections.length)
+            return;
+
         const section = sections[section_idx];
         const otherSection = sections[other_idx];
         this.sectionService.swapOrder(section, otherSection).subscribe({
@@ -275,6 +324,9 @@ export class CoursesDetailPageComponent implements OnInit {
     }
 
     changeQuestionOrder(questions: Question[], question_idx: number, other_idx: number): void {
+        if (other_idx < 0 || other_idx >= questions.length)
+            return;
+
         const question = questions[question_idx];
         const otherQuestion = questions[other_idx];
         this.questionService.swapOrder(question, otherQuestion).subscribe({
@@ -320,7 +372,6 @@ export class CoursesDetailPageComponent implements OnInit {
     }
 
     createDefaultQuestion(section: Section) {
-        // const defQuestion: Question = { ...this.defaultQuestion, section: sectionId };
         const defaultQuestion: Question = {
             id: -1,
             url: '',
@@ -351,25 +402,13 @@ export class CoursesDetailPageComponent implements OnInit {
         const updatedQuestion = { ...q };
         this.questionService.editQuestion(q.url, updatedQuestion).subscribe({
             next: () => {
+                notify_success("Questão atualizada.");
             },
             error: (err) => {
                 console.error(err);
                 notify_error('Falha ao editar uma questão');
             },
         });
-    }
-
-    @HostListener('window:keydown', ['$event'])
-    keyEventListener(event: KeyboardEvent): void {
-        const editingSection = this.sections.find(section => section.isEditing);
-        if (editingSection) {
-            if (event.key === 'Escape' || event.key === 'Esc') {
-                this.cancelEditSection(editingSection);
-            }
-            else if (event.key === 'Enter') {
-                this.confirmEditSection(editingSection);
-            }
-        }
     }
 
     onFileSelected(event: Event) {
@@ -381,7 +420,7 @@ export class CoursesDetailPageComponent implements OnInit {
 
     changeVisibilitySection(section: Section): void {
         section.visible = !section.visible;
-        this.confirmEditSection(section);
+        this.save_section_update(section.url, section);
     }
 
     changeVisibilityQuestion(question: Question): void {
@@ -408,5 +447,16 @@ export class CoursesDetailPageComponent implements OnInit {
                 notify_error('Falha ao exportar a questão');
             },
         });
+    }
+
+    /** ************************************************* */
+    /** ************************************************* */
+
+    readonly courseId = input.required<string>();
+
+    protected back() { this.router.navigate(['..'], { relativeTo: this.route }); }
+
+    log(msg: string) {
+        console.log(msg);
     }
 }

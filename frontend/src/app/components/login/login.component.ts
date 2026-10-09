@@ -4,24 +4,74 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from '@angular/core';
+import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { handleError } from '../../utils/handleError';
+import {
+    ButtonDirective,
+    ColComponent,
+    FormCheckComponent,
+    FormCheckInputDirective,
+    FormCheckLabelDirective,
+    FormControlDirective,
+    FormDirective,
+    FormFeedbackComponent,
+    FormLabelDirective,
+    FormSelectDirective,
+    GutterDirective,
+    InputGroupComponent,
+    InputGroupTextDirective,
+    RowDirective
+} from '@coreui/angular';
+
+import { cilLockLocked } from '@coreui/icons';
+import { notify_error } from '../../utils/notifications';
+import { TestrStore } from '../../services/testr.store';
+
+export const iconSubset = {
+    cilLockLocked
+};
 
 @Component({
     selector: 'app-login',
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
-    imports: [ReactiveFormsModule, RouterLink, CommonModule, MatIconModule, MatInputModule, MatButtonModule, MatCardModule],
+    imports: [
+        RouterLink,
+        CommonModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        MatCardModule,
+        ReactiveFormsModule,
+        FormsModule,
+        FormDirective,
+        RowDirective,
+        GutterDirective,
+        ColComponent,
+        FormLabelDirective,
+        FormControlDirective,
+        FormFeedbackComponent,
+        InputGroupComponent,
+        InputGroupTextDirective,
+        FormSelectDirective,
+        FormCheckComponent,
+        FormCheckInputDirective,
+        FormCheckLabelDirective,
+        ButtonDirective,
+    ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+    protected readonly store = inject(TestrStore);
+    readonly customStylesValidated = signal(false);
     form!: FormGroup;
+
     constructor(
         private formBuilder: FormBuilder,
         private authService: AuthService,
@@ -30,12 +80,19 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            username: '',
-            password: ''
+            username: ['', Validators.required],
+            password: ['', Validators.required]
         });
     }
 
     submit() {
+        this.customStylesValidated.set(true);
+
+        if (!this.form.valid) {
+            notify_error("Existem campos inválidos no formulário.");
+            return;
+        }
+
         this.authService.login(this.form.getRawValue()).subscribe({
             next: (res: any) => {
                 localStorage.setItem('user', JSON.stringify(res.user));
@@ -47,6 +104,11 @@ export class LoginComponent implements OnInit {
                 }
                 else {
                     this.getUserGroups(res.user.groups).subscribe(groups => {
+                        if (groups.includes('teacher'))
+                            this.store.setProfessorRole();
+                        else
+                            this.store.setStudentRole();
+
                         this.redirectTo(groups);
                     });
                 }

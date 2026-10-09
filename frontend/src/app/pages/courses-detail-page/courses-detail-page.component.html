@@ -1,3 +1,5 @@
+<app-course-detail courseId="c1" />
+
 <div class="d-flex justify-content-center align-items-center">
     <div style="padding-right: 20px">
         <h1 class="display-2">{{ course.name }}</h1>
@@ -91,6 +93,7 @@
                         [routerLink]="['/question', question.id]">{{ question.name }}
                         <i *ngIf="questionIsSolved(question)" class="bi bi-check-circle-fill text-success"></i>
                     </a>
+
                     <!-- Botões de editar e excluir questão (aparecem apenas se for professor) -->
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"
                         [routerLink]="['/question', question.id, 'edit']">
@@ -117,14 +120,14 @@
                         </ng-template>
                     </div>
 
-                    <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-danger ms-1"
-                        (click)="questionToDelete = question">
-                        <i class="bi bi-trash-fill"></i>
-                    </button>
-
                     <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-primary ms-1"
                         (click)="downloadQuestion(question)">
                         <i class="bi bi-download"></i>
+                    </button>
+
+                    <button *ngIf="isProfessor" type="button" class="btn btn-sm rounded-circle text-danger ms-1"
+                        (click)="questionToDelete = question">
+                        <i class="bi bi-trash-fill"></i>
                     </button>
                 </div>
             </li>

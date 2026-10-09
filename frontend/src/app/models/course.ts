@@ -8,6 +8,8 @@ export class Course {
     public students?: string[] = [];
     public isEditing?: boolean = false;
     public originalName: string = "";
+    public program: string = "";
+    public semester: string = "";
 
     public static getDefaultCourse(): Course {
         let course: Course = new Course();
@@ -19,6 +21,8 @@ export class Course {
         course.teachers = [];
         course.students = [];
         course.originalName = "Novo Curso";
+        course.program = "Ccomp / Engcomp";
+        course.semester = new Date().getFullYear().toString();
 
         return course;
     }

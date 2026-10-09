@@ -16,7 +16,7 @@
  */
 
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -24,6 +24,8 @@ import { AuthService } from '../../../services/auth.service';
 import { IconDirective } from '@coreui/icons-angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
+
+import { TestrStore } from '../../../services/testr.store';
 
 
 import {
@@ -50,8 +52,10 @@ import {
     ModalTitleDirective,
     NavLinkDirective,
     SearchButtonComponent,
-    SidebarToggleDirective
+    SidebarToggleDirective,
 } from '@coreui/angular';
+import { RoleSwitcherComponent } from '../../../components/role-switcher/role-switcher.component';
+
 
 @Component({
     selector: 'app-default-header',
@@ -81,11 +85,12 @@ import {
         NgTemplateOutlet,
         RouterLink,
         SearchButtonComponent,
-        SidebarToggleDirective
+        SidebarToggleDirective,
+        RoleSwitcherComponent,
     ]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
-
+export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
+    protected readonly store = inject(TestrStore);
     readonly #colorModeService = inject(ColorModeService);
     readonly colorMode = this.#colorModeService.colorMode;
 
@@ -110,8 +115,24 @@ export class DefaultHeaderComponent extends HeaderComponent {
     }
 
     readonly sidebarId = input('sidebar1');
-
     readonly searchVisible = signal(false);
+    protected user: any | null = null;
+    readonly isProfessor = signal(false);
+
+    ngOnInit(): void {
+        // TODO: these API calls are unnecessary are all over the place
+        this.authService.profile().subscribe({
+            next: (response) => {
+                this.user = response;
+                // TODO: these API calls are unnecessary are all over the place (also in other components)
+                this.authService.userInfo().subscribe({
+                    next: (userInfo: any) => {
+                        this.isProfessor.set(userInfo.groups.includes('teacher'));
+                    }
+                });
+            },
+        });
+    }
 
     logout() {
         this.authService.logout().subscribe({

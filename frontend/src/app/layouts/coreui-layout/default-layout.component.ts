@@ -20,6 +20,7 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from '.';
 import { navItems } from './_nav';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm-modal.component';
 
 function isOverflown(element: HTMLElement) {
     return (
@@ -48,7 +49,9 @@ function isOverflown(element: HTMLElement) {
         NgScrollbar,
         RouterOutlet,
         RouterLink,
-        ShadowOnScrollDirective
+        ShadowOnScrollDirective,
+        ConfirmModalComponent
+
     ]
 })
 export class DefaultLayoutComponent {

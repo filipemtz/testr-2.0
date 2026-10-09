@@ -16,9 +16,6 @@
 
         <c-header-nav class="d-none d-md-flex ms-auto">
             <a cNavLink>
-                <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
-            </a>
-            <a cNavLink>
                 <svg cIcon class="my-1" name="cilList" size="lg"></svg>
             </a>
             <a cNavLink>
@@ -31,6 +28,11 @@
 
         </c-header-nav>
         <c-header-nav class="d-none d-md-flex ms-auto">
+            @if (isProfessor()) {
+            <div class="nav-item py-1">
+                <app-role-switcher />
+            </div>
+            }
             <div class="nav-item py-1">
                 <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
             </div>
@@ -88,7 +90,7 @@
       />
     -->
 
-            <c-avatar alt="User avatar" shape="rounded-1" size="md" src="./assets/brand/testr-imgs/default-avatar.png"
+            <c-avatar alt="User avatar" shape="rounded-1" size="md" src="./assets/testr-imgs/default-avatar.png"
                 textColor="primary" />
 
         </button>
