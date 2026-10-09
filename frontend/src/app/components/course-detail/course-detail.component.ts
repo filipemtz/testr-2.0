@@ -5,9 +5,7 @@ import {
     CardBodyComponent, CardComponent, ProgressBarComponent, ProgressComponent, TemplateIdDirective,
 } from '@coreui/angular';
 import { ActivityItemComponent } from './../activity-item/activity-item.component';
-import { EntityFormModalComponent } from './../claude-components/entity-form-modal.component';
 
-import { FormField } from './../claude-components/mooc.forms';
 import { TestrStore } from '../../services/testr.store';
 
 import {
@@ -40,15 +38,7 @@ import { AuthService } from '../../services/auth.service';
 import { notify_error, notify_success } from '../../utils/notifications';
 import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
-
-interface Dialog {
-    title: string;
-    fields: FormField[];
-    value: Record<string, unknown>;
-    onSave: (v: Record<string, unknown>) => void;
-}
-const str = (v: unknown) => String(v ?? '').trim();
-
+import { ImportQuestionComponent } from '../import-question/import-question.component';
 
 @Component({
     selector: 'app-course-detail',
@@ -65,7 +55,6 @@ const str = (v: unknown) => String(v ?? '').trim();
         ProgressComponent,
         ProgressBarComponent,
         ActivityItemComponent,
-        EntityFormModalComponent,
         RouterLink,
         ModalComponent,
         ModalHeaderComponent,
@@ -74,6 +63,7 @@ const str = (v: unknown) => String(v ?? '').trim();
         ButtonCloseDirective,
         FormsModule,
         ReactiveFormsModule,
+        ImportQuestionComponent,
     ],
     templateUrl: './course-detail.component.html',
 })
@@ -367,6 +357,7 @@ export class CourseDetailComponent implements OnInit {
         this.sectionService.postSection(defaultSection).subscribe({
             next: section => {
                 this.sections.push(section);
+                notify_success("Seção adicionada.");
             }
         })
     }
@@ -458,5 +449,20 @@ export class CourseDetailComponent implements OnInit {
 
     log(msg: string) {
         console.log(msg);
+    }
+
+    reload_sections() {
+        // TODO: this function is called whenever a question with BOCa format is imported.
+        // Instead of reloading all sections, it should only add the question (or the section that contains it if it was created).
+        this.courseService.getSections(this.course.id).subscribe({
+            next: (sections) => {
+                this.sections = sections;
+                this.loadQuestions(sections);
+                this.sections = sections;
+            },
+            error: () => {
+                notify_error("Error when reloading sections.");
+            }
+        });
     }
 }

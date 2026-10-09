@@ -14,8 +14,11 @@
     </div>
     @if (store.viewAsProfessor()) {
     <div class="d-flex gap-2">
+        <button cButton color="primary" (click)="createDefaultSection(c.id)">+ Add section</button>
         <button cButton color="primary" variant="outline" [routerLink]="['/course', course.id, 'report']">Edit
             course</button>
+        <button cButton color="primary" variant="outline" (click)="import_question_modal_visible.set(true)">Importar
+            Questões BOCA</button>
     </div>
     }
 </div>
@@ -109,6 +112,21 @@
         <button cButton color="secondary" (click)="close_edit_modal()">Cancel</button>
         <button cButton color="success" (click)="update_section()">Save</button>
     </c-modal-footer>
+</c-modal>
+
+
+<!-- Modal para importar questões -->
+<c-modal id="importQuestionModal" [visible]="import_question_modal_visible()">
+    <c-modal-header>
+        <h5 cModalTitle>
+            <i class="bi bi-upload"></i>
+            Importar questões
+        </h5>
+        <button (click)="import_question_modal_visible.set(false);" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+        <app-import-question [courseId]="course.id" (success)="reload_sections();"></app-import-question>
+    </c-modal-body>
 </c-modal>
 }
 } @else {

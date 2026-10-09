@@ -20,6 +20,7 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { ForbiddenPageComponent } from './pages/forbidden/forbidden.component';
 import { CanActivateTeacherOrStudent } from './guards/teacher-or-student.guard';
 import { DefaultLayoutComponent } from './layouts';
+import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 
 
 export const routes: Routes = [
@@ -60,7 +61,7 @@ export const routes: Routes = [
                     },
                     {
                         path: 'course/:id',
-                        component: CoursesDetailPageComponent
+                        component: CourseDetailComponent
                     },
                     {
                         path: 'course/:id/report',

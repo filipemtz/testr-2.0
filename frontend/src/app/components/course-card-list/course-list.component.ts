@@ -22,8 +22,6 @@ import { inject, input, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
 import { CourseCardComponentNew } from './../course-card-novo/course-card.component';
-import { EntityFormModalComponent } from '../claude-components/entity-form-modal.component';
-import { COURSE_FIELDS } from '../claude-components/mooc.forms';
 import { TestrStore } from '../../services/testr.store';
 import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 
@@ -32,16 +30,14 @@ import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 @Component({
     selector: 'app-course-list',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ButtonDirective, CourseCardComponentNew, EntityFormModalComponent,
+    imports: [ButtonDirective, CourseCardComponentNew,
         CommonModule,
         MatIconModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        // CourseCardComponent,
         ButtonDirective,
         CourseListComponent,
-        // CourseDetailComponent,
         ModalComponent,
         ModalHeaderComponent,
         ModalBodyComponent,

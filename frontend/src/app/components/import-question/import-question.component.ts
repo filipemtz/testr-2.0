@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, output } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { CommonModule } from '@angular/common';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -23,6 +23,7 @@ export class ImportQuestionComponent {
     message: string[] = [];
     @Input() courseId!: number;
     section_name!: string;
+    success = output();
 
     constructor(
         private questionService: QuestionService,
@@ -55,11 +56,14 @@ export class ImportQuestionComponent {
                 next: (event: any) => {
                     if (event.type === HttpEventType.UploadProgress) {
                         this.progressInfos[idx].value = Math.round((100 * event.loaded) / event.total);
-                    } else
+                    } else {
                         if (event instanceof HttpResponse) {
                             const msg = 'Upload com sucesso da questão: ' + file.name;
                             this.message.push(msg);
                         }
+                    }
+
+                    this.success.emit();
                 },
                 error: (err: any) => {
                     this.progressInfos[idx].value = 0;

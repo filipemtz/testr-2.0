@@ -244,7 +244,7 @@ class QuestionImportAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        course = request.user.courses.filter(id=course_id).first()
+        course = Course.objects.filter(id=course_id).first()
         if not course:
             return Response(
                 {"error": "Curso não encontrado."}, status=status.HTTP_404_NOT_FOUND
