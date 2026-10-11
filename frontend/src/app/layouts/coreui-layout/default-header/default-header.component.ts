@@ -43,6 +43,8 @@ import {
 
 import { RoleSwitcherComponent } from '../../../components/role-switcher/role-switcher.component';
 import { BreadcrumbsService, BreadCrumbItem } from '../../../components/breadcrumbs/breadcrumb.service';
+import { UiPreferencesService } from '../../../services/ui-preferences.service';
+import { notify_error } from '../../../utils/notifications';
 
 @Component({
     selector: 'app-default-header',
@@ -80,6 +82,7 @@ import { BreadcrumbsService, BreadCrumbItem } from '../../../components/breadcru
     ]
 })
 export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
+    protected readonly ui_preferences_service = inject(UiPreferencesService);
     protected readonly store = inject(TestrStore);
     readonly #colorModeService = inject(ColorModeService);
     readonly colorMode = this.#colorModeService.colorMode;
@@ -132,6 +135,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
                 localStorage.removeItem('token');
                 localStorage.removeItem('authenticated');
                 localStorage.removeItem('user');
+                this.ui_preferences_service.setUser(null);
 
                 // remover todos os cookies
                 document.cookie.split(';').forEach(function (c) {
@@ -145,6 +149,9 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
                 // AuthService.authEmitter.emit(false);
                 this.router.navigate(['/accounts/login']);
             },
+            error: () => {
+                notify_error("Logout failed. Contact administration.");
+            }
         });
     }
 }

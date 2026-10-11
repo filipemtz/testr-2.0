@@ -2,7 +2,8 @@
 <ng-container>
     <c-container [fluid]="true" class="border-bottom">
         <button [cSidebarToggle]="sidebarId()" aria-label="Toggle sidebar navigation" cHeaderToggler class="btn px-4"
-            style="margin-inline-start: -14px" toggle="visible">
+            style="margin-inline-start: -14px" toggle="visible"
+            (click)="ui_preferences_service.setSidebarCollapsed(!ui_preferences_service.sidebarCollapsed())">
             <svg cIcon name="cilMenu" size="lg"></svg>
         </button>
 
@@ -224,8 +225,9 @@
         </button>
         <div cDropdownMenu>
             @for (mode of colorModes; track mode.name) {
-            <button (click)="colorMode.set(mode.name)" [active]="colorMode() === mode.name" cDropdownItem
-                class="d-flex align-items-center">
+            <button
+                (click)="colorMode.set(mode.name); ui_preferences_service.setTheme(mode.name === 'dark' ? 'dark' : 'light')"
+                [active]="colorMode() === mode.name" cDropdownItem class="d-flex align-items-center">
                 <svg [name]="mode.icon" cIcon class="me-2" size="lg"></svg>
                 {{ mode.text }}
             </button>

@@ -39,9 +39,11 @@
 <c-accordion [alwaysOpen]="true">
     @for (s of sections; track s.id; let section_idx = $index) {
     @if (s.visible || store.viewAsProfessor()) {
-    <c-accordion-item #item="cAccordionItem" [visible]="true">
+    <c-accordion-item #item="cAccordionItem" [visible]="!ui_preferences_service.isSectionCollapsed(course.id, s.id)">
         <ng-template cTemplateId="accordionHeaderTemplate">
-            <button cAccordionButton type="button" (click)="item.toggleItem()" [collapsed]="!item.visible">
+            <button cAccordionButton type="button"
+                (click)="item.toggleItem(); ui_preferences_service.toggleSection(course.id, s.id)"
+                [collapsed]="!item.visible">
                 <span class="larger" [class.text-body-secondary]="!s.visible" [class.fst-italic]="!s.visible">{{ s.name
                     }}</span>
             </button>

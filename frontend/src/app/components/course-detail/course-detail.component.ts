@@ -40,6 +40,7 @@ import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
 import { ImportQuestionComponent } from '../import-question/import-question.component';
 import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
+import { UiPreferencesService } from '../../services/ui-preferences.service';
 
 @Component({
     selector: 'app-course-detail',
@@ -69,6 +70,7 @@ import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
     templateUrl: './course-detail.component.html',
 })
 export class CourseDetailComponent implements OnInit {
+    protected readonly ui_preferences_service = inject(UiPreferencesService);
     protected breadcumbs_service = inject(BreadcrumbsService);
     protected readonly store = inject(TestrStore);
     @ViewChild('sectionInput') sectionInput!: ElementRef;

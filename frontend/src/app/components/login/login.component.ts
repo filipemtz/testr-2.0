@@ -31,6 +31,7 @@ import {
 import { cilLockLocked } from '@coreui/icons';
 import { notify_error } from '../../utils/notifications';
 import { TestrStore } from '../../services/testr.store';
+import { UiPreferencesService } from '../../services/ui-preferences.service';
 
 export const iconSubset = {
     cilLockLocked
@@ -68,6 +69,7 @@ export const iconSubset = {
     styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+    protected readonly ui_preferences_service = inject(UiPreferencesService);
     protected readonly store = inject(TestrStore);
     readonly customStylesValidated = signal(false);
     form!: FormGroup;
@@ -98,6 +100,7 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem('user', JSON.stringify(res.user));
                 localStorage.setItem('token', res.token);
                 localStorage.setItem('authenticated', 'true');
+                this.ui_preferences_service.setUser(res.user.id);
 
                 if (res.user.is_superuser) {
                     this.router.navigate(['/admin']);

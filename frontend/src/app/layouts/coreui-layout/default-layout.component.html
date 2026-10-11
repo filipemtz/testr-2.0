@@ -1,6 +1,6 @@
 <!--sidebar-->
 <c-sidebar #sidebar1="cSidebar" class="d-print-none sidebar sidebar-fixed border-end" colorScheme="dark" id="sidebar1"
-    visible>
+    [visible]="!ui_preferences_service.sidebarCollapsed()">
     <c-sidebar-header class="border-bottom">
         <c-sidebar-brand [routerLink]="[]">
             <div class="h3 text-center sidebar-brand-full">Testr 2.0</div>

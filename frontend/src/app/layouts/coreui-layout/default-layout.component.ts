@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
@@ -21,6 +21,7 @@ import {
 import { DefaultFooterComponent, DefaultHeaderComponent } from '.';
 import { navItems } from './nav.service';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm-modal.component';
+import { UiPreferencesService } from '../../services/ui-preferences.service';
 
 function isOverflown(element: HTMLElement) {
     return (
@@ -55,6 +56,7 @@ function isOverflown(element: HTMLElement) {
     ]
 })
 export class DefaultLayoutComponent {
+    protected readonly ui_preferences_service = inject(UiPreferencesService);
     public navItems = [...navItems];
 
     constructor(public iconSet: IconSetService) {

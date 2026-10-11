@@ -6,16 +6,7 @@ import { TestrStore, Role } from '../../services/testr.store';
 @Component({
     selector: 'app-role-switcher',
     imports: [ButtonGroupComponent, ButtonDirective],
-    template: `
-    <c-button-group aria-label="View as">
-      @for (r of view_modes; track r.value) {
-        <button cButton size="sm" color="primary"
-                [variant]="store.view_mode() === r.value ? undefined : 'outline'"
-                [attr.aria-pressed]="store.view_mode() === r.value"
-                (click)="store.view_mode.set(r.value)">{{ r.label }}</button>
-      }
-    </c-button-group>
-  `,
+    templateUrl: 'role-switcher.component.html',
 })
 export class RoleSwitcherComponent {
     protected readonly store = inject(TestrStore);
