@@ -1,11 +1,17 @@
-<h2>Gerenciar arquivos</h2>
+<div class="h4 mb-4">
+    Gerenciar arquivos
+</div>
 
-<div class="d-flex flex-wrap mb-3">
-    <input type="file" class="form-control me-2 my-1" style="max-width: 700px" multiple
-        (change)="selectFiles($event)" />
-    <button class="btn btn-success my-1" [disabled]="!selectedFiles" (click)="uploadFiles()">
-        Upload
-    </button>
+<div class="mb-4">
+    <div class="mb-4">
+        <input type="file" class="form-control me-2 my-1" style="max-width: 700px" multiple
+            (change)="selectFiles($event)" />
+    </div>
+    <div>
+        <button class="btn btn-success my-1 btn col-2" [disabled]="!selectedFiles" (click)="uploadFiles()">
+            Upload
+        </button>
+    </div>
 </div>
 
 <div *ngIf="progressInfos.length">
@@ -24,18 +30,15 @@
     </ul>
 </div>
 
-<h3>Lista de arquivos</h3>
-<div *ngIf="fileInfos.length; else noFilesTemplate">
-    <ul class="list-group list-group-flush">
-        <li *ngFor="let file of fileInfos" class="list-group-item d-flex justify-content-start align-items-center">
-            <i class="fa-regular fa-file me-2"></i>
-            <div class="fw-bold">{{ file.file_name }}</div>
-            <button type="button" class="btn btn-sm fa-solid fa-trash text-danger ms-2"
-                (click)="deleteFile(file.id)"></button>
-        </li>
-    </ul>
-</div>
 
-<ng-template #noFilesTemplate>
-    <p>Não existem arquivos para serem exibidos.</p>
-</ng-template>
+@for (file of fileInfos; track file.id) {
+<div>
+    <button cButton color="danger" (click)="deleteFile(file.id)">
+        <i class="bi bi-trash-fill"></i>
+    </button>
+    {{ file.file_name }}
+</div>
+}
+@empty {
+Não existem arquivos para serem exibidos.
+}

@@ -1,14 +1,42 @@
 <!--<c-header class="mb-4 d-print-none" position="sticky">-->
 <ng-container>
-    <c-container [fluid]="true" class="border-bottom px-4">
-        <button [cSidebarToggle]="sidebarId()" aria-label="Toggle sidebar navigation" cHeaderToggler class="btn"
+    <c-container [fluid]="true" class="border-bottom">
+        <button [cSidebarToggle]="sidebarId()" aria-label="Toggle sidebar navigation" cHeaderToggler class="btn px-4"
             style="margin-inline-start: -14px" toggle="visible">
             <svg cIcon name="cilMenu" size="lg"></svg>
         </button>
 
-        <c-header-nav class="px-4">
-            <c-breadcrumb-router />
-        </c-header-nav>
+        <c-breadcrumb aria-label="breadcrumb" class="my-0">
+            <c-breadcrumb-item>
+                <button cButton shape="rounded-pill" size="sm" color="secondary" variant="outline"
+                    [routerLink]="breadcrumbs()['Home'].url">{{
+                    breadcrumbs()['Home'].name }}</button>
+            </c-breadcrumb-item>
+
+            @if (breadcrumbs()['Course'].url) {
+            <c-breadcrumb-item>
+                <button cButton shape="rounded-pill" size="sm" color="secondary" variant="outline"
+                    [routerLink]="breadcrumbs()['Course'].url">{{
+                    breadcrumbs()['Course'].name }}</button>
+            </c-breadcrumb-item>
+            }
+            @if (breadcrumbs()['Question'].url) {
+            <c-breadcrumb-item>
+                <button cButton shape="rounded-pill" size="sm" color="secondary" variant="outline"
+                    [routerLink]="breadcrumbs()['Question'].url">{{
+                    breadcrumbs()['Question'].name }}</button>
+            </c-breadcrumb-item>
+            @if (store.viewAsProfessor()) {
+            <c-breadcrumb-item>
+                <button cButton shape="rounded-pill" size="sm" color="secondary" variant="outline"
+                    [routerLink]="breadcrumbs()['QuestionEdit'].url">{{
+                    breadcrumbs()['QuestionEdit'].name }}</button>
+            </c-breadcrumb-item>
+            }
+            }
+        </c-breadcrumb>
+
+
 
         <!--
         <c-search-button (trigger)=" searchVisible.set(true)" aria-controls="app-header-search-modal"
@@ -24,9 +52,10 @@
 
         </c-header-nav>
         -->
-        <c-header-nav class="ms-auto ms-md-0">
+        <c-header-nav class="ms-auto">
 
         </c-header-nav>
+
         <c-header-nav class="d-none d-md-flex ms-auto">
             @if (isProfessor()) {
             <div class="nav-item py-1">

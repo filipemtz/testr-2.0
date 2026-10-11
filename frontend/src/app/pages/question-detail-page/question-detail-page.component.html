@@ -1,32 +1,30 @@
-<h1 class="display-2 text-center mb-4">{{ question.name }}
-    <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success h1"></i>
-</h1>
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <button cButton color="secondary" variant="outline" size="sm" (click)="goBack()">← Voltar</button>
+</div>
 
-<div style="padding-bottom: 20px">
-    <a class="icon-link icon-link-hover mb-2" style="cursor: pointer" (click)="goBack()">
-        <i class="bi bi-arrow-left-circle"></i>
-        Voltar
-    </a>
+<div class="h3 mb-4">
+    {{ question.name }}
+    <i *ngIf="submission && submission.status === 'SC'" class="bi bi-balloon-fill text-success h3"></i>
 </div>
 
 <!--Informações-->
 <div style="padding-bottom: 50px">
-    <div class="mb-4">
+    <div class="mb-3">
         <strong>Deadline:</strong> {{ question.submission_deadline | dateFormat }}
     </div>
-    <div class="mb-4">
+    <div class="mb-3">
         <strong>Linguagem de Programação:</strong>
         {{ getLanguageName(question.language) }}
     </div>
-    <div class="mb-4">
-        <strong>Descrição:</strong>
+    <div class="mb-3 border border-dark p-3 rounded">
         <div [innerHTML]="question.description"></div>
     </div>
 </div>
 
 <!--Arquivos-->
+@if (questionFiles.length > 0) {
 <div style="margin-bottom: 50px;">
-    <h3 class="fw-bold">Arquivos</h3>
+    <div class="fw-bold">Arquivos</div>
     <div *ngIf="questionFiles.length; else noQuestionFile">
         <ul class="list-group list-group-flush">
             <li *ngFor="let file of questionFiles" class="list-group-item">
@@ -38,22 +36,23 @@
         <p class="ms-3">Não existem arquivos</p>
     </ng-template>
 </div>
+}
 
-<div *ngIf="isProfessor; else student">
+<div *ngIf="testr_store.viewAsProfessor(); else student">
     <div style="padding-bottom: 50px">
-        <h3 class="fw-bold mb-3">Enviar Resposta</h3>
-        <div class="d-flex flex-wrap mb-3">
-            <input #fileInput class="form-control" type="file" (change)="onFileSelected($event)"
+        <div class="fw-bold mb-3">Enviar Resposta</div>
+        <div>
+            <input #fileInput class="form-control me-2 mb-4" type="file" (change)="onFileSelected($event)"
                 style="max-width: 700px" />
-            <button class="btn btn-success" (click)="onSubmitFile(); fileInput.value = ''">
-                Upload
-            </button>
         </div>
+        <button cButton color="success" (click)="onSubmitFile(); fileInput.value = ''">
+            Upload
+        </button>
     </div>
 
     <div *ngIf="submission" style="padding-bottom: 50px">
-        <h3 class="fw-bold mb-3">Relatório</h3>
-        <table class="table table-bordered table-striped">
+        <div class="fw-bold mb-3">Relatório</div>
+        <table cTable>
             <tbody>
                 <tr>
                     <th scope="row" class="col-2">Arquivo</th>
@@ -67,7 +66,7 @@
                     <th scope="row" class="col-2">Data da Submissão</th>
                     <td class="col-10">{{ submission.created_at | dateFormat }}</td>
                 </tr>
-                <tr cTableColor='success'>
+                <tr cTableColor="{{ statusColors[submission.status] ?? 'default' }}">
                     <th scope="row" class="col-2">Status</th>
                     <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
                 </tr>
@@ -81,7 +80,7 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+        <button class="btn btn-primary" (click)="resetSubmissionStatus()">
             Reavaliar
         </button>
     </div>
@@ -90,18 +89,19 @@
 <ng-template #student>
     <!--Arquivo a ser submetido-->
     <div style="padding-bottom: 50px">
-        <h3 class="fw-bold mb-3">Enviar Resposta</h3>
-        <div class="d-flex flex-wrap mb-3">
-            <input #fileInput class="form-control me-2 my-1" type="file" (change)="onFileSelected($event)"
+        <div class="fw-bold mb-3">Enviar Resposta</div>
+
+        <div>
+            <input #fileInput class="form-control me-2 mb-4" type="file" (change)="onFileSelected($event)"
                 style="max-width: 700px" />
-            <button class="btn btn-success my-1" (click)="onSubmitFile(); fileInput.value = ''">
-                Upload
-            </button>
         </div>
+        <button cButton color="success" (click)="onSubmitFile(); fileInput.value = ''">
+            Upload
+        </button>
     </div>
 
-    <div *ngIf="submission">
-        <h3 class="fw-bold mb-3">Relatório</h3>
+    <div *ngIf="submission" style="padding-bottom: 50px">
+        <div class="fw-bold mb-3">Relatório</div>
         <table cTable>
             <tbody>
                 <tr>
@@ -116,7 +116,7 @@
                     <th scope="row" class="col-2">Data da Submissão</th>
                     <td class="col-10">{{ submission.created_at | dateFormat }}</td>
                 </tr>
-                <tr>
+                <tr cTableColor="{{ statusColors[submission.status] ?? 'default' }}">
                     <th scope="row" class="col-2">Status</th>
                     <td class="col-10">{{ getSubmissionStatus(submission.status) }}</td>
                 </tr>
@@ -130,7 +130,7 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-primary my-1" (click)="resetSubmissionStatus()">
+        <button class="btn btn-primary" (click)="resetSubmissionStatus()">
             Reavaliar
         </button>
     </div>
@@ -139,7 +139,7 @@
 
 <!--Entradas e Saídas-->
 <div style="margin-bottom: 50px;" *ngIf="question.language != 'JP'">
-    <h3 class="fw-bold mb-2">Entradas e Saídas</h3>
+    <div class="fw-bold mb-2">Casos de Teste</div>
     <div *ngIf="ios.length; else noIO">
         <div *ngFor="let io of ios; let i = index" class="row my-3">
             <div class="col">
@@ -161,15 +161,13 @@
     </ng-template>
 </div>
 
-
-<div *ngIf="isProfessor">
+<div *ngIf="testr_store.viewAsProfessor()">
     <div style="padding-bottom: 50px">
-        <div class="d-flex">
-            <h3 class="fw-bold">Submissões</h3>
-            <button class="btn btn-danger ms-3" (click)="resetAllSubmissions()">
-                <i class="bi bi-arrow-repeat"></i>
-                Reavaliar Todos </button>
-        </div>
+
+        <div class="fw-bold mb-3">Submissões</div>
+        <button cButton color="danger" (click)="resetAllSubmissions()">
+            <i class="bi bi-arrow-repeat"></i>Reavaliar Todos </button>
+
         <br>
         <div *ngIf="submissionsList.length; else noSubmissions">
             <table class="table table-bordered table-striped">

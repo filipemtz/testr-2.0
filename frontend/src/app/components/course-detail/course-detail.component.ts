@@ -39,6 +39,7 @@ import { notify_error, notify_success } from '../../utils/notifications';
 import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
 import { ImportQuestionComponent } from '../import-question/import-question.component';
+import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
 
 @Component({
     selector: 'app-course-detail',
@@ -68,6 +69,7 @@ import { ImportQuestionComponent } from '../import-question/import-question.comp
     templateUrl: './course-detail.component.html',
 })
 export class CourseDetailComponent implements OnInit {
+    protected breadcumbs_service = inject(BreadcrumbsService);
     protected readonly store = inject(TestrStore);
     @ViewChild('sectionInput') sectionInput!: ElementRef;
     course: Course = {} as Course;
@@ -180,10 +182,15 @@ export class CourseDetailComponent implements OnInit {
         this.courseService.getCourse(+id).pipe(
             switchMap(course => {
                 this.course = course;
+                this.route.url.subscribe(segments => {
+                    const course_url = segments.map(segment => segment.path).join('/');
+                    this.breadcumbs_service.set_course(course.name, course_url);
+                });
                 return forkJoin({
                     submissions: this.submissionService.submissionsFromCourse(course.id),
                     sections: this.courseService.getSections(course.id),
                 });
+
             })
         ).subscribe({
             next: ({ submissions, sections }) => {

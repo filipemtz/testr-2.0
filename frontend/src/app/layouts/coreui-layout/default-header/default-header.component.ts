@@ -1,19 +1,3 @@
-/**
- * AppDefaultHeader Component
- *
- * Main application header with navigation, theme switcher, and user menu.
- * Features include:
- * - Sidebar toggle button
- * - Search button with keyboard shortcut and recent searches modal
- * - Primary navigation links
- * - Notification and action icons
- * - Theme switcher (light/dark/auto)
- * - User dropdown menu
- * - Breadcrumb navigation
- * - Sticky positioning with scroll shadow effect
- *
- * @component
- */
 
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
@@ -27,6 +11,8 @@ import { freeSet } from '@coreui/icons';
 
 import { TestrStore } from '../../../services/testr.store';
 
+
+import { BreadcrumbComponent, BreadcrumbItemComponent, ButtonDirective } from '@coreui/angular';
 
 import {
     AvatarComponent,
@@ -54,8 +40,9 @@ import {
     SearchButtonComponent,
     SidebarToggleDirective,
 } from '@coreui/angular';
-import { RoleSwitcherComponent } from '../../../components/role-switcher/role-switcher.component';
 
+import { RoleSwitcherComponent } from '../../../components/role-switcher/role-switcher.component';
+import { BreadcrumbsService, BreadCrumbItem } from '../../../components/breadcrumbs/breadcrumb.service';
 
 @Component({
     selector: 'app-default-header',
@@ -87,6 +74,9 @@ import { RoleSwitcherComponent } from '../../../components/role-switcher/role-sw
         SearchButtonComponent,
         SidebarToggleDirective,
         RoleSwitcherComponent,
+        BreadcrumbComponent,
+        BreadcrumbItemComponent,
+        ButtonDirective
     ]
 })
 export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
@@ -94,10 +84,12 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
     readonly #colorModeService = inject(ColorModeService);
     readonly colorMode = this.#colorModeService.colorMode;
 
+    readonly breadcrumbs = inject(BreadcrumbsService).get_breadcrumbs();
+
     readonly colorModes = [
         { name: 'light', text: 'Light', icon: 'cilSun' },
         { name: 'dark', text: 'Dark', icon: 'cilMoon' },
-        { name: 'auto', text: 'Auto', icon: 'cilContrast' }
+        //{ name: 'auto', text: 'Auto', icon: 'cilContrast' }
     ];
 
     readonly icons = computed(() => {

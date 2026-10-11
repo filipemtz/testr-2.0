@@ -19,7 +19,7 @@ import {
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from '.';
-import { navItems } from './_nav';
+import { navItems } from './nav.service';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm-modal.component';
 
 function isOverflown(element: HTMLElement) {

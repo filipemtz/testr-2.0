@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ProgressComponent } from '@coreui/angular';
+import { ButtonDirective, ProgressComponent } from '@coreui/angular';
 
 @Component({
     selector: 'app-upload-question-file',
@@ -14,7 +14,8 @@ import { ProgressComponent } from '@coreui/angular';
     standalone: true,
     imports: [
         CommonModule,
-        ProgressComponent
+        ProgressComponent,
+        ButtonDirective
     ],
     templateUrl: './upload-question-file.component.html',
     styleUrls: ['./upload-question-file.component.css'],

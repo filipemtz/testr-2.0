@@ -24,8 +24,7 @@ import { ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalCompone
 import { CourseCardComponentNew } from './../course-card-novo/course-card.component';
 import { TestrStore } from '../../services/testr.store';
 import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
-
-
+import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
 
 @Component({
     selector: 'app-course-list',
@@ -47,6 +46,7 @@ import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
     templateUrl: './course-list.component.html',
 })
 export class CourseListComponent {
+    protected readonly breadcrumbs_service = inject(BreadcrumbsService);
     protected readonly store = inject(TestrStore);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
@@ -73,6 +73,8 @@ export class CourseListComponent {
     ) { }
 
     ngOnInit(): void {
+        this.breadcrumbs_service.reset();
+
         // TODO: these API calls are unnecessary are all over the place
         this.authService.profile().subscribe({
             next: (response) => {

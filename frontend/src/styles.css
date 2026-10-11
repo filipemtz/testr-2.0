@@ -37,6 +37,7 @@
 }
 
 .form-control,
+.form-control::file-selector-button,
 .form-select {
     min-height: 3.5rem;
 }
@@ -50,4 +51,8 @@
     font-size: 1.25rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+}
+
+a {
+    color: var(--coreui-primary)
 }

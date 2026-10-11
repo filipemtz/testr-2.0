@@ -27,74 +27,88 @@ export const routes: Routes = [
     {
         path: 'accounts',
         component: LoginLayoutComponent,
+        data: { breadcrumb: 'Accounts' },
         children: [
             {
                 path: 'login',
-                component: LoginPageComponent
+                component: LoginPageComponent,
+                data: { breadcrumb: 'Login' }
             },
             {
                 path: 'register',
-                component: RegisterPageComponent
+                component: RegisterPageComponent,
+                data: { breadcrumb: 'Register' }
             },
         ]
     },
     {
         path: 'forbidden',
-        component: ForbiddenPageComponent
+        component: ForbiddenPageComponent,
+        data: { breadcrumb: 'Forbidden' },
     },
     {
         path: '',
         component: DefaultLayoutComponent,
         data: {
-            title: 'Home'
+            title: 'Home',
+            breadcrumb: 'Home'
         },
         children: [
             {
                 path: '',
                 component: MainLayoutComponent,
+                data: { breadcrumb: 'Home' },
                 canActivate: [authenticatedGuard],
                 children: [
                     {
                         path: '',
                         component: IndexPageComponent,
+                        data: { breadcrumb: 'Index' },
                         canActivate: [CanActivateTeacherOrStudent]
                     },
                     {
                         path: 'course/:id',
-                        component: CourseDetailComponent
+                        component: CourseDetailComponent,
+                        data: { breadcrumb: 'Course' },
                     },
                     {
                         path: 'course/:id/report',
-                        component: ReportPageComponent
+                        component: ReportPageComponent,
+                        data: { breadcrumb: 'Report' }
                     },
                     {
                         path: 'question/:id',
-                        component: QuestionDetailPageComponent
-
+                        component: QuestionDetailPageComponent,
+                        data: { breadcrumb: 'Question' }
                     },
                     {
                         path: 'question/:questionId/edit',
                         component: QuestionEditPageComponent,
+                        data: { breadcrumb: 'Edit' },
                         canActivate: [CanActivateTeacher]
                     },
                     {
                         path: 'admin',
                         component: AdminPageComponent,
+                        data: { breadcrumb: 'Admin' },
                         canActivate: [CanActivateAdmin]
                     },
                     {
                         path: 'student',
                         component: StudentPageComponent,
+                        data: { breadcrumb: 'Student' },
                         canActivate: [CanActivateStudent]
                     },
                     {
                         path: 'teacher',
                         component: ProfessorPageComponent,
+                        data: { breadcrumb: 'Teacher' },
                         canActivate: [CanActivateTeacher]
                     },
                     {
                         path: 'profile',
-                        component: UserProfileComponent
+                        component: UserProfileComponent,
+                        data: { breadcrumb: 'Profile' }
                     }
                 ]
             },

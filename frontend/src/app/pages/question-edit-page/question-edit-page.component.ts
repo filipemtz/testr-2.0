@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -27,6 +27,7 @@ import { FormSelectDirective } from '@coreui/angular';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Question } from '../../models/question';
 import { notify_error, notify_success } from '../../utils/notifications';
+import { BreadcrumbsService } from '../../components/breadcrumbs/breadcrumb.service';
 
 export const MY_DATE_FORMATS = {
     parse: {
@@ -74,6 +75,7 @@ export const MY_DATE_FORMATS = {
 })
 
 export class QuestionEditPageComponent implements OnInit {
+    protected readonly breadcrumbs_service = inject(BreadcrumbsService);
     editForm: FormGroup;
     question: Question | null = null;
     delete_modal_visible: boolean = false;
@@ -105,6 +107,15 @@ export class QuestionEditPageComponent implements OnInit {
                     this.questionService.getQuestion(id).subscribe({
                         next: response => {
                             this.question = response;
+
+                            this.route.url.subscribe(segments => {
+                                this.breadcrumbs_service.set_question(
+                                    response.name,
+                                    segments.slice(0, segments.length - 1).map(segment => segment.path).join('/')
+                                );
+                            });
+
+
                             this.editForm.patchValue(response);
                         },
                         error: err => {

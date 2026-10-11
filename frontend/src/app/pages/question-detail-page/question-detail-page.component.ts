@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Question } from '../../models/question';
 import { QuestionService } from '../../services/question.service';
@@ -12,17 +12,21 @@ import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../models/input-output';
 import { environment } from '../../../environments/environment';
 import Notify from 'simple-notify';
-import { TableColorDirective, TableDirective } from '@coreui/angular';
+import { ButtonDirective, TableColorDirective, TableDirective } from '@coreui/angular';
+import { BreadcrumbsService } from '../../components/breadcrumbs/breadcrumb.service';
+import { TestrStore } from '../../services/testr.store';
 
 @Component({
     selector: 'app-question-detail-page',
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
-    imports: [DateFormatPipe, CommonModule, TableColorDirective, TableDirective],
+    imports: [DateFormatPipe, CommonModule, TableColorDirective, TableDirective, ButtonDirective],
     templateUrl: './question-detail-page.component.html',
     styleUrl: './question-detail-page.component.css',
 })
 export class QuestionDetailPageComponent implements OnInit {
+    protected readonly testr_store = inject(TestrStore);
+    protected readonly breadcrumbs_service = inject(BreadcrumbsService);
     private intervalId: any;
     question: Question = {} as Question;
     questionFiles: QuestionFile[] = [] as QuestionFile[];
@@ -34,6 +38,11 @@ export class QuestionDetailPageComponent implements OnInit {
     submissionsList: any[] = [];
     isProfessor: boolean = false;
     myNotify: any;
+
+    readonly statusColors: Record<string, string> = {
+        SC: 'success',
+        FL: 'danger',
+    };
 
     constructor(
         private authService: AuthService,
@@ -50,6 +59,13 @@ export class QuestionDetailPageComponent implements OnInit {
             this.questionService.getQuestion(+id).subscribe({
                 next: (question: Question) => {
                     this.question = question;
+
+                    this.route.url.subscribe(segments => {
+                        this.breadcrumbs_service.set_question(
+                            question.name,
+                            segments.map(segment => segment.path).join('/')
+                        );
+                    });
 
                     this.question.description = this.question.description.replace(/\n/g, "<br>");
                     this.question.description = this.question.description.replace(/  /g, "&nbsp;&nbsp;");
