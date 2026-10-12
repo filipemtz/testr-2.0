@@ -2,13 +2,32 @@
 <c-sidebar #sidebar1="cSidebar" class="d-print-none sidebar sidebar-fixed border-end" colorScheme="dark" id="sidebar1"
     [visible]="!ui_preferences_service.sidebarCollapsed()">
     <c-sidebar-header class="border-bottom">
-        <c-sidebar-brand [routerLink]="[]">
+        <c-sidebar-brand routerLink="/">
             <div class="h3 text-center sidebar-brand-full">Testr 2.0</div>
         </c-sidebar-brand>
     </c-sidebar-header>
 
     <ng-scrollbar pointerEventsMethod="scrollbar" visibility="hover">
-        <c-sidebar-nav [navItems]="navItems" dropdownMode="close" compact />
+        <!-- <c-sidebar-nav [navItems]="navItems()" dropdownMode="close" compact /> -->
+        <c-sidebar visible class="border-end">
+            <c-sidebar-nav>
+                <c-nav-item href="/">
+                    <svg [cIcon]="icons.cilHouse" class="nav-icon"></svg> Home
+                </c-nav-item>
+                <c-nav-title>Courses</c-nav-title>
+                @for (c of courses(); track c.id) {
+                <c-nav-item>
+                    <a routerLink="/course/{{c.id}}" class="course-nav-link" cNavLink>
+                        <span class="course-name">{{ c.name }}</span>
+                    </a>
+                </c-nav-item>
+                }
+                <c-nav-item class='mt-auto' href="/profile">
+                    <svg [cIcon]="icons.cilSettings" class="nav-icon"></svg> Profile
+                </c-nav-item>
+            </c-sidebar-nav>
+        </c-sidebar>
+
     </ng-scrollbar>
 
     @if (!sidebar1.narrow) {

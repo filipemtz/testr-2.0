@@ -1,14 +1,14 @@
 from accounts.permissions import IsStudent, IsTeacher
+from django.db.models import Count
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
-from django.db.models import Count
 
-from ..models import Question, Submission, SubmissionStatus
+from ..models import Course, Question, Submission, SubmissionStatus
 from ..serializers import SubmissionSerializer
 
 
@@ -301,6 +301,7 @@ def submissions_stats(request, course_id):
         )
 
     # returns a list in which each element is [student_id, number of solved questions]
+    # TODO: only students with submissions are considered.
     solved_counts = list(
         Submission.objects.filter(
             question__section__course=course_id,
@@ -320,24 +321,25 @@ def submissions_stats(request, course_id):
         if x["student"] == student_id
     ]
 
-    if len(student_data) != 1:
-        return Response(
-            {"detail": f"invalid student or zero submissions."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    # extract the student data from the list
-    student_data = student_data[0]
+    if len(student_data) == 1:
+        n_solved = student_data[0][1]["total"]
+        rank = student_data[0][0]
+    else:
+        # student hasn't submissions or student_id is invalid.
+        n_solved = 0
+        rank = None
 
     n_visible_questions = Question.objects.filter(
         section__course=course_id, visible=True
     ).count()
 
+    n_students = Course.objects.filter(id=course_id).first().students.count()
+
     response = {
-        "rank": student_data[0],
-        "n_solved": student_data[1]["total"],
+        "rank": rank if rank else n_students,
+        "n_solved": n_solved,
         "n_visible_questions": n_visible_questions,
-        "total_students": len(solved_counts),
+        "total_students": n_students,
     }
 
     return Response(response)

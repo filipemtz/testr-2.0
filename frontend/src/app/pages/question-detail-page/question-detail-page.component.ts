@@ -73,7 +73,8 @@ export class QuestionDetailPageComponent implements OnInit {
                     this.authService.userInfo().subscribe({
                         next: (response: any) => {
                             this.isProfessor = response.groups.includes('teacher');
-                            this.getSubmissionsList();
+                            if (this.isProfessor)
+                                this.getSubmissionsList();
                         },
                     });
                 },

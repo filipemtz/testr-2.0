@@ -8,6 +8,9 @@ import { freeSet } from '@coreui/icons';
 
 import {
     ContainerComponent,
+    NavItemComponent,
+    NavLinkDirective,
+    NavTitleComponent,
     ShadowOnScrollDirective,
     SidebarBrandComponent,
     SidebarComponent,
@@ -19,9 +22,9 @@ import {
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from '.';
-import { navItems } from './nav.service';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm-modal.component';
 import { UiPreferencesService } from '../../services/ui-preferences.service';
+import { SideBarService } from './sidebar.service';
 
 function isOverflown(element: HTMLElement) {
     return (
@@ -41,6 +44,9 @@ function isOverflown(element: HTMLElement) {
         SidebarBrandComponent,
         SidebarNavComponent,
         SidebarFooterComponent,
+        NavItemComponent,
+        NavTitleComponent,
+        NavLinkDirective,
         SidebarToggleDirective,
         SidebarTogglerDirective,
         ContainerComponent,
@@ -52,14 +58,11 @@ function isOverflown(element: HTMLElement) {
         RouterLink,
         ShadowOnScrollDirective,
         ConfirmModalComponent
-
     ]
 })
 export class DefaultLayoutComponent {
+    protected readonly sidebar_service = inject(SideBarService);
     protected readonly ui_preferences_service = inject(UiPreferencesService);
-    public navItems = [...navItems];
-
-    constructor(public iconSet: IconSetService) {
-        iconSet.icons = { ...freeSet };
-    }
+    public courses = this.sidebar_service.courses;
+    readonly icons = { ...freeSet };
 }

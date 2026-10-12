@@ -56,3 +56,8 @@
 a {
     color: var(--coreui-primary)
 }
+
+/* Collapsed accordion header */
+.accordion-button {
+    background-color: var(--cui-primary-bg-subtle);
+}

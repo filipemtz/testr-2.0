@@ -1,5 +1,7 @@
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Course } from '../../models/course';
+
 import { INavData } from '@coreui/angular';
 
 
@@ -10,10 +12,6 @@ export const navItems: INavData[] = [
         name: 'My Courses',
         url: '/',
         iconComponent: { name: 'cil-house' },
-    },
-    {
-        title: true,
-        name: 'Cursos'
     },
     // {
     //     name: 'Charts',
@@ -439,3 +437,38 @@ export const navItems: INavData[] = [
         iconComponent: { name: 'cil-settings' },
     },
 ];
+
+
+@Injectable({ providedIn: 'root' })
+export class SideBarService {
+    private readonly _courses = signal<Course[]>([]);
+    courses = this._courses.asReadonly();
+
+    readonly navItems = computed(() => [
+        {
+            name: 'My Courses',
+            url: '/',
+            iconComponent: { name: 'cil-house' },
+        },
+        {
+            title: true,
+            name: 'Cursos',
+            iconComponent: { name: 'cil-puzzle' },
+        },
+        ...this.courses().map(course => ({
+            name: course.name,
+            url: `/course/${course.id}`,
+            class: 'unidented',
+        })),
+        {
+            name: 'Profile',
+            url: '/profile',
+            class: 'mt-auto',
+            iconComponent: { name: 'cil-settings' },
+        },
+    ]);
+
+    setCourses(courses: Course[]) {
+        this._courses.set(courses);
+    }
+}

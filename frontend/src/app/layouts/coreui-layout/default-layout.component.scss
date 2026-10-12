@@ -1,3 +1,7 @@
+c-sidebar-brand:hover {
+    cursor: pointer;
+}
+
 :host::ng-deep {
     .ng-scrollbar {
         --scrollbar-padding: 1px;
@@ -16,6 +20,17 @@
     //.sidebar-nav {
     //  scrollbar-color: var(--cui-gray-500, #444) transparent;
     //}
+}
+
+.course-nav-link {
+    min-width: 0;
+}
+
+.course-name {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 // ng-scrollbar css variables

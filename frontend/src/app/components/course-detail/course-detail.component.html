@@ -44,7 +44,7 @@
             <button cAccordionButton type="button"
                 (click)="item.toggleItem(); ui_preferences_service.toggleSection(course.id, s.id)"
                 [collapsed]="!item.visible">
-                <span class="larger" [class.text-body-secondary]="!s.visible" [class.fst-italic]="!s.visible">{{ s.name
+                <span class="fw-bold" [class.text-body-secondary]="!s.visible" [class.fst-italic]="!s.visible">{{ s.name
                     }}</span>
             </button>
         </ng-template>

@@ -41,6 +41,7 @@ import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterCo
 import { ImportQuestionComponent } from '../import-question/import-question.component';
 import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
 import { UiPreferencesService } from '../../services/ui-preferences.service';
+import { DateFormatPipe } from '../../utils/date-format.pipe';
 
 @Component({
     selector: 'app-course-detail',
@@ -66,6 +67,7 @@ import { UiPreferencesService } from '../../services/ui-preferences.service';
         FormsModule,
         ReactiveFormsModule,
         ImportQuestionComponent,
+        DateFormatPipe
     ],
     templateUrl: './course-detail.component.html',
 })
@@ -77,7 +79,7 @@ export class CourseDetailComponent implements OnInit {
     course: Course = {} as Course;
     sections: Section[] = [] as Section[];
     submissions: Submission[] = [] as Submission[];
-    stats: CourseStats = {} as CourseStats;
+    stats: CourseStats = CourseStats.getDefault();
     import_question_modal_visible = signal(false);
 
     addSectionForm: FormGroup;
@@ -172,9 +174,9 @@ export class CourseDetailComponent implements OnInit {
     }
 
     percent_done() {
-        if (!this.stats)
+        if (!this.stats || this.stats.n_visible_questions == 0)
             return 0;
-        return Math.round(100 * (this.stats.n_solved / this.stats.n_solved));
+        return Math.round(100 * (this.stats.n_solved / this.stats.n_visible_questions));
     }
 
     loadCourse() {
