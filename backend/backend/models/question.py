@@ -11,6 +11,7 @@ class Language(models.TextChoices):
     JUPYTER = "JP", _("Jupyter")
     JAVA = "JV", _("Java")
     RELAX = "RL", _("Relax")
+    SQL = "SQ", _("SQL")
 
 
 class Question(models.Model):
@@ -39,7 +40,7 @@ class Question(models.Model):
         return False
 
 
-class RelaxTestInfo(models.Model):
+class DbTestInfo(models.Model):
     question = models.OneToOneField(Question, on_delete=models.CASCADE)
     database = models.CharField(max_length=100)
     correct_query = models.TextField(blank=False)

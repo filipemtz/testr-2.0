@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from backend.models.question import RelaxTestInfo
+from backend.models.question import DbTestInfo
 from backend.models.submission import Submission
 from pyrelax.data import databases
 from pyrelax.engine import execute_query
@@ -45,7 +45,7 @@ class RelaxJudge:
             )
             return
 
-        relax_info = RelaxTestInfo.objects.filter(question=self.question)
+        relax_info = DbTestInfo.objects.filter(question=self.question)
         if relax_info.count() == 0:
             self.report["error_msgs"].append(
                 "Relax information missing for the question."
@@ -78,7 +78,18 @@ class RelaxJudge:
             self.report["error_msgs"].append("Error in teacher query: " + e.__repr__())
             print(traceback.format_exc())
 
+        result_match = self._df_match(student_result, teacher_result)
+
+        if not result_match:
+            self.report["error_msgs"].append("Query result is incorrect.")
+
+        self.report["end_at"] = datetime.now().strftime(date_format)
+
+        return self.report
+
+    def _df_match(self, student_result, teacher_result):
         result_match = False
+
         if (student_result is not None) and (teacher_result is not None):
             if teacher_result.shape[1] != student_result.shape[1]:
                 self.report["error_msgs"].append(
@@ -102,9 +113,4 @@ class RelaxJudge:
                     )
                 )
 
-        if not result_match:
-            self.report["error_msgs"].append("Query result is incorrect.")
-
-        self.report["end_at"] = datetime.now().strftime(date_format)
-
-        return self.report
+        return result_match

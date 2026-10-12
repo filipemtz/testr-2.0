@@ -14,7 +14,7 @@
         </span>
         <div class="mt-auto pt-3">
             <small class="text-body-secondary">
-                m sections · n activities
+                {{n_sections()}} sections · {{n_questions()}} questions
             </small>
             @if (!isProfessor()) {
             <c-progress thin class="mt-2" [attr.aria-label]="'Progress ' + progress() + '%'">

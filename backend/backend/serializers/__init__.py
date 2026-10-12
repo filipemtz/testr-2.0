@@ -1,6 +1,6 @@
 from .course_serializer import CourseSerializer
 from .input_output_serializer import InputOutputSerializer
 from .question_file_serializer import QuestionFileSerializer
-from .question_serializer import QuestionSerializer, RelaxTestInfoSerializer
+from .question_serializer import DbTestInfoSerializer, QuestionSerializer
 from .section_serializer import SectionSerializer
 from .submission_serializer import SubmissionSerializer

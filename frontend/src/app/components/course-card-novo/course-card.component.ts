@@ -48,6 +48,8 @@ export class CourseCardComponentNew {
     readonly progress = input(0);
     readonly titleLines = input(2);
     readonly descLines = input(2);
+    readonly n_sections = input(0);
+    readonly n_questions = input(0);
     readonly opened = output<number>();
     copyRequested = output<Course>();
     deleteRequested = output<Course>();

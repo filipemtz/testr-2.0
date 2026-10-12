@@ -16,9 +16,9 @@
     @for (c of courses(); track c.id) {
     @if (c.visible || store.viewAsProfessor()) {
     <div class="col">
-        <app-course-card-new [course]="c" [isProfessor]="store.viewAsProfessor()" [titleLines]="2"
-            (deleteRequested)="delete_course($event)" (editRequested)="open_edit_modal($event.course, $event.card)"
-            (copyRequested)="copyCourse($event)"
+        <app-course-card-new [course]="c" [isProfessor]="store.viewAsProfessor()" [titleLines]="2" [n_sections]="0"
+            [n_questions]="0" (deleteRequested)="delete_course($event)"
+            (editRequested)="open_edit_modal($event.course, $event.card)" (copyRequested)="copyCourse($event)"
             (toggleVisibilityRequested)="toggle_visibility($event.course, $event.card)" />
     </div>
     }

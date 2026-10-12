@@ -3,6 +3,7 @@ import csv
 from accounts.permissions import IsStudentSafeMethods, IsTeacher
 from accounts.serializers import UserRegisterSerializer, UserSerializer
 from django.contrib.auth.models import User
+from django.db.models import Count, Q
 from rest_framework import status, viewsets
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
@@ -49,9 +50,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     # exibe apenas os cursos aos quais o usuario está relacionado. Além de permitir que o professor edite apenas os cursos que ele leciona
     def get_queryset(self):
         user = self.request.user
-        return (
-            Course.objects.filter(teachers=user) | Course.objects.filter(students=user)
-        ).distinct()
+        return Course.objects.filter(Q(teachers=user) | Q(students=user)).distinct()
 
 
 class CourseRemoveTeacherAPIView(APIView):
