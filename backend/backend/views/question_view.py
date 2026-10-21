@@ -65,7 +65,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def _remove_extra_info_on_type_change(self):
         question: Question = self.get_object()
-        if question.language != Language.RELAX.value:
+        if question.language not in [Language.RELAX.value, Language.SQL.value]:
             info_query = DbTestInfo.objects.filter(question=question)
             if info_query.count() > 0:
                 info_query.delete()

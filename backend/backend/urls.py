@@ -104,9 +104,9 @@ urlpatterns = [
         name="course_stats",
     ),
     path(
-        "questions/<int:question_id>/relax-test-info/",
+        "questions/<int:question_id>/db-test-info/",
         QuestionDbTestInfoView.as_view(),
-        name="question-relax-test-info",
+        name="question-db-test-info",
     ),
     path(
         "pyrelax/databases/",

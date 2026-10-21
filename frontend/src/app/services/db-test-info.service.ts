@@ -22,9 +22,6 @@ export class DbTestInfoService {
     }
 
     post(data: DbTestInfo): Observable<DbTestInfo> {
-        console.log("post:" + data);
-        console.log("http:", this.http);
-
         return this.http.post<DbTestInfo>(`${this.api_url}/`, data, { withCredentials: true });
     }
 

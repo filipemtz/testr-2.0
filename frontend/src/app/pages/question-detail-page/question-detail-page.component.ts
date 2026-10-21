@@ -236,6 +236,8 @@ export class QuestionDetailPageComponent implements OnInit {
         this.submissionService.getSubmission(question_id).subscribe({
             next: (submission) => {
                 this.submission = submission;
+                if (this.intervalId && (submission.status == 'FL' || submission.status == 'SC'))
+                    clearInterval(this.intervalId);
             },
             error: (err) => {
                 console.log('Error getting submission:', err);
@@ -243,7 +245,7 @@ export class QuestionDetailPageComponent implements OnInit {
         });
     }
 
-    // A cada 30 segundos, verifica o status da submissão
+    // A cada X segundos, verifica o status da submissão
     startSubmissionStatusCheck(): void {
         this.intervalId = setInterval(() => {
             if (this.question) {

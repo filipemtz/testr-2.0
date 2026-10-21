@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, Input } from '@angular/core';
 
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DbTestInfo } from '../../models/db_test_info';
@@ -8,6 +8,8 @@ import Notify from 'simple-notify';
 import { FormsModule, Validators } from '@angular/forms';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { notify_error } from '../../utils/notifications';
+import { Question } from '../../models/question';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -18,7 +20,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
     styleUrl: './db-test-info.component.css'
 })
 export class DbTestInfoComponent {
-    questionId: number = -1;
+    question = input.required<Question | null>();
     relaxTestInfoId: number = -1;
     notification: any;
     form = this.form_builder.nonNullable.group({
@@ -39,29 +41,35 @@ export class DbTestInfoComponent {
     ) { }
 
     ngOnInit(): void {
-        const id = this.route.snapshot.paramMap.get('questionId');
+        const question = this.question();
 
-        if (id !== null) {
-            this.questionId = +id;
-            this.dbTestService.get(this.questionId).subscribe({
-                next: (data: any) => {
-                    this.form.patchValue(data);
-                    this.infoExists = true;
-                    this.relaxTestInfoId = data['id'];
-                },
-                error(err) { }  // creating the information now
-            })
-        }
+        if (question == null) return;
+
+        this.dbTestService.get(question.id).subscribe({
+            next: (data: any) => {
+                this.form.patchValue(data);
+                this.infoExists = true;
+                this.relaxTestInfoId = data['id'];
+            },
+            error(err) {
+                notify_error(err);
+                console.log(err);
+            }  // creating the information now
+        })
 
         this._read_available_databases();
     }
 
     save(): void {
+        const question = this.question();
+        if (question == null) return;
+
+
         if (this.form.valid) {
             let data: DbTestInfo = {
                 ...new DbTestInfo(),
                 ...this.form.getRawValue(),
-                question: this.questionId
+                question: question.id
             };
 
             if (!this.infoExists)
