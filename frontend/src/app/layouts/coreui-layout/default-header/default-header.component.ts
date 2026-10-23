@@ -30,19 +30,11 @@ import {
     HeaderComponent,
     HeaderNavComponent,
     HeaderTogglerDirective,
-    ListGroupDirective,
-    ListGroupItemDirective,
-    ModalBodyComponent,
-    ModalComponent,
-    ModalHeaderComponent,
-    ModalTitleDirective,
-    NavLinkDirective,
-    SearchButtonComponent,
     SidebarToggleDirective,
 } from '@coreui/angular';
 
 import { RoleSwitcherComponent } from '../../../components/role-switcher/role-switcher.component';
-import { BreadcrumbsService, BreadCrumbItem } from '../../../components/breadcrumbs/breadcrumb.service';
+import { BreadcrumbsService } from '../../../components/breadcrumbs/breadcrumb.service';
 import { UiPreferencesService } from '../../../services/ui-preferences.service';
 import { notify_error } from '../../../utils/notifications';
 
@@ -64,16 +56,8 @@ import { notify_error } from '../../../utils/notifications';
         HeaderNavComponent,
         HeaderTogglerDirective,
         IconDirective,
-        ListGroupDirective,
-        ListGroupItemDirective,
-        ModalBodyComponent,
-        ModalComponent,
-        ModalHeaderComponent,
-        ModalTitleDirective,
-        NavLinkDirective,
         NgTemplateOutlet,
         RouterLink,
-        SearchButtonComponent,
         SidebarToggleDirective,
         RoleSwitcherComponent,
         BreadcrumbComponent,

@@ -1,11 +1,9 @@
-import { signal, Component, ElementRef, ViewChild, OnInit, TemplateRef, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { signal, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CourseService } from '../../services/course.service';
 import { Router, RouterModule } from '@angular/router';
 import { Course } from '../../models/course';
-//import { CourseCardComponent } from '../../components/course-card/course-card.component';
-// import { CourseDetailComponent } from '../course-detail/course-detail.component';
 
 import {
     ReactiveFormsModule,
@@ -18,14 +16,13 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { notify_error, notify_success } from '../../utils/notifications';
 
-import { inject, input, } from '@angular/core';
+import { inject, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonCloseDirective, ButtonDirective, ModalBodyComponent, ModalComponent, ModalFooterComponent, ModalHeaderComponent } from '@coreui/angular';
 import { CourseCardComponentNew } from './../course-card-novo/course-card.component';
 import { TestrStore } from '../../services/testr.store';
 import { ConfirmModalService } from '../confirm-modal/confirm-modal.service';
 import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
-import { SideBarService } from '../../layouts/coreui-layout/sidebar.service';
 
 @Component({
     selector: 'app-course-list',
@@ -37,7 +34,6 @@ import { SideBarService } from '../../layouts/coreui-layout/sidebar.service';
         FormsModule,
         ReactiveFormsModule,
         ButtonDirective,
-        CourseListComponent,
         ModalComponent,
         ModalHeaderComponent,
         ModalBodyComponent,
@@ -46,8 +42,7 @@ import { SideBarService } from '../../layouts/coreui-layout/sidebar.service';
     ],
     templateUrl: './course-list.component.html',
 })
-export class CourseListComponent {
-    protected readonly sidebar_service = inject(SideBarService);
+export class CourseListComponent implements OnInit {
     protected readonly breadcrumbs_service = inject(BreadcrumbsService);
     protected readonly store = inject(TestrStore);
     private readonly router = inject(Router);
@@ -96,7 +91,6 @@ export class CourseListComponent {
         this.courseService.getCourses().subscribe({
             next: (response) => {
                 this.courses.set(response.results);
-                this.sidebar_service.setCourses(response.results);
             },
             error: (err) => {
                 console.log(err);

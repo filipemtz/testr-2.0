@@ -13,19 +13,11 @@ import { catchError, map } from 'rxjs/operators';
 import { handleError } from '../../utils/handleError';
 import {
     ButtonDirective,
-    ColComponent,
-    FormCheckComponent,
-    FormCheckInputDirective,
-    FormCheckLabelDirective,
     FormControlDirective,
     FormDirective,
     FormFeedbackComponent,
-    FormLabelDirective,
-    FormSelectDirective,
-    GutterDirective,
     InputGroupComponent,
     InputGroupTextDirective,
-    RowDirective
 } from '@coreui/angular';
 
 import { cilLockLocked } from '@coreui/icons';
@@ -51,18 +43,10 @@ export const iconSubset = {
         ReactiveFormsModule,
         FormsModule,
         FormDirective,
-        RowDirective,
-        GutterDirective,
-        ColComponent,
-        FormLabelDirective,
         FormControlDirective,
         FormFeedbackComponent,
         InputGroupComponent,
         InputGroupTextDirective,
-        FormSelectDirective,
-        FormCheckComponent,
-        FormCheckInputDirective,
-        FormCheckLabelDirective,
         ButtonDirective,
     ],
     templateUrl: './login.component.html',

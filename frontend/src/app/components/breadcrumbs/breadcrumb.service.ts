@@ -40,11 +40,12 @@ export class BreadcrumbsService {
         }));
     }
 
-    set_question(name: string, url: string) {
+    set_question(course_name: string, course_url: string, question_name: string, question_url: string) {
         this._breadcrumbs.update(breadcrumbs => ({
             ...breadcrumbs,
-            Question: new BreadCrumbItem(name, url),
-            QuestionEdit: new BreadCrumbItem("Edit Question", url + "/edit"),
+            Course: new BreadCrumbItem(course_name, course_url),
+            Question: new BreadCrumbItem(question_name, question_url),
+            QuestionEdit: new BreadCrumbItem("Edit Question", question_url + "/edit"),
         }));
     }
 

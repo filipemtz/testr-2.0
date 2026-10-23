@@ -41,7 +41,6 @@ import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterCo
 import { ImportQuestionComponent } from '../import-question/import-question.component';
 import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
 import { UiPreferencesService } from '../../services/ui-preferences.service';
-import { DateFormatPipe } from '../../utils/date-format.pipe';
 
 @Component({
     selector: 'app-course-detail',
@@ -67,7 +66,6 @@ import { DateFormatPipe } from '../../utils/date-format.pipe';
         FormsModule,
         ReactiveFormsModule,
         ImportQuestionComponent,
-        DateFormatPipe
     ],
     templateUrl: './course-detail.component.html',
 })

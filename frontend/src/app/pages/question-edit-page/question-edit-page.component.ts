@@ -22,7 +22,6 @@ import {
     ModalHeaderComponent,
     ModalTitleDirective
 } from '@coreui/angular';
-import { FormSelectDirective } from '@coreui/angular';
 
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Question } from '../../models/question';
@@ -55,7 +54,6 @@ export const MY_DATE_FORMATS = {
         MatInputModule,
         MatDatepickerModule,
         UploadQuestionFileComponent,
-        FormSelectDirective,
         InputOutputComponent,
         ModalComponent,
         ModalHeaderComponent,
@@ -109,6 +107,7 @@ export class QuestionEditPageComponent implements OnInit {
 
                             this.route.url.subscribe(segments => {
                                 this.breadcrumbs_service.set_question(
+                                    '', '',
                                     response.name,
                                     segments.slice(0, segments.length - 1).map(segment => segment.path).join('/')
                                 );

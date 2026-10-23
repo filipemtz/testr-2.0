@@ -62,6 +62,7 @@ export class QuestionDetailPageComponent implements OnInit {
 
                     this.route.url.subscribe(segments => {
                         this.breadcrumbs_service.set_question(
+                            '', '',
                             question.name,
                             segments.map(segment => segment.path).join('/')
                         );

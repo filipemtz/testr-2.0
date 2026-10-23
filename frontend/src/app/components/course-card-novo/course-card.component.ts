@@ -1,11 +1,7 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { BadgeComponent, CardBodyComponent, CardFooterComponent, CardComponent, ProgressBarComponent, ProgressComponent, ButtonDirective } from '@coreui/angular';
 import { Course } from '../../models/course';
-import { Role } from '../../services/testr.store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-//import { Course, Role } from './mooc.store';
 import { RouterLink } from '@angular/router';
-import { ColComponent, ContainerComponent, RowComponent } from '@coreui/angular';
 
 @Component({
     selector: 'app-course-card-new',
@@ -18,9 +14,6 @@ import { ColComponent, ContainerComponent, RowComponent } from '@coreui/angular'
         ProgressBarComponent,
         ButtonDirective,
         RouterLink,
-        ContainerComponent,
-        RowComponent,
-        ColComponent
     ],
     host: {
         // Max visible lines before the text is clipped with "…" (configurable per instance).

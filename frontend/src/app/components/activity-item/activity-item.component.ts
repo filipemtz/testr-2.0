@@ -1,12 +1,12 @@
-import { Component, computed, input, output } from '@angular/core';
-import { BadgeComponent, ButtonDirective } from '@coreui/angular';
+import { Component, input, output } from '@angular/core';
+import { ButtonDirective } from '@coreui/angular';
 import { Question } from '../../models/question';
 import { RouterLink } from '@angular/router';
 import { DateFormatPipe } from '../../utils/date-format.pipe';
 
 @Component({
     selector: 'app-activity-item',
-    imports: [BadgeComponent, ButtonDirective, RouterLink, DateFormatPipe],
+    imports: [ButtonDirective, RouterLink, DateFormatPipe],
     templateUrl: 'activity-item.component.html',
 })
 export class ActivityItemComponent {

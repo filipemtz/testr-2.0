@@ -1,12 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CourseCardComponent } from '../../components/course-card/course-card.component';
 import { CourseListComponent } from '../../components/course-card-list/course-list.component';
 
-
-import {
-    ButtonDirective,
-} from '@coreui/angular';
 
 import {
     ReactiveFormsModule,
@@ -24,8 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
         MatIconModule,
         FormsModule,
         ReactiveFormsModule,
-        CourseCardComponent,
-        ButtonDirective,
         CourseListComponent
     ],
     templateUrl: './index-page.component.html',
