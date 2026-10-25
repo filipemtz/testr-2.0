@@ -101,6 +101,7 @@ export class LoginComponent implements OnInit {
                 }
             },
             error: (error: any) => {
+                notify_error("Error during login.");
                 handleError(error);
             }
         });

@@ -17,6 +17,9 @@ a2.csv
 
 backend/venv
 
+.env.ts
+frontend/.env.ts
+
 .env
 
 /backend/config.yaml

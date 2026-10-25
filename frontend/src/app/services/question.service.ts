@@ -3,9 +3,11 @@ import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Question } from '../models/question';
 import { InputOutput } from '../models/input-output';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../.env';
 import { QuestionFile } from '../models/question-file';
 import { map } from 'rxjs/operators';
+
+
 @Injectable({
     providedIn: 'root'
 })

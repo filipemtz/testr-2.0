@@ -44,3 +44,6 @@ class DbTestInfo(models.Model):
     question = models.OneToOneField(Question, on_delete=models.CASCADE)
     database = models.CharField(max_length=100)
     correct_query = models.TextField(blank=False)
+
+    def __str__(self):
+        return f"Question: {self.question.name} Id: {self.id} DB: {self.database}"

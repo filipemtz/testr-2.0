@@ -8,7 +8,7 @@ import Notify from 'simple-notify';
 import { FormsModule, Validators } from '@angular/forms';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { notify_error } from '../../utils/notifications';
+import { notify_error, notify_success } from '../../utils/notifications';
 import { Question } from '../../models/question';
 
 @Component({
@@ -86,7 +86,6 @@ export class DbTestInfoComponent {
     _create_new(data: DbTestInfo): void {
         this.dbTestService.post(data).subscribe({
             next: (data: any) => {
-                console.log("resultado:" + data);
                 this.form.patchValue(data);
                 this.infoExists = true;
                 this.relaxTestInfoId = data['id'];
@@ -115,29 +114,15 @@ export class DbTestInfoComponent {
     }
 
     _edit(data: DbTestInfo): void {
-        console.log("edit: " + JSON.stringify(data));
         this.dbTestService.edit(data).subscribe({
             next: (data: any) => {
-                console.log("resultado:" + data);
                 this.form.patchValue(data);
                 this.infoExists = true;
                 this.relaxTestInfoId = data['id'];
-                this.notification = new Notify({
-                    status: "success",
-                    title: "OK",
-                    text: "Informações de teste atualizadas.",
-                    effect: 'slide',
-                    type: 'filled',
-                });
+                notify_success("Informações de teste atualizadas.");
             },
             error: (err) => {
-                this.notification = new Notify({
-                    status: "error",
-                    title: "Error!",
-                    text: "Falha ao salvar configuração dos testes.",
-                    effect: 'slide',
-                    type: 'filled',
-                });
+                notify_error("Falha ao salvar configuração dos testes.");
             },
         });
     }

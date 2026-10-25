@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminService } from '../../services/admin.service';
 import { CommonModule } from '@angular/common';
+import { notify_error, notify_success } from '../../utils/notifications';
 @Component({
     selector: 'app-user-profile',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -54,7 +55,8 @@ export class UserProfileComponent implements OnInit {
     editProfile(): void {
         this.adminService.editUser(this.user.id, this.editForm.getRawValue()).subscribe({
             next: (response) => {
-                console.log(response);
+                notify_success("Edição bem sucedida.");
+
             },
         });
     }
@@ -66,8 +68,11 @@ export class UserProfileComponent implements OnInit {
 
             this.authService.changePassword(currentPassword, newPassword).subscribe({
                 next: () => {
-                    console.log('Senha alterada com sucesso');
-                }
+                    notify_success('Senha alterada com sucesso');
+                },
+                error: (err) => {
+                    notify_error('Erro ao alterar senha.');
+                },
             });
         }
     }

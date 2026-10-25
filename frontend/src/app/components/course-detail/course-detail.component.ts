@@ -15,7 +15,7 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { Course, CourseStats } from '../../models/course';
 import { Section } from '../../models/section';
 import { Question } from '../../models/question';
@@ -24,7 +24,7 @@ import { QuestionService } from '../../services/question.service';
 import { SectionService } from '../../services/section.service';
 import { CourseService } from '../../services/course.service';
 import { SubmissionService } from '../../services/submission.service';
-
+import { ExportService } from '../../services/export.service';
 
 import {
     FormsModule,
@@ -41,6 +41,7 @@ import { ButtonCloseDirective, ModalBodyComponent, ModalComponent, ModalFooterCo
 import { ImportQuestionComponent } from '../import-question/import-question.component';
 import { BreadcrumbsService } from '../breadcrumbs/breadcrumb.service';
 import { UiPreferencesService } from '../../services/ui-preferences.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-course-detail',
@@ -94,6 +95,12 @@ export class CourseDetailComponent implements OnInit {
     editForm: FormGroup = this.fb.group({
         name: ['', Validators.required],
     });
+
+    private exportService = inject(ExportService);
+
+    downloading = false;
+    errorMessage = '';
+
 
     constructor(
         private route: ActivatedRoute,
@@ -473,5 +480,57 @@ export class CourseDetailComponent implements OnInit {
                 notify_error("Error when reloading sections.");
             }
         });
+    }
+
+    private download(
+        request: import('rxjs').Observable<Blob>,
+        filename: string
+    ): void {
+        this.downloading = true;
+        this.errorMessage = '';
+
+        request.pipe(
+            finalize(() => {
+                this.downloading = false;
+            })
+        ).subscribe({
+            next: (blob) => {
+                const url = URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+
+                anchor.href = url;
+                anchor.download = filename;
+                anchor.click();
+
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.errorMessage =
+                    `Export failed (HTTP ${error.status}).`;
+                console.error('Export error:', error);
+                notify_error('Export error: ' + error.message);
+            }
+        });
+    }
+
+    onDownloadCourse(courseId: number): void {
+        this.download(
+            this.exportService.downloadCourse(courseId),
+            `course_${courseId}.zip`
+        );
+    }
+
+    onDownloadSection(sectionId: number): void {
+        this.download(
+            this.exportService.downloadSection(sectionId),
+            `section_${sectionId}.zip`
+        );
+    }
+
+    onDownloadQuestion(questionId: number): void {
+        this.download(
+            this.exportService.downloadQuestion(questionId),
+            `question_${questionId}.zip`
+        );
     }
 }

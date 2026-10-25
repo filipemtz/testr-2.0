@@ -198,7 +198,6 @@ export class ReportPageComponent {
 
         this.questionService.importQuestionsFromJson(formData).subscribe({
             next: (response) => {
-                console.log('HTTP SUCCESS', response);
                 notify_success('Upload com sucesso das questões!');
             },
             error: (err: any) => {

@@ -15,6 +15,8 @@ class SubmissionStatus(models.TextChoices):
 
 
 def upload_file(instance, filename):
+    if "/" in filename or "\\" in filename:
+        return filename
     timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     return f"{instance.question.id}-{instance.student.id}-{timestamp}-{filename}"
 

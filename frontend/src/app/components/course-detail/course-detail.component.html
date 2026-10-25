@@ -17,6 +17,9 @@
         <button cButton color="primary" (click)="createDefaultSection(c.id)">+ Add section</button>
         <button cButton color="primary" variant="outline" [routerLink]="['/course', course.id, 'report']">Edit
             course</button>
+        <button cButton color="primary" variant="outline" (click)="onDownloadCourse(course.id)">
+            <i class="bi bi-box-arrow-down"></i> JSON
+        </button>
         <button cButton color="primary" variant="outline" (click)="import_question_modal_visible.set(true)">Importar
             Questões BOCA</button>
     </div>
@@ -84,6 +87,9 @@
                             class="bi bi-arrow-down"></i></button>
                     <button cButton size="sm" color="danger" variant="outline" (click)="removeSection(s)">Delete
                         section</button>
+                    <button cButton color="primary" variant="outline" (click)="onDownloadSection(s.id)">
+                        <i class="bi bi-box-arrow-down"></i> JSON
+                    </button>
                 </div>
                 }
             </div>

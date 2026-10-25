@@ -10,11 +10,11 @@ import { DateFormatPipe } from '../../utils/date-format.pipe';
 import { QuestionFile } from '../../models/question-file';
 import { CommonModule } from '@angular/common';
 import { InputOutput } from '../../models/input-output';
-import { environment } from '../../../environments/environment';
-import Notify from 'simple-notify';
 import { ButtonDirective, TableColorDirective, TableDirective } from '@coreui/angular';
 import { BreadcrumbsService } from '../../components/breadcrumbs/breadcrumb.service';
 import { TestrStore } from '../../services/testr.store';
+import { environment } from '../../../../.env';
+import Notify from 'simple-notify';
 
 @Component({
     selector: 'app-question-detail-page',
@@ -106,7 +106,6 @@ export class QuestionDetailPageComponent implements OnInit {
                 next: (submission) => {
                     this.submission = submission;
                     this.startSubmissionStatusCheck();
-                    //console.log(submission);
                 },
                 error: (err) => {
                     console.log(err);

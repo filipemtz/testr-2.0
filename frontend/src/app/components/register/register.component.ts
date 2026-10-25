@@ -75,7 +75,6 @@ export class RegisterComponent implements OnInit {
 
 
     submit() {
-        console.log(this.form.getRawValue());
         this.authService.register(this.form.getRawValue()).subscribe({
             next: (res: any) => {
                 localStorage.setItem('user', JSON.stringify(res.user));

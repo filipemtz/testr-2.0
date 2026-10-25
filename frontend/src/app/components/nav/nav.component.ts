@@ -33,10 +33,6 @@ export class NavComponent implements OnInit {
                 },
             });
         }
-        // AuthService.authEmitter.subscribe((authenticated) => {
-        //   this.authenticated = authenticated;
-        //   console.log('olaaaa');
-        // });
     }
 
     logout() {

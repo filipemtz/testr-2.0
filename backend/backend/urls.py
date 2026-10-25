@@ -113,4 +113,19 @@ urlpatterns = [
         PyrelaxDatabasesView.as_view(),
         name="pyrelax-databases",
     ),
+    path(
+        "export/courses/<int:course_id>/",
+        ExportCourseView.as_view(),
+        name="download-course",
+    ),
+    path(
+        "export/sections/<int:section_id>/",
+        ExportSectionView.as_view(),
+        name="download-section",
+    ),
+    path(
+        "export/questions/<int:question_id>/",
+        ExportQuestionView.as_view(),
+        name="download-question",
+    ),
 ]

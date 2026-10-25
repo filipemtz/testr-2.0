@@ -1,51 +1,51 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../.env';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
 
-  api = `${environment.apiUrl}/accounts`;
- 
-  // static authEmitter = new EventEmitter<boolean>();
+    api = `${environment.apiUrl}/accounts`;
 
-  register(body: any){
-    return this.http.post(`${this.api}/register/`, body);
-  }
+    // static authEmitter = new EventEmitter<boolean>();
 
-  login(body: any){
-    return this.http.post(`${this.api}/login/`, body, {withCredentials: true});
-  }
+    register(body: any) {
+        return this.http.post(`${this.api}/register/`, body);
+    }
 
-  profile(){
-    return this.http.get(`${this.api}/profile/` ,{withCredentials: true});
-  }
+    login(body: any) {
+        return this.http.post(`${this.api}/login/`, body, { withCredentials: true });
+    }
 
-  refresh(){
-    return this.http.post(`${this.api}/refresh/`,{}, {withCredentials: true});
-  }
+    profile() {
+        return this.http.get(`${this.api}/profile/`, { withCredentials: true });
+    }
 
-  logout(){
-    return this.http.post(`${this.api}/logout/`, {}, {withCredentials: true});
-  }
+    refresh() {
+        return this.http.post(`${this.api}/refresh/`, {}, { withCredentials: true });
+    }
 
-  getGroups(){
-    return this.http.get<any>(`${this.api}/groups/`, {withCredentials: true});
-  }
+    logout() {
+        return this.http.post(`${this.api}/logout/`, {}, { withCredentials: true });
+    }
 
-  getGroup(id: number){
-    return this.http.get<any>(`${this.api}/groups/${id}/`, {withCredentials: true});
-  }
+    getGroups() {
+        return this.http.get<any>(`${this.api}/groups/`, { withCredentials: true });
+    }
 
-  changePassword(currentPassword: string, newPassword: string){
-    return this.http.post(`${this.api}/change-password/`, { currentPassword, newPassword }, { withCredentials: true });
-  }
+    getGroup(id: number) {
+        return this.http.get<any>(`${this.api}/groups/${id}/`, { withCredentials: true });
+    }
 
-  userInfo(){
-    return this.http.get(`${this.api}/user-info/`, { withCredentials: true });
-  }
+    changePassword(currentPassword: string, newPassword: string) {
+        return this.http.post(`${this.api}/change-password/`, { currentPassword, newPassword }, { withCredentials: true });
+    }
+
+    userInfo() {
+        return this.http.get(`${this.api}/user-info/`, { withCredentials: true });
+    }
 }

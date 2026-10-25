@@ -9,6 +9,7 @@ from .course_view import (
     CourseUnrollStudentAPIView,
     CourseViewSet,
 )
+from .exports_view import ExportCourseView, ExportQuestionView, ExportSectionView
 from .input_output_view import InputOutputViewSet
 from .pyrelax_view import PyrelaxDatabasesView
 from .question_file_view import QuestionFileViewSet
